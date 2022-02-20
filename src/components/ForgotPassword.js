@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from 'react-router-dom';
+import Button from "./form/Button";
 
 const Login = () => {
     return (
@@ -8,9 +8,9 @@ const Login = () => {
                 <h3><b>Reset password</b></h3>
                 <div className="form-group mb-3">
                     <label htmlFor="email" className="mb-2">Email address</label>
-                    <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" />
+                    <input type="email" className="form-control" placeholder="Enter email" />
                 </div>
-                <button type="submit" className="btn btn-success">Submit</button>
+                <Button value="Reset password" color="success" />
             </form>
         </div>
     );

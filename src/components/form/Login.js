@@ -1,7 +1,7 @@
 import React from "react";
-import RequestPassword from "./RequestPassword";
-import ForgotPassword from "../ForgotPassword";
-import { Routes, Route, Link } from 'react-router-dom';
+import Button from "./Button";
+
+import { Link } from 'react-router-dom';
 
 const Login = () => {
 	return (
@@ -18,13 +18,10 @@ const Login = () => {
 			<div className="form-group mb-3 text-right">
 				<Link to="/forgot">Forgot password?</Link>
 			</div>
-			<button type="submit" className="btn btn-success">Submit</button>
+			<Button value="Login" color="success" />
+			<Link to="/register" className="btn btn-danger">Create a new account</Link>
 		</form>
 	);
 }
-
-<style>
-
-</style>
 
 export default Login
