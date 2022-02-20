@@ -1,7 +1,7 @@
 import React from "react";
 import ForgotPassword from "./password/ForgotPassword";
 import RequestPassword from "./password/RequestPassword";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 const Login = () => {
 	return (
@@ -21,11 +21,9 @@ const Login = () => {
 				</div>
 				<div className="form-group mb-3">
 					<ForgotPassword />
-					{/* <BrowserRouter> */}
 					<Routes>
 						<Route path="/request-password" element={<RequestPassword />}></Route>
 					</Routes>
-					{/* </BrowserRouter> */}
 				</div>
 				<button type="submit" className="btn btn-success">Submit</button>
 			</form>
