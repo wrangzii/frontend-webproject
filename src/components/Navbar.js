@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 
 const Navbar = () => {
     return (
-        <nav className="navbar">
-            <Link to="/listuser">Logo</Link>
+        <nav className="navbar py-3">
+            <Link to="/list-user">Logo</Link>
         </nav>
     );
 }

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const ViewUser = () => {
-   
+
     const [user, setUser] = useState({
         name: "",
         username: "",
@@ -23,17 +23,17 @@ const ViewUser = () => {
     };
 
     return (
-        <div className="container py-4">
-            <Link className="btn btn-primary" to="/listuser">List User</Link>
-        <h1 className="display-4">User Id: {id}</h1>
-        <hr />
-            <ul className="list-group w-50">
-                <li className="list-group-item">name: {user.name}</li>
-                <li className="list-group-item">user name: {user.username}</li>
-                <li className="list-group-item">email: {user.email}</li>
-                <li className="list-group-item">phone: {user.phone}</li>
+        <>
+            <Link className="btn btn-primary" to="/list-user">List User</Link>
+            <h3 className="display-4">User Id: {id}</h3>
+            <hr />
+            <ul className="list-group col-12 col-md-9 col-lg-6 px-0">
+                <li className="list-group-item text-break">Name: {user.name}</li>
+                <li className="list-group-item text-break">User name: {user.username}</li>
+                <li className="list-group-item text-break">Email: {user.email}</li>
+                <li className="list-group-item text-break">Phone: {user.phone}</li>
             </ul>
-        </div>
+        </>
     );
 };
 

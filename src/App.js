@@ -21,12 +21,16 @@ function App() {
         <div className="authentication container">
           <Routes>
             <Route exact path='/' element={<Login />} />
-            <Route exact path='/forgot' element={<ForgotPassword />} />
-            <Route exact path='/register' element={<Register />} />
-            <Route exact path='/listuser' element={<ListUser />} />
-            <Route exact path='/listuser/add' element={<AddUser />} />
-            <Route exact path='/listuser/edit/:id' element={<EditUser />} />
-            <Route exact path='/listuser/:id' element={<ViewUser />} />
+            <Route path='/forgot' element={<ForgotPassword />} />
+            <Route path='/register' element={<Register />} />
+          </Routes>
+        </div>
+        <div className="container">
+          <Routes>
+            <Route path='/list-user' element={<ListUser />} />
+            <Route path='/list-user/add' element={<AddUser />} />
+            <Route path='/list-user/edit/:id' element={<EditUser />} />
+            <Route path='/list-user/:id' element={<ViewUser />} />
           </Routes>
         </div>
       </div>

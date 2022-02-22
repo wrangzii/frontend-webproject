@@ -14,4 +14,15 @@
 .authentication form {
   max-width: 400px;
 }
+
+th,
+td {
+  white-space: nowrap;
+}
+
+tbody tr td:last-child {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
 /*# sourceMappingURL=all.css.map */
