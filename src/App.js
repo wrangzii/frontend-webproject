@@ -8,6 +8,10 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import ListUser from './components/users/ListUser';
+import AddUser from './components/users/AddUser';
+import EditUser from './components/users/EditUser';
+import ViewUser from './components/users/ViewUser';
 
 function App() {
   return (
@@ -19,6 +23,10 @@ function App() {
             <Route exact path='/' element={<Login />} />
             <Route exact path='/forgot' element={<ForgotPassword />} />
             <Route exact path='/register' element={<Register />} />
+            <Route exact path='/listuser' element={<ListUser />} />
+            <Route exact path='/listuser/add' element={<AddUser />} />
+            <Route exact path='/listuser/edit/:id' element={<EditUser />} />
+            <Route exact path='/listuser/:id' element={<ViewUser />} />
           </Routes>
         </div>
       </div>
