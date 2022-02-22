@@ -1,11 +1,11 @@
-import Home from './Home';
+import Navbar from './components/Navbar'
 import Login from './components/form/Login';
 import ForgotPassword from './components/ForgotPassword';
 import Register from './components/admin/Register';
 
 import {
   BrowserRouter,
-  Routes,
+  Switch,
   Route,
 } from "react-router-dom";
 import ListUser from './components/users/ListUser';
@@ -17,7 +17,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Home />
+        <Navbar />
         <div className="authentication container">
           <Routes>
             <Route exact path='/' element={<Login />} />
