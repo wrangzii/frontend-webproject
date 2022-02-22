@@ -1,11 +1,11 @@
-import Home from './Home';
+import Navbar from './components/Navbar'
 import Login from './components/form/Login';
 import ForgotPassword from './components/ForgotPassword';
 import Register from './components/admin/Register';
 
 import {
   BrowserRouter,
-  Routes,
+  Switch,
   Route,
 } from "react-router-dom";
 
@@ -13,13 +13,13 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Home />
+        <Navbar />
         <div className="authentication container">
-          <Routes>
-            <Route exact path='/' element={<Login />} />
-            <Route exact path='/forgot' element={<ForgotPassword />} />
-            <Route exact path='/register' element={<Register />} />
-          </Routes>
+          <Switch>
+            <Route exact path='/' component={Login} />
+            <Route path='/forgot' component={ForgotPassword} />
+            <Route path='/register' component={Register} />
+          </Switch>
         </div>
       </div>
     </BrowserRouter>

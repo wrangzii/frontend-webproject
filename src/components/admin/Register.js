@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../form/Button";
+import { Link } from 'react-router-dom'
 
 const Register = () => {
     return (
@@ -24,6 +25,7 @@ const Register = () => {
                 </select>
             </div>
             <Button value="Register" color="success" />
+            <Link to="/" className="btn btn-danger">Back to login</Link>
         </form>
     );
 }
