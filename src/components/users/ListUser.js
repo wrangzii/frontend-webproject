@@ -22,9 +22,9 @@ const ListUser = () => {
     }
 
     return (
-        <div className="list-user">
+        <div className="users">
 
-            <Link className="btn btn-outline-dark mb-3" to="/list-user/add">Add User</Link>
+            <Link className="btn btn-outline-dark mb-3" to="/users/add">Add User</Link>
 
             <div className="overflow-auto">
                 <table className="table border shadow">
@@ -32,8 +32,8 @@ const ListUser = () => {
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">UseName</th>
                             <th scope="col">Email</th>
+                            <th scope="col">Department</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -43,12 +43,12 @@ const ListUser = () => {
                                 <tr key={index}>
                                     <th scope="row">{index + 1}</th>
                                     <td>{user.name}</td>
-                                    <td>{user.username}</td>
                                     <td>{user.email}</td>
+                                    <td>{user.department}</td>
                                     <td>
-                                        <Link className="btn btn-primary mr-2" to={`/list-user/${user.id}`}>View</Link>
-                                        <Link className="btn btn-outline-primary mr-2" to={`/list-user/edit/${user.id}`}>Edit</Link>
-                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteUser(user.id)} to="/list-user">Delete</Link>
+                                        <Link className="btn btn-primary mr-2" to={`/users/${user.id}`}>View</Link>
+                                        <Link className="btn btn-outline-primary mr-2" to={`/users/edit/${user.id}`}>Edit</Link>
+                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteUser(user.id)} to="/users">Delete</Link>
                                     </td>
                                 </tr>
                             ))

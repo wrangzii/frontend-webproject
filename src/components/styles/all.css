@@ -1,14 +1,52 @@
 .App {
   position: relative;
-  height: 100vh;
+}
+
+li {
+  list-style-type: none;
+}
+
+ul,
+p {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.c-pointer {
+  cursor: pointer;
+}
+
+.fz-20 {
+  font-size: 20px;
+}
+
+.wrapper-content {
+  position: relative;
+  left: 204px;
+  width: calc(100% - 205px);
+}
+
+.wrapper-nav {
+  height: 74px;
+}
+
+.wrapper-nav nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
 }
 
 .authentication {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
+  margin-left: 102px;
 }
 
 .authentication form {
@@ -24,5 +62,17 @@ tbody tr td:last-child {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.sidebar {
+  position: fixed;
+  z-index: 999;
+  top: 74px;
+  bottom: 0;
+}
+
+.sidebar a {
+  padding: 1rem 2rem;
+  font-size: 18px;
 }
 /*# sourceMappingURL=all.css.map */

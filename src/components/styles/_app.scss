@@ -1,4 +1,32 @@
 .App {
     position: relative;
-    height: 100vh;
+}
+
+li {
+    list-style-type: none;
+}
+
+ul,
+p {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+.c-pointer {
+    cursor: pointer;
+}
+
+.fz-20 {
+    font-size: 20px;
+}
+
+.wrapper-content {
+    position: relative;
+    left: 204px;
+    width: calc(100% - 205px);
+
+    #container {}
 }

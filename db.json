@@ -21,7 +21,9 @@
         "name": "Robel-Corkery",
         "catchPhrase": "Multi-tiered zero tolerance productivity",
         "bs": "transition cutting-edge web services"
-      }
+      },
+      "department": "Falcuty of IT",
+      "role": "QA manager"
     },
     {
       "id": 5,
@@ -98,6 +100,38 @@
       "email": "khanh79@gmail.com",
       "phone": "0922332213",
       "id": 9
+    },
+    {
+      "name": "Hai",
+      "email": "hai@gmail.com",
+      "phone": "092372737237",
+      "department": "HR department",
+      "role": "QA manager",
+      "id": 10
+    },
+    {
+      "name": "",
+      "email": "",
+      "phone": "",
+      "department": "",
+      "role": "",
+      "id": 11
+    }
+  ],
+  "cates": [
+    {
+      "name": "New Year",
+      "description": "Collect ideas for year end party",
+      "createDate": "2022-02-22",
+      "lastEdit": "",
+      "id": 1
+    }
+  ],
+  "departs": [
+    {
+      "name": "Human Resources",
+      "description": "Head hunter guys",
+      "id": 1
     }
   ]
 }

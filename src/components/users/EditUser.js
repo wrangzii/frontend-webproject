@@ -12,12 +12,13 @@ const EditUser = () => {
 
     const [user, setUser] = useState({
         name: "",
-        username: "",
         email: "",
-        phone: ""
+        phone: "",
+        department: "",
+        role: ""
     });
 
-    const { name, username, email, phone } = user;
+    const { name, email, phone, department, role } = user;
     const onInputChange = e => {
         setUser({ ...user, [e.target.name]: e.target.value });
     };
@@ -29,7 +30,7 @@ const EditUser = () => {
     const onSubmit = async e => {
         e.preventDefault();
         await axios.put(`http://localhost:3003/users/${id}`, user);
-        navigate("/list-user");
+        navigate("/users");
     };
 
     const loadUser = async () => {
@@ -53,16 +54,6 @@ const EditUser = () => {
                 </div>
                 <div className="form-group">
                     <input
-                        type="text"
-                        className="form-control form-control-lg"
-                        placeholder="Enter Your Username"
-                        name="username"
-                        value={username}
-                        onChange={e => onInputChange(e)}
-                    />
-                </div>
-                <div className="form-group">
-                    <input
                         type="email"
                         className="form-control form-control-lg"
                         placeholder="Enter Your E-mail Address"
@@ -81,9 +72,41 @@ const EditUser = () => {
                         onChange={e => onInputChange(e)}
                     />
                 </div>
+
+                <div className="form-group">
+                    <select
+                        name="department"
+                        className="form-control form-control-lg"
+                        placeholder="Enter Your Department"
+                        value={department}
+                        onChange={e => onInputChange(e)}
+                    >
+                        <optgroup label="Department">
+                            <option value="QA department">QA department</option>
+                            <option value="Falcuty of IT">Falcuty of IT</option>
+                            <option value="HR department">HR department</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div className="form-group">
+                    <select
+                        name="role"
+                        className="form-control form-control-lg"
+                        placeholder="Enter Your Role"
+                        value={role}
+                        onChange={e => onInputChange(e)}
+                    >
+                        <optgroup label="Role">
+                            <option value="Admin">Admin</option>
+                            <option value="QA manager">QA manager</option>
+                            <option value="QA coordinator">QA coordinator</option>
+                            <option value="Staff">Staff</option>
+                        </optgroup>
+                    </select>
+                </div>
                 <div className="form-group text-right">
                     <button className="btn btn-warning px-3 mr-3">Update</button>
-                    <Link to="/list-user" className="btn btn-danger px-3">Cancel</Link>
+                    <Link to="/users" className="btn btn-danger px-3">Cancel</Link>
                 </div>
             </form>
         </div>
