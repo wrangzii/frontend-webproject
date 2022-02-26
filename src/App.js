@@ -1,5 +1,4 @@
 import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar';
 //Form
 import Login from './components/form/Login';
 import ForgotPassword from './components/form/ForgotPassword'
@@ -30,7 +29,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Navbar />
-        <Sidebar />
+        {/* <Sidebar /> */}
         <Routes>
           <Route exact path='/' element={<Login />} />
           <Route path='/forgot' element={<ForgotPassword />} />
