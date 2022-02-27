@@ -75,3 +75,4 @@ npm i react-router-dom ||
 npm i json-server ||
 npm i concurrently ||
 npm i axios ||
+npm install react-icons --save ||
