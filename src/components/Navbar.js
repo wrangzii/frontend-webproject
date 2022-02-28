@@ -1,41 +1,35 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
-import { AiOutlineClose } from "react-icons/ai";
 import { Sidebar } from "./Sidebar";
 import './Navbar.css';
 
 const Navbar = () => {
-
     const [sidebar, setSidebar] = useState(false)
 
-    const showSidebar = () => setSidebar (!sidebar)
+    const showSidebar = () => setSidebar(!sidebar)
 
     return (
         <div className="navbar">
-            <Link to="#" className="menu-bars">
-                <FaBars onClick={showSidebar}/>
-            </Link>
-            <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
-                <ul className="nav-menu-items" onClick={showSidebar}>
-                    <li className="navbar-toggle-modify">
-                        <Link to="#" className="menu-bars">
-                            <AiOutlineClose />
-                        </Link>
-                    </li>
+            <div className="wrapper">
+                <Link to="#" className="menu-bars">
+                    <FaBars onClick={showSidebar} />
+                </Link>
+                <ul className={sidebar ? 'nav-menu active' : 'nav-menu'}>
                     {Sidebar.map((item, index) => {
                         return (
-                            <li key={index} className={item.aName}>
-                            <Link to={item.path}>
-                                <span>{item.title}</span>
+                            <Link to={item.path} key={index} className={item.className}>
+                                <li className="px-3 py-2">
+                                    {item.title}
+                                </li>
                             </Link>
-                            </li>
                         )
                     })}
                 </ul>
-            </nav>
+            </div>
+            <Link exact to="/" className="navbar-brand text-white">Collecting Idea System</Link>
         </div>
     )
-} 
+}
 
 export default Navbar;

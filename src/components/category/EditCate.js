@@ -38,7 +38,7 @@ const EditCate = () => {
     };
 
     return (
-        <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-2 p-md-5">
+        <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h2 className="text-center mb-4">Edit Category</h2>
             <form onSubmit={e => onSubmit(e)}>
                 <div className="form-group">

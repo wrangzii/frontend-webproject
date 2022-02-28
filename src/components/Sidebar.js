@@ -1,30 +1,27 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
 export const Sidebar = [
     {
         title: 'Department',
         path: '/departments',
-        aName: 'nav-text'
+        className: 'nav-text text-white text-decoration-none',
     },
     {
         title: 'Users',
         path: '/users',
-        aName: 'nav-text'
+        className: 'nav-text text-white text-decoration-none',
     },
     {
         title: 'Categories',
         path: '/categories',
-        aName: 'nav-text'
+        className: 'nav-text text-white text-decoration-none',
     },
     {
         title: 'Academic-year',
         path: '/academic-year',
-        aName: 'nav-text'
+        className: 'nav-text text-white text-decoration-none',
     },
     {
         title: 'Logout',
         path: '/',
-        aName: 'nav-text'
+        className: 'nav-text text-white text-decoration-none',
     },
 ]
