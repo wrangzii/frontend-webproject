@@ -29,13 +29,12 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Navbar />
-        {/* <Sidebar /> */}
         <Routes>
           <Route exact path='/' element={<Login />} />
           <Route path='/forgot' element={<ForgotPassword />} />
         </Routes>
         <div className="wrapper-content">
-          <div className="px-3 px-md-5 mt-5" id='container'>
+          <div className="px-3 px-md-5 my-5" id='container'>
             <Routes>
               <Route path='/users' element={<ListUser />} />
               <Route path='/users/add' element={<AddUser />} />

@@ -23,12 +23,6 @@ a {
   font-size: 20px;
 }
 
-.wrapper-content {
-  position: relative;
-  left: 204px;
-  width: calc(100% - 205px);
-}
-
 .wrapper-nav {
   height: 74px;
 }
@@ -46,7 +40,6 @@ a {
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
-  margin-left: 102px;
 }
 
 .authentication form {
