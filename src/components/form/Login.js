@@ -1,7 +1,8 @@
 import React from "react";
 import Button from "./Button";
 import { Link } from 'react-router-dom';
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
+import axios from "axios";
 
 export default class Login extends React.Component {
 	constructor(props) {
@@ -40,9 +41,10 @@ export default class Login extends React.Component {
 			})
 			.then(result => {
 				console.log(result)
-				// localStorage.setItem("token", result.token)
-				Cookies.get('token')
-				alert("ok")
+				localStorage.setItem("token", result.token)
+				console.log(result.username)
+				alert(localStorage.getItem('token'))
+				axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
 			})
 			.catch(error => {
 				console.log('error', error)
@@ -53,7 +55,7 @@ export default class Login extends React.Component {
 	render() {
 		return (
 			<div className="authentication container">
-				<form className="px-3 mx-auto d-flex justify-content-center flex-column" method="POST">
+				<form className="px-3 mx-auto d-flex justify-content-center flex-column">
 					<h3><b>Login to your account</b></h3>
 					<div className="form-group mb-3">
 						<label htmlFor="username" className="mb-2">Username</label>
