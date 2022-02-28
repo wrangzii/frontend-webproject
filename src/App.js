@@ -8,10 +8,10 @@ import AddUser from './components/users/AddUser';
 import EditUser from './components/users/EditUser';
 import ViewUser from './components/users/ViewUser';
 //Category
-import ListCate from './components/category/ListCate';
-import EditCate from './components/category/EditCate';
-import AddCate from './components/category/AddCate';
-import ViewCate from './components/category/ViewCate';
+import ListCate from './components/categories/ListCate';
+import EditCate from './components/categories/EditCate';
+import AddCate from './components/categories/AddCate';
+import ViewCate from './components/categories/ViewCate';
 // Department
 import ListDepart from './components/departments/ListDepart';
 import EditDepart from './components/departments/EditDepart';
