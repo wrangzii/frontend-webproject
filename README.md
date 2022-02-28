@@ -76,4 +76,4 @@ npm i json-server ||
 npm i concurrently ||
 npm i axios ||
 npm install react-icons --save ||
-npm install cookie ||
+npm i js-cookie --save ||
