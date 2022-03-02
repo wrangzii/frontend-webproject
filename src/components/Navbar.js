@@ -18,7 +18,8 @@ const Navbar = () => {
                 <ul className={sidebar ? 'nav-menu active' : 'nav-menu'}>
                     {Sidebar.map((item, index) => {
                         return (
-                            <Link to={item.path} key={index} className={item.className}>
+                            <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`}>
+                                <i className={item.icon}></i>
                                 <li className="px-3 py-2">
                                     {item.title}
                                 </li>

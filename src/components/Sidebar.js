@@ -9,24 +9,24 @@ export const Sidebar = [
         title: 'Users',
         path: '/users',
         className: 'nav-text text-white text-decoration-none',
-        icon: 'fa fas '
+        icon: 'fa-solid fa-users '
     },
     {
         title: 'Categories',
         path: '/categories',
         className: 'nav-text text-white text-decoration-none',
-        icon: 'fa fas '
+        icon: 'fa-solid fa-list '
     },
     {
         title: 'Academic-year',
         path: '/academic-year',
         className: 'nav-text text-white text-decoration-none',
-        icon: 'fa fas '
+        icon: 'fa-solid fa-calendar-check'
     },
     {
         title: 'Logout',
         path: '/',
         className: 'nav-text text-white text-decoration-none',
-        icon: 'fa fas '
+        icon: 'fa-solid fa-arrow-right-from-bracket'
     },
 ]

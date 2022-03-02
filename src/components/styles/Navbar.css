@@ -33,13 +33,13 @@
     gap: 1rem;
 }
 
-.nav-menu a li:hover {
+.nav-menu a:hover {
     transition: all .5s ease;
     border-radius: 4px;
     background-color: #0d6efd;
 }
 
-.nav-menu a:last-child li:hover {
+.nav-menu a:last-child:hover {
     background-color: #dc3545;
 }
 

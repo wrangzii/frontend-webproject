@@ -1,7 +1,9 @@
 import Navbar from './components/Navbar'
-//Form
-import Login from './components/form/Login';
-import ForgotPassword from './components/form/ForgotPassword'
+// //Form
+// import Login from './components/form/Login';
+// import ForgotPassword from './components/form/ForgotPassword'
+// import ResetPassword from './components/form/ResetPassword';
+import Form from './components/form/Form';
 //User
 import ListUser from './components/users/ListUser';
 import AddUser from './components/users/AddUser';
@@ -29,10 +31,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Navbar />
-        <Routes>
-          <Route exact path='/' element={<Login />} />
-          <Route path='/forgot' element={<ForgotPassword />} />
-        </Routes>
+        <Form />
         <div className="wrapper-content">
           <div className="px-3 px-md-5 my-5" id='container'>
             <Routes>
