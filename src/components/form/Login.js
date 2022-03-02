@@ -25,7 +25,7 @@ export default class Login extends React.Component {
 			method: 'POST',
 			headers: myHeaders,
 			body: raw,
-			redirect: '../departments/ListDepart.js'
+			redirect: 'follow'
 		};
 		fetch("http://localhost:8080/login", requestOptions)
 			.then(response => {
