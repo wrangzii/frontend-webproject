@@ -26,12 +26,12 @@ const EditDepart = () => {
 
     const onSubmit = async e => {
         e.preventDefault();
-        await axios.put(`http://localhost:3003/departs/${id}`, depart);
+        await axios.put(`http://localhost:8080/departs/${id}`, depart);
         navigate("/departments");
     };
 
     const loadDepart = async () => {
-        const result = await axios.get(`http://localhost:3003/departs/${id}`)
+        const result = await axios.get(`http://localhost:8080/departs/${id}`)
         setDepart(result.data);
     };
 

@@ -37,11 +37,9 @@ export default class Login extends React.Component {
 				throw Error(response.status)
 			})
 			.then(result => {
-				console.log(result)
 				localStorage.setItem("token", result.token)
-				console.log(result.username)
-				alert(localStorage.getItem('token'))
 				axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
+				console.log(result.username)
 			})
 			.catch(error => {
 				console.log('error', error)
@@ -51,21 +49,23 @@ export default class Login extends React.Component {
 
 	render() {
 		return (
-			<>
-				<h3><b>Login to your account</b></h3>
-				<div className="form-group mb-3">
-					<label htmlFor="username" className="mb-2">Username</label>
-					<input type="text" name="username" className="form-control" placeholder="Enter username" onChange={this.setParams} />
-				</div>
-				<div className="form-group mb-3">
-					<label htmlFor="password" className="mb-2">Password</label>
-					<input type="password" name="password" className="form-control" placeholder="Password" onChange={this.setParams} />
-				</div>
-				<div className="form-group mb-3 text-right">
-					<Link to="/forgot">Forgot password?</Link>
-				</div>
-				<button type="button" onClick={this.login} className="btn btn-success">Login</button>
-			</>
+			<div className="authentication container">
+				<form className="d-flex flex-column mx-auto">
+					<h3><b>Login to your account</b></h3>
+					<div className="form-group mb-3">
+						<label htmlFor="username" className="mb-2">Username</label>
+						<input type="text" name="username" className="form-control" placeholder="Enter username" onChange={this.setParams} />
+					</div>
+					<div className="form-group mb-3">
+						<label htmlFor="password" className="mb-2">Password</label>
+						<input type="password" name="password" className="form-control" placeholder="Password" onChange={this.setParams} />
+					</div>
+					<div className="form-group mb-3 text-right">
+						<Link to="/forgot">Forgot password?</Link>
+					</div>
+					<button type="button" onClick={this.login} className="btn btn-success">Login</button>
+				</form>
+			</div>
 		)
 	}
 }

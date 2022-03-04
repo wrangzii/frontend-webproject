@@ -28,12 +28,12 @@ const EditCate = () => {
 
     const onSubmit = async e => {
         e.preventDefault();
-        await axios.put(`http://localhost:3003/cates/${id}`, cate);
+        await axios.put(`http://localhost:8080/cates/${id}`, cate);
         navigate("/categories");
     };
 
     const loadCate = async () => {
-        const result = await axios.get(`http://localhost:3003/cates/${id}`)
+        const result = await axios.get(`http://localhost:8080/cates/${id}`)
         setCate(result.data);
     };
 

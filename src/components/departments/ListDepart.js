@@ -12,12 +12,12 @@ const ListDepart = () => {
     }, []);
 
     const loadDeparts = async () => {
-        const result = await axios.get("http://localhost:3003/departs");
+        const result = await axios.get("http://localhost:8080/departs");
         setDepart(result.data);
     }
 
     const deleteDepart = async id => {
-        await axios.delete(`http://localhost:3003/departs/${id}`);
+        await axios.delete(`http://localhost:8080/departs/${id}`);
         loadDeparts();
     }
 

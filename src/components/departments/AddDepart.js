@@ -18,7 +18,7 @@ const AddDepart = () => {
 
     const onSubmit = async e => {
         e.preventDefault();
-        await axios.post("http://localhost:3003/departs", depart);
+        await axios.post("http://localhost:8080/department/add", depart);
         navigate("/departments");
     };
 
