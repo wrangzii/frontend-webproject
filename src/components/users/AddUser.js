@@ -17,7 +17,6 @@ export default class AddUser extends React.Component {
             "departmentId": ""
         }
     }
-
     setParams = event => {
         this.setState({ [event.target.name]: event.target.value })
     }
@@ -25,6 +24,8 @@ export default class AddUser extends React.Component {
     addUser = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", 'Bearer ' + localStorage.getItem('token'));
+
         var raw = JSON.stringify({
             "email": this.state.email,
             "username": this.state.username,
@@ -41,6 +42,7 @@ export default class AddUser extends React.Component {
             body: raw,
             redirect: 'follow'
         };
+
         console.log(requestOptions);
         fetch("http://localhost:8080/users/add", requestOptions)
             .then(response => {
@@ -52,11 +54,7 @@ export default class AddUser extends React.Component {
                 throw Error(response.status)
             })
             .then(result => {
-                console.log(result)
-                localStorage.setItem("token", result.token)
-                console.log(result.username)
-                alert(localStorage.getItem('token'))
-                axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
+
             })
             .catch(error => {
                 console.log('error', error)
@@ -71,23 +69,23 @@ export default class AddUser extends React.Component {
                     <h2 className="text-center mb-4">Add New User</h2>
                     <div>
                         <div className="form-group">
-                            <label htmlFor="Username">Username</label>
+                            <label htmlFor="username">Username.</label>
                             <input
                                 type="text"
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Username"
-                                name="Username"
+                                placeholder="Enter Your Department Id"
+                                name="username"
                                 value={this.username}
                                 onChange={this.setParams}
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="name">Full name</label>
+                            <label htmlFor="fullName">Full Name.</label>
                             <input
                                 type="text"
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Username"
-                                name="name"
+                                placeholder="Enter Your Department Id"
+                                name="fullName"
                                 value={this.fullName}
                                 onChange={this.setParams}
                             />
@@ -104,12 +102,12 @@ export default class AddUser extends React.Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="phone">Phone No.</label>
+                            <label htmlFor="phoneNumber">Phone Number.</label>
                             <input
                                 type="text"
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Phone Number"
-                                name="phone"
+                                placeholder="Enter Your Department Id"
+                                name="phoneNumber"
                                 value={this.phoneNumber}
                                 onChange={this.setParams}
                             />
