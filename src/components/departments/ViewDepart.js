@@ -16,7 +16,7 @@ const ViewDepart = () => {
     }, []);
 
     const loadDepart = async () => {
-        const res = await axios.get(`http://localhost:3003/departs/${id}`);
+        const res = await axios.get(`http://localhost:8080/departs/${id}`);
         setDepart(res.data);
     };
 

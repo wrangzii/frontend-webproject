@@ -18,7 +18,7 @@ const ViewCate = () => {
     }, []);
 
     const loadCate = async () => {
-        const res = await axios.get(`http://localhost:3003/cates/${id}`);
+        const res = await axios.get(`http://localhost:8080/cates/${id}`);
         setCate(res.data);
     };
 

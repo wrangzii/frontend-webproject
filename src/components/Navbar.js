@@ -5,17 +5,34 @@ import { Sidebar } from "./Sidebar";
 import './styles/Navbar.css';
 
 const Navbar = () => {
-    const [sidebar, setSidebar] = useState(false)
+    window.onload = () => {
+        const sidebar = document.querySelector("ul.nav-menu");
+        const sidebar_items = document.querySelectorAll("ul.nav-menu a");
+        const barBtn = document.querySelector(".fa-bars");
 
-    const showSidebar = () => setSidebar(!sidebar)
+        barBtn.onclick = toggleSidebar;
 
+        function toggleSidebar() {
+            sidebar.classList.toggle("active")
+            if (sidebar.classList.contains("active")) {
+                Array.from(sidebar_items).map(item => {
+                    item.onclick = closeSidebar;
+                })
+            }
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove("active")
+        }
+
+    }
     return (
         <div className="navbar">
             <div className="wrapper">
                 <Link to="#" className="menu-bars">
-                    <FaBars onClick={showSidebar} />
+                    <i className="fa-solid fa-bars"></i>
                 </Link>
-                <ul className={sidebar ? 'nav-menu active' : 'nav-menu'}>
+                <ul className='nav-menu'>
                     {Sidebar.map((item, index) => {
                         return (
                             <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`}>
@@ -28,7 +45,7 @@ const Navbar = () => {
                     })}
                 </ul>
             </div>
-            <Link exact to="/" className="navbar-brand text-white">Collecting Idea System</Link>
+            <Link to="/" className="navbar-brand text-white">Collecting Idea System</Link>
         </div>
     )
 }

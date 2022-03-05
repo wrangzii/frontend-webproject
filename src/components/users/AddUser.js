@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import axios from "axios";
-
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
+import { Cookies } from "react-cookie";
 
 export default class AddUser extends React.Component {
     constructor(props) {
@@ -17,15 +17,17 @@ export default class AddUser extends React.Component {
             "departmentId": ""
         }
     }
+
     setParams = event => {
         this.setState({ [event.target.name]: event.target.value })
     }
 
     addUser = () => {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", 'Bearer ' + localStorage.getItem('token'));
-
+        const cookies = new Cookies();
+        // var myHeaders = new Headers();
+        // myHeaders.append("Content-Type", "application/json");
+        // myHeaders.append("Authorization", 'Bearer ' + cookies.get('token'));
+        // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
         var raw = JSON.stringify({
             "email": this.state.email,
             "username": this.state.username,
@@ -38,11 +40,13 @@ export default class AddUser extends React.Component {
         });
         var requestOptions = {
             method: 'POST',
-            headers: myHeaders,
+            headers: new Headers({
+                'Authorization': 'Bearer ' + cookies.get('token'),
+                'Content-Type': 'application/json'
+            }),
             body: raw,
             redirect: 'follow'
         };
-
         console.log(requestOptions);
         fetch("http://localhost:8080/users/add", requestOptions)
             .then(response => {
@@ -54,10 +58,14 @@ export default class AddUser extends React.Component {
                 throw Error(response.status)
             })
             .then(result => {
-
+                console.log(result)
+                cookies.set('token', result.token, { path: '/' });
+                console.log(result.username)
+                alert(cookies.get('token'))
+                // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
             })
             .catch(error => {
-                console.log('error', error)
+                console.log('error message', error.message)
                 alert("Wrong")
             });
     }
@@ -69,22 +77,22 @@ export default class AddUser extends React.Component {
                     <h2 className="text-center mb-4">Add New User</h2>
                     <div>
                         <div className="form-group">
-                            <label htmlFor="username">Username.</label>
+                            <label htmlFor="Username">Username</label>
                             <input
-                                type="text"
+
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Department Id"
+                                placeholder="Enter Your Username"
                                 name="username"
                                 value={this.username}
                                 onChange={this.setParams}
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="fullName">Full Name.</label>
+                            <label htmlFor="name">Full name</label>
                             <input
-                                type="text"
+
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Department Id"
+                                placeholder="Enter Your Full Name"
                                 name="fullName"
                                 value={this.fullName}
                                 onChange={this.setParams}
@@ -102,11 +110,11 @@ export default class AddUser extends React.Component {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="phoneNumber">Phone Number.</label>
+                            <label htmlFor="phone">Phone No.</label>
                             <input
-                                type="text"
+
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Department Id"
+                                placeholder="Enter Your Phone Number"
                                 name="phoneNumber"
                                 value={this.phoneNumber}
                                 onChange={this.setParams}
@@ -128,7 +136,7 @@ export default class AddUser extends React.Component {
                             <input
                                 type="date"
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Dob"
+                                placeholder="Enter Your Birthday"
                                 name="dateOfBirth"
                                 value={this.dateOfBirth}
                                 onChange={this.setParams}
@@ -143,12 +151,11 @@ export default class AddUser extends React.Component {
                                 value={this.role}
                                 onChange={this.setParams}
                             >
-                                <optgroup label="Role">
-                                    <option value="Admin">Admin</option>
-                                    <option value="QA manager">QA manager</option>
-                                    <option value="QA coordinator">QA coordinator</option>
-                                    <option value="Staff">Staff</option>
-                                </optgroup>
+                                <option>Select a role</option>
+                                <option value="admin">Admin</option>
+                                <option value="qa_manger">QA manager</option>
+                                <option value="2">QA coordinator</option>
+                                <option value="3">Staff</option>
                             </select>
                         </div>
                         <div className="form-group">
@@ -156,7 +163,7 @@ export default class AddUser extends React.Component {
                             <input
                                 type="text"
                                 className="form-control form-control-lg"
-                                placeholder="Enter Your Department Id"
+                                placeholder="Enter Your Department ID"
                                 name="departmentId"
                                 value={this.departmentId}
                                 onChange={this.setParams}

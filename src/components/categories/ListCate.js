@@ -12,12 +12,12 @@ const ListCate = () => {
     }, []);
 
     const loadCates = async () => {
-        const result = await axios.get("http://localhost:3003/cates");
+        const result = await axios.get("http://localhost:8080/cates");
         setCate(result.data);
     }
 
     const deleteCate = async id => {
-        await axios.delete(`http://localhost:3003/cates/${id}`);
+        await axios.delete(`http://localhost:8080/cates/${id}`);
         loadCates();
     }
 

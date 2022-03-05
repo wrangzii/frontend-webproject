@@ -41,7 +41,7 @@ export default class Login extends React.Component {
 				localStorage.setItem("token", result.token)
 				console.log(result.username)
 				alert(localStorage.getItem('token'))
-				axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token')
+				axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
 			})
 			.catch(error => {
 				console.log('error', error)
