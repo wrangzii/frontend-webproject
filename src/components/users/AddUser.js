@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
+import { Cookies } from "react-cookie";
 
 export default class AddUser extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ export default class AddUser extends React.Component {
             "dateOfBirth": "",
             "role": [],
             "password": "",
-            "departmentId": ""
+            "departmentId": "",
         }
     }
 
@@ -22,10 +23,11 @@ export default class AddUser extends React.Component {
     }
 
     addUser = () => {
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        let token = localStorage.getItem("token")
-        myHeaders.append("token", `Bearer ${token}`);
+        const cookies = new Cookies();
+        // var myHeaders = new Headers();
+        // myHeaders.append("Content-Type", "application/json");
+        // myHeaders.append("Authorization", 'Bearer ' + cookies.get('token'));
+        // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
         var raw = JSON.stringify({
             "email": this.state.email,
             "username": this.state.username,
@@ -34,13 +36,16 @@ export default class AddUser extends React.Component {
             "dateOfBirth": this.state.dateOfBirth,
             "role": this.state.role,
             "password": this.state.password,
-            "departmentId": this.state.departmentId
+            "departmentId": this.state.departmentId,
         });
         var requestOptions = {
             method: 'POST',
-            headers: myHeaders,
+            headers: new Headers({
+                'Authorization': 'Bearer ' + cookies.get('token'),
+                'Content-Type': 'application/json'
+            }),
             body: raw,
-            redirect: 'follow'
+            redirect: 'follow',
         };
         fetch("http://localhost:8080/users/add", requestOptions)
             .then(response => {
@@ -53,13 +58,13 @@ export default class AddUser extends React.Component {
             })
             .then(result => {
                 console.log(result)
-                localStorage.setItem("token", result.token)
+                cookies.set('token', result.token, { path: '/' });
                 console.log(result.username)
-                alert(localStorage.getItem('token'))
-                axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
+                alert(cookies.get('token'))
+                // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
             })
             .catch(error => {
-                console.log('error', error)
+                console.log('error message', error.message)
                 alert("Wrong")
             });
     }
@@ -146,8 +151,8 @@ export default class AddUser extends React.Component {
                                 onChange={this.setParams}
                             >
                                 <option>Select a role</option>
-                                <option value="0">Admin</option>
-                                <option value="1">QA manager</option>
+                                <option value="admin">Admin</option>
+                                <option value="qa_manger">QA manager</option>
                                 <option value="2">QA coordinator</option>
                                 <option value="3">Staff</option>
                             </select>

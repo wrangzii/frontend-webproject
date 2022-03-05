@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import { Cookies } from "react-cookie";
 export default class Login extends React.Component {
 	constructor(props) {
 		super(props)
@@ -37,9 +38,9 @@ export default class Login extends React.Component {
 				throw Error(response.status)
 			})
 			.then(result => {
-				localStorage.setItem("token", result.token)
-				axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
-				console.log(result.username)
+				const cookies = new Cookies();
+				cookies.set('token', result.token, { path: '/' });
+				axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
 			})
 			.catch(error => {
 				console.log('error', error)

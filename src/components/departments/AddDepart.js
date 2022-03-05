@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
+import { Cookies } from "react-cookie";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default class AddDepart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            "name": "",
+            "departmentName": "",
             "description": ""
         }
     }
@@ -20,7 +21,7 @@ export default class AddDepart extends React.Component {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
         var raw = JSON.stringify({
-            "username": this.state.username,
+            "departmentName": this.state.departmentName,
             "description": this.state.description
         });
         var requestOptions = {
@@ -40,11 +41,11 @@ export default class AddDepart extends React.Component {
                 throw Error(response.status)
             })
             .then(result => {
+                const cookies = new Cookies()
                 console.log(result)
-                localStorage.setItem("token", result.token)
-                console.log(result.username)
-                alert(localStorage.getItem('token'))
-                axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
+                cookies.set("token", result.token)
+                alert(cookies.get('token'))
+                axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
             })
             .catch(error => {
                 console.log('error', error)
@@ -54,22 +55,22 @@ export default class AddDepart extends React.Component {
     render() {
         return (
             <>
-            <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
-                <h2 className="text-center mb-4">Add New Department</h2>
-                
-                <div className="form-group">
-                    <label htmlFor="departmentId">Department Name</label>
+                <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
+                    <h2 className="text-center mb-4">Add New Department</h2>
+
+                    <div className="form-group">
+                        <label htmlFor="departmentId">Department Name</label>
                         <input
                             type="text"
                             className="form-control form-control-lg"
                             placeholder="Enter Your Department Name"
-                            name="name"
-                            value={this.name}
+                            name="departmentName"
+                            value={this.departmentName}
                             onChange={this.setParams}
                         />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="description">Description</label>
                         <input
                             type="text"
                             className="form-control form-control-lg"
@@ -78,74 +79,13 @@ export default class AddDepart extends React.Component {
                             value={this.description}
                             onChange={this.setParams}
                         />
+                    </div>
+                    <div className="form-group text-right">
+                        <button className="btn btn-primary px-3 mr-3" onClick={this.AddDepart}>Add Department</button>
+                        <Link to="/department" className="btn btn-danger px-3">Cancel</Link>
+                    </div>
                 </div>
-                <div className="form-group text-right">
-                    <button className="btn btn-primary px-3 mr-3" onClick={this.AddDepart}>Add Department</button>
-                    <Link to="/department" className="btn btn-danger px-3">Cancel</Link>
-                </div>                
-            </div>          
             </>
         )
     }
 }
-
-// import React, { useState } from "react";
-// import axios from "axios";
-
-// import { Link, useNavigate } from "react-router-dom";
-
-// const AddDepart = () => {
-
-//     let navigate = useNavigate();
-//     const [depart, setDepart] = useState({
-//         name: "",
-//         description: "",
-//     });
-
-//     const { name, description } = depart;
-//     const onInputChange = e => {
-//         setDepart({ ...depart, [e.target.name]: e.target.value });
-//     };
-
-//     const onSubmit = async e => {
-//         e.preventDefault();
-//         await axios.post("http://localhost:8080/department/add", depart);
-//         navigate("/departments");
-//     };
-
-//     return (
-//         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
-//             <h2 className="text-center mb-4">Add New Department</h2>
-//             <form onSubmit={e => onSubmit(e)}>
-//                 <div className="form-group">
-//                     <label htmlFor="department-name">Department Name</label>
-//                     <input
-//                         type="text"
-//                         className="form-control form-control-lg"
-//                         placeholder="Enter Department"
-//                         name="name"
-//                         value={name}
-//                         onChange={e => onInputChange(e)}
-//                     />
-//                 </div>
-//                 <div className="form-group">
-//                     <label htmlFor="description">Description</label>
-//                     <textarea
-//                         type="text"
-//                         className="form-control form-control-lg"
-//                         placeholder="Enter Description"
-//                         name="description"
-//                         value={description}
-//                         onChange={e => onInputChange(e)}
-//                     />
-//                 </div>
-//                 <div className="form-group text-right">
-//                     <button className="btn btn-primary px-3 mr-3">Add Department</button>
-//                     <Link to="/departments" className="btn btn-danger px-3">Cancel</Link>
-//                 </div>
-//             </form>
-//         </div>
-//     )
-// }
-
-// export default AddDepart;
