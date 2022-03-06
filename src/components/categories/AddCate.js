@@ -19,37 +19,35 @@ export default class AddCate extends React.Component {
     }
 
     addCate = () => {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+        const cookies = new Cookies();
+        
         const raw = JSON.stringify({
-            "username": this.state.username,
+            "name": this.state.name,
             "description": this.state.description,
             "createDate": this.state.createDate,
-            "lastEdit": this.state.lastEdit,
+            "lastEdit": this.state.lastEdit
         });
         const requestOptions = {
             method: 'POST',
-            headers: myHeaders,
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token'),
+                'Content-Type': 'application/json'
+            },
             body: raw,
-            redirect: 'follow'
+            redirect: 'follow',
         };
-        fetch("http://localhost:8080/category/add", requestOptions)
+        fetch("http://localhost:8080/department/add", requestOptions)
             .then(response => {
                 console.log(response);
                 if (response.ok) {
                     return response.json()
                 }
-
-                throw Error(response.status)
             })
             .then(result => {
-                localStorage.setItem("token", result.token)
-                axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token')
-                console.log(result.username)
-                console.log(result);
+                console.log(result.name)
             })
             .catch(error => {
-                console.log('error', error)
+                console.log('error message', error.message)
                 alert("Wrong")
             });
     }

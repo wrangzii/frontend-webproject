@@ -18,37 +18,33 @@ export default class AddDepart extends React.Component {
     }
 
     AddDepart = () => {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+        const cookies = new Cookies();
+        
         const raw = JSON.stringify({
             "departmentName": this.state.departmentName,
             "description": this.state.description
         });
         const requestOptions = {
             method: 'POST',
-            headers: myHeaders,
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token'),
+                'Content-Type': 'application/json'
+            },
             body: raw,
-            redirect: 'follow'
+            redirect: 'follow',
         };
-        console.log(requestOptions);
         fetch("http://localhost:8080/department/add", requestOptions)
             .then(response => {
                 console.log(response);
                 if (response.ok) {
                     return response.json()
                 }
-
-                throw Error(response.status)
             })
             .then(result => {
-                const cookies = new Cookies()
-                console.log(result)
-                cookies.set("token", result.token)
-                alert(cookies.get('token'))
-                axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
+                console.log(result.departmentName)
             })
             .catch(error => {
-                console.log('error', error)
+                console.log('error message', error.message)
                 alert("Wrong")
             });
     }
