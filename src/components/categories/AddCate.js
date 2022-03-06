@@ -19,15 +19,15 @@ export default class AddCate extends React.Component {
     }
 
     addCate = () => {
-        var myHeaders = new Headers();
+        const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        var raw = JSON.stringify({
+        const raw = JSON.stringify({
             "username": this.state.username,
             "description": this.state.description,
             "createDate": this.state.createDate,
             "lastEdit": this.state.lastEdit,
         });
-        var requestOptions = {
+        const requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: raw,

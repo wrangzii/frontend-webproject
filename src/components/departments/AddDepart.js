@@ -18,13 +18,13 @@ export default class AddDepart extends React.Component {
     }
 
     AddDepart = () => {
-        var myHeaders = new Headers();
+        const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        var raw = JSON.stringify({
+        const raw = JSON.stringify({
             "departmentName": this.state.departmentName,
             "description": this.state.description
         });
-        var requestOptions = {
+        const requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: raw,
