@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
 import { Sidebar } from "./Sidebar";
+import NavbarAction from "./NavbarAction";
 import './styles/Navbar.css';
 
-const Navbar = () => {
+const Navbar = (props) => {
+
     window.onload = () => {
         const sidebar = document.querySelector("ul.nav-menu");
         const sidebar_items = document.querySelectorAll("ul.nav-menu a");
@@ -24,8 +25,8 @@ const Navbar = () => {
         function closeSidebar() {
             sidebar.classList.remove("active")
         }
-
     }
+
     return (
         <div className="navbar">
             <div className="wrapper">
@@ -44,8 +45,9 @@ const Navbar = () => {
                         )
                     })}
                 </ul>
+                <p>{props.loginName}</p>
             </div>
-            <Link to="/" className="navbar-brand text-white">Collecting Idea System</Link>
+            <NavbarAction />
         </div>
     )
 }

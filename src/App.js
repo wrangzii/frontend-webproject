@@ -22,8 +22,7 @@ import ViewDepart from './components/departments/ViewDepart';
 import {
   BrowserRouter,
   Routes,
-  Route,
-  Navigate
+  Route
 } from "react-router-dom";
 
 function App() {

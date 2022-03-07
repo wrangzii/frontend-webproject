@@ -14,7 +14,9 @@ export default class AddUser extends React.Component {
             "dateOfBirth": "",
             "role": [],
             "password": "",
-            //"departmentId": "",
+            "department": {
+                "departmentId": ""
+            },
         }
     }
 
@@ -24,11 +26,10 @@ export default class AddUser extends React.Component {
 
     addUser = () => {
         const cookies = new Cookies();
-        // const myHeaders = new Headers();
-        // myHeaders.append("Content-Type", "application/json");
-        // myHeaders.append("Authorization", 'Bearer ' + cookies.get('token'));
-        // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
         const role = [this.state.role]
+        const department = { "departmentId": this.state.departmentId }
+        // department.add({ "departmentId": this.state.department })
+        console.log(department);
         const raw = JSON.stringify({
             "email": this.state.email,
             "username": this.state.username,
@@ -37,7 +38,7 @@ export default class AddUser extends React.Component {
             "dateOfBirth": this.state.dateOfBirth,
             "role": role,
             "password": this.state.password,
-            "departmentId": this.state.departmentId,
+            "department": department,
         });
         const requestOptions = {
             method: 'POST',
@@ -50,13 +51,13 @@ export default class AddUser extends React.Component {
         };
         fetch("http://localhost:8080/users/add", requestOptions)
             .then(response => {
-                console.log(response);
                 if (response.ok) {
                     return response.json()
                 }
+                throw Error(response.status)
             })
             .then(result => {
-                console.log(result.username)
+                // console.log(result.data.username)
                 // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
             })
             .catch(error => {
@@ -153,17 +154,16 @@ export default class AddUser extends React.Component {
                                 <option value="3">Staff</option>
                             </select>
                         </div>
-                        {/*<div className="form-group">*/}
-                        {/*    <label htmlFor="departmentId">Department No.</label>*/}
-                        {/*    <input*/}
-                        {/*        type="number"*/}
-                        {/*        className="form-control form-control-lg"*/}
-                        {/*        placeholder="Enter Your Department ID"*/}
-                        {/*        name="departmentId"*/}
-                        {/*        value={this.departmentId}*/}
-                        {/*        onChange={this.setParams}*/}
-                        {/*    />*/}
-                        {/*</div>*/}
+                        <div className="form-group">
+                            <label htmlFor="departmentId">Department No.</label>
+                            <input
+                                type="number"
+                                className="form-control form-control-lg"
+                                placeholder="Enter Your Department ID"
+                                name="departmentId"
+                                value={this.departmentId}
+                            />
+                        </div>
                         <div className="form-group text-right">
                             <button type="button" className="btn btn-primary px-3 mr-3" onClick={this.addUser}>Add User</button>
                             <Link to="/users" className="btn btn-danger px-3">Cancel</Link>

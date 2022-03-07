@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Cookies } from "react-cookie";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -20,7 +21,7 @@ export default class AddCate extends React.Component {
 
     addCate = () => {
         const cookies = new Cookies();
-        
+
         const raw = JSON.stringify({
             "name": this.state.name,
             "description": this.state.description,

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const ListUser = () => {
-
     const [users, setUser] = useState([]);
 
     useEffect(() => {
