@@ -153,17 +153,17 @@ export default class AddUser extends React.Component {
                                 <option value="3">Staff</option>
                             </select>
                         </div>
-                        {/*<div className="form-group">*/}
-                        {/*    <label htmlFor="departmentId">Department No.</label>*/}
-                        {/*    <input*/}
-                        {/*        type="number"*/}
-                        {/*        className="form-control form-control-lg"*/}
-                        {/*        placeholder="Enter Your Department ID"*/}
-                        {/*        name="departmentId"*/}
-                        {/*        value={this.departmentId}*/}
-                        {/*        onChange={this.setParams}*/}
-                        {/*    />*/}
-                        {/*</div>*/}
+                        <div className="form-group">
+                            <label htmlFor="departmentId">Department No.</label>
+                            <input
+                                type="number"
+                                className="form-control form-control-lg"
+                                placeholder="Enter Your Department ID"
+                                name="departmentId"
+                                value={this.departmentId}
+                                onChange={this.setParams}
+                            />
+                        </div>
                         <div className="form-group text-right">
                             <button type="button" className="btn btn-primary px-3 mr-3" onClick={this.addUser}>Add User</button>
                             <Link to="/users" className="btn btn-danger px-3">Cancel</Link>
