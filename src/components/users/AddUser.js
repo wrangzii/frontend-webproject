@@ -14,7 +14,7 @@ export default class AddUser extends React.Component {
             "dateOfBirth": "",
             "role": [],
             "password": "",
-            //"departmentId": "",
+            "departmentId": Number
         }
     }
 
@@ -24,10 +24,6 @@ export default class AddUser extends React.Component {
 
     addUser = () => {
         const cookies = new Cookies();
-        // const myHeaders = new Headers();
-        // myHeaders.append("Content-Type", "application/json");
-        // myHeaders.append("Authorization", 'Bearer ' + cookies.get('token'));
-        // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
         const role = [this.state.role]
         const raw = JSON.stringify({
             "email": this.state.email,
@@ -50,13 +46,13 @@ export default class AddUser extends React.Component {
         };
         fetch("http://localhost:8080/users/add", requestOptions)
             .then(response => {
-                console.log(response);
                 if (response.ok) {
                     return response.json()
                 }
+                throw Error(response.status)
             })
             .then(result => {
-                console.log(result.username)
+                // console.log(result.data.username)
                 // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
             })
             .catch(error => {
@@ -161,7 +157,6 @@ export default class AddUser extends React.Component {
                                 placeholder="Enter Your Department ID"
                                 name="departmentId"
                                 value={this.departmentId}
-                                onChange={this.setParams}
                             />
                         </div>
                         <div className="form-group text-right">

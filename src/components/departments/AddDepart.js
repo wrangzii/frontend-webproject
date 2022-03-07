@@ -9,7 +9,7 @@ export default class AddDepart extends React.Component {
         super(props)
         this.state = {
             "departmentName": "",
-            "description": ""
+            // "description": ""
         }
     }
 
@@ -17,12 +17,12 @@ export default class AddDepart extends React.Component {
         this.setState({ [event.target.name]: event.target.value })
     }
 
-    AddDepart = () => {
+    addDepart = () => {
         const cookies = new Cookies();
-        
+
         const raw = JSON.stringify({
             "departmentName": this.state.departmentName,
-            "description": this.state.description
+            // "description": this.state.description
         });
         const requestOptions = {
             method: 'POST',
@@ -39,6 +39,7 @@ export default class AddDepart extends React.Component {
                 if (response.ok) {
                     return response.json()
                 }
+                throw new Error('error')
             })
             .then(result => {
                 console.log(result.departmentName)
@@ -65,7 +66,7 @@ export default class AddDepart extends React.Component {
                             onChange={this.setParams}
                         />
                     </div>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label htmlFor="description">Description</label>
                         <input
                             type="text"
@@ -75,9 +76,9 @@ export default class AddDepart extends React.Component {
                             value={this.description}
                             onChange={this.setParams}
                         />
-                    </div>
+                    </div> */}
                     <div className="form-group text-right">
-                        <button className="btn btn-primary px-3 mr-3" onClick={this.AddDepart}>Add Department</button>
+                        <button className="btn btn-primary px-3 mr-3" onClick={this.addDepart}>Add Department</button>
                         <Link to="/department" className="btn btn-danger px-3">Cancel</Link>
                     </div>
                 </div>

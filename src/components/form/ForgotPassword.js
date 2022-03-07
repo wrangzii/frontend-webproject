@@ -12,7 +12,6 @@ const Login = () => {
                     <input type="email" className="form-control" placeholder="Enter email" />
                 </div>
                 <Button value="Reset password" color="success" />
-                <Link to="/" className="btn btn-danger">Back to login</Link>
             </form>
         </div>
     );
