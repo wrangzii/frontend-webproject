@@ -43,13 +43,15 @@ export default class AddCate extends React.Component {
                 if (response.ok) {
                     return response.json()
                 }
+                throw Error(response.message);
             })
             .then(result => {
                 console.log(result.name)
+                alert("Create category successfully!")
             })
             .catch(error => {
                 console.log('error message', error.message)
-                alert("Wrong")
+                alert(error.message)
             });
     }
 

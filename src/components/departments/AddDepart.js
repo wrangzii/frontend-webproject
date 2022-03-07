@@ -39,14 +39,15 @@ export default class AddDepart extends React.Component {
                 if (response.ok) {
                     return response.json()
                 }
-                throw new Error('error')
+                throw Error(response.message);
             })
             .then(result => {
                 console.log(result.departmentName)
+                alert("Create department successfully!")
             })
             .catch(error => {
                 console.log('error message', error.message)
-                alert("Wrong")
+                alert(error.message)
             });
     }
     render() {

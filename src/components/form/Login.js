@@ -29,16 +29,17 @@ const Login = () => {
 					return response.json()
 				}
 
-				throw Error(response.status)
+				throw Error(response.message);
 			})
 			.then(result => {
 				const cookies = new Cookies();
 				cookies.set('token', result.token, { path: '/' });
+				cookies.set('fullName', result.fullName, )
 				redirectHome()
 			})
 			.catch(error => {
 				console.log('error', error)
-				alert("Wrong")
+				alert(error.message)
 			});
 	};
 	return (

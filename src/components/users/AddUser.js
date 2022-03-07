@@ -14,7 +14,7 @@ export default class AddUser extends React.Component {
             "dateOfBirth": "",
             "role": [],
             "password": "",
-            "departmentId": Number
+            "departmentId": ""
         }
     }
 
@@ -49,15 +49,16 @@ export default class AddUser extends React.Component {
                 if (response.ok) {
                     return response.json()
                 }
-                throw Error(response.status)
+                throw Error(response.message);
             })
             .then(result => {
                 // console.log(result.data.username)
                 // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
+                alert("Create user: " + result.data.username + "successfully")
             })
             .catch(error => {
                 console.log('error message', error.message)
-                alert("Wrong")
+                alert(error.message)
             });
     }
 
@@ -157,6 +158,7 @@ export default class AddUser extends React.Component {
                                 placeholder="Enter Your Department ID"
                                 name="departmentId"
                                 value={this.departmentId}
+                                onChange={this.setParams}
                             />
                         </div>
                         <div className="form-group text-right">
