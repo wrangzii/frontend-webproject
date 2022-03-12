@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from "react-cookie";
 
 const Login = () => {
 	const [Username, setUsername] = useState("");
 	const [Password, setPassword] = useState("");
+	const navigate = useNavigate()
+	const $ = document.querySelector.bind(document)
 
 	const handleLogin = () => {
-		function redirectHome() {
-			window.location.replace("/")
-		}
 		const myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
 		const raw = JSON.stringify({
@@ -24,23 +23,33 @@ const Login = () => {
 		};
 		fetch("http://localhost:8080/login", requestOptions)
 			.then(response => {
-				console.log(response);
 				if (response.ok) {
 					return response.json()
 				}
 
-				throw Error(response.message);
+				throw Error("Wrong input");
 			})
 			.then(result => {
 				const cookies = new Cookies();
 				cookies.set('token', result.token, { path: '/' });
-				cookies.set('fullName', result.fullName, )
-				redirectHome()
+				cookies.set('fullName', result.fullName,)
+				navigate('/')
+				window.location.reload()
 			})
 			.catch(error => {
-				console.log('error', error)
-				alert(error.message)
+				createAlert(error)
 			});
+
+		function createAlert(message) {
+			const alert = document.createElement("p")
+			if (!document.querySelector(".alert-danger")) {
+				$('h3').after(alert)
+			} else {
+				return false
+			}
+			alert.textContent = message
+			alert.setAttribute("class", "alert alert-danger")
+		}
 	};
 	return (
 		<div className="authentication container">
@@ -59,7 +68,7 @@ const Login = () => {
 					}} />
 				</div>
 				<div className="form-group mb-3 text-right">
-					<Link to="/forgot">Forgot password?</Link>
+					<Link to="/forgot-password">Forgot password?</Link>
 				</div>
 				<button type="button" onClick={handleLogin} className="btn btn-success">Login</button>
 			</form>

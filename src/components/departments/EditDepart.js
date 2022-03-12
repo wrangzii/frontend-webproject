@@ -1,44 +1,45 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { Cookies } from "react-cookie";
 
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditDepart = () => {
 
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
 
     const { id } = useParams();
 
-    const [depart, setDepart] = useState({
-        name: "",
-        description: "",
-    });
+    const [departmentName, setDepartmentName] = useState("");
 
-    const { name, description } = depart;
-    const onInputChange = e => {
-        setDepart({ ...depart, [e.target.name]: e.target.value });
-    };
+    const handleEditDepart = () => {
+        // navigate('/departments')
+        const cookies = new Cookies();
 
-    useEffect(() => {
-        loadDepart();
-    }, []);
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        const raw = JSON.stringify({
+            departmentName
+        });
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token'),
+                'Content-Type': 'application/json'
+            },
+            body: raw,
+            redirect: 'follow'
+        };
 
-    const onSubmit = async e => {
-        e.preventDefault();
-        await axios.put(`http://localhost:8080/departs/${id}`, depart);
-        navigate("/departments");
-    };
-
-    const loadDepart = async () => {
-        const result = await axios.get(`http://localhost:8080/departs/${id}`)
-        setDepart(result.data);
-    };
+        fetch(`http://localhost:8080/department/edit/${id}`, requestOptions)
+            .then(response => response.json())
+            .then(result => setDepartmentName(result))
+    }
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h2 className="text-center mb-4">Edit Department</h2>
-            <form onSubmit={e => onSubmit(e)}>
+            <form>
                 <div className="form-group">
                     <label htmlFor="department-name">Department Name</label>
                     <input
@@ -46,28 +47,16 @@ const EditDepart = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Department"
                         name="name"
-                        value={name}
-                        onChange={e => onInputChange(e)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <input
-                        type="text"
-                        className="form-control form-control-lg"
-                        placeholder="Enter Your Description"
-                        name="description"
-                        value={description}
-                        onChange={e => onInputChange(e)}
+                        value={departmentName.trim()}
+                        onChange={e => setDepartmentName(e.target.value)}
                     />
                 </div>
                 <div className="form-group text-right">
-                    <button className="btn btn-warning px-3 mr-3">Update</button>
+                    <button className="btn btn-warning px-3 mr-3" onClick={handleEditDepart}>Update</button>
                     <Link to="/departments" className="btn btn-danger px-3">Cancel</Link>
                 </div>
             </form>
         </div>
     );
 };
-
 export default EditDepart;

@@ -1,39 +1,30 @@
-import axios from "axios";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
-export default class AddUser extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            "email": "",
-            "username": "",
-            "fullName": "",
-            "phoneNumber": "",
-            "dateOfBirth": "",
-            "role": [],
-            "password": "",
-            "departmentId": ""
-        }
-    }
+const AddUser = () => {
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [role, setRole] = useState("");
+    const [password, setPassword] = useState("");
+    const [departmentId, setDepartmentId] = useState("");
+    const navigate = useNavigate()
 
-    setParams = event => {
-        this.setState({ [event.target.name]: event.target.value })
-    }
-
-    addUser = () => {
+    const handleAddUser = () => {
+        navigate('/users')
         const cookies = new Cookies();
-        const role = [this.state.role]
         const raw = JSON.stringify({
-            "email": this.state.email,
-            "username": this.state.username,
-            "fullName": this.state.fullName,
-            "phoneNumber": this.state.phoneNumber,
-            "dateOfBirth": this.state.dateOfBirth,
-            "role": role,
-            "password": this.state.password,
-            "departmentId": this.state.departmentId,
+            email,
+            username,
+            fullName,
+            phoneNumber,
+            dateOfBirth,
+            role,
+            password,
+            departmentId,
         });
         const requestOptions = {
             method: 'POST',
@@ -46,128 +37,138 @@ export default class AddUser extends React.Component {
         };
         fetch("http://localhost:8080/users/add", requestOptions)
             .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw Error(response.message);
+                return response.json()
             })
             .then(result => {
-                // console.log(result.data.username)
-                // axios.defaults.headers.common['Authorization'] = 'Bearer' + cookies.get('token')
-                alert("Create user: " + result.data.username + "successfully")
+                console.log(result);
             })
-            .catch(error => {
-                console.log('error message', error.message)
-                alert(error.message)
-            });
     }
 
-    render() {
-        return (
-            <>
-                <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
-                    <h2 className="text-center mb-4">Add New User</h2>
-                    <div>
-                        <div className="form-group">
-                            <label htmlFor="Username">Username</label>
-                            <input
+    return (
+        <>
+            <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
+                <h2 className="text-center mb-4">Add New User</h2>
+                <div>
+                    <div className="form-group">
+                        <label htmlFor="Username">Username</label>
+                        <input
 
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your Username"
-                                name="username"
-                                value={this.username}
-                                onChange={this.setParams}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="name">Full name</label>
-                            <input
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your Username"
+                            name="username"
+                            value={username.trim()}
+                            onChange={(e) => {
+                                setUsername(e.target.value)
+                            }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="name">Full name</label>
+                        <input
 
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your Full Name"
-                                name="fullName"
-                                value={this.fullName}
-                                onChange={this.setParams}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                type="email"
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your E-mail Address"
-                                name="email"
-                                value={this.email}
-                                onChange={this.setParams}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="phone">Phone No.</label>
-                            <input
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your Full Name"
+                            name="fullName"
+                            value={fullName.trim()}
+                            onChange={(e) => {
+                                setFullName(e.target.value)
+                            }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your E-mail Address"
+                            name="email"
+                            value={email.trim()}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                            }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="phone">Phone No.</label>
+                        <input
 
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your Phone Number"
-                                name="phoneNumber"
-                                value={this.phoneNumber}
-                                onChange={this.setParams}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input
-                                type="password"
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your Password"
-                                name="password"
-                                value={this.password}
-                                onChange={this.setParams}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="dateOfBirth">Date of birth</label>
-                            <input
-                                type="date"
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your Birthday"
-                                name="dateOfBirth"
-                                value={this.dateOfBirth}
-                                onChange={this.setParams}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="role">Role</label>
-                            <select
-                                name="role"
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your Role"
-                                value={this.role}
-                                onChange={this.setParams}
-                            >
-                                <option>Select a role</option>
-                                <option value="admin">Admin</option>
-                                <option value="qa_manger">QA manager</option>
-                                <option value="2">QA coordinator</option>
-                                <option value="3">Staff</option>
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="departmentId">Department No.</label>
-                            <input
-                                type="number"
-                                className="form-control form-control-lg"
-                                placeholder="Enter Your Department ID"
-                                name="departmentId"
-                                value={this.departmentId}
-                                onChange={this.setParams}
-                            />
-                        </div>
-                        <div className="form-group text-right">
-                            <button type="button" className="btn btn-primary px-3 mr-3" onClick={this.addUser}>Add User</button>
-                            <Link to="/users" className="btn btn-danger px-3">Cancel</Link>
-                        </div>
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your Phone Number"
+                            name="phoneNumber"
+                            value={phoneNumber.trim()}
+                            onChange={(e) => {
+                                setPhoneNumber(e.target.value)
+                            }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your Password"
+                            name="password"
+                            value={password.trim()}
+                            onChange={(e) => {
+                                setPassword(e.target.value)
+                            }}
+
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="dateOfBirth">Date of birth</label>
+                        <input
+                            type="date"
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your Birthday"
+                            name="dateOfBirth"
+                            value={dateOfBirth}
+                            onChange={(e) => {
+                                setDateOfBirth(e.target.value)
+                            }}
+
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="role">Role</label>
+                        <select
+                            name="role"
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your Role"
+                            value={role}
+                            onChange={(e) => {
+                                setRole(e.target.value)
+                            }}
+                        >
+                            <option>Select a role</option>
+                            <option value="admin">Admin</option>
+                            <option value="qa_manger">QA manager</option>
+                            <option value="qa_coordinator">QA coordinator</option>
+                            <option value="staff">Staff</option>
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="departmentId">Department No.</label>
+                        <input
+                            type="number"
+                            className="form-control form-control-lg"
+                            placeholder="Enter Your Department ID"
+                            name="departmentId"
+                            value={departmentId}
+                            onChange={(e) => {
+                                setDepartmentId(e.target.value)
+                            }}
+
+                        />
+                    </div>
+                    <div className="form-group text-right">
+                        <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddUser}>Add User</button>
+                        <Link to="/users" className="btn btn-danger px-3">Cancel</Link>
                     </div>
                 </div>
-            </>
-        )
-    }
+            </div>
+        </>
+    )
 }
+
+export default AddUser;

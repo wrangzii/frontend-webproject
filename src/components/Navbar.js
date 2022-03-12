@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import NavbarAction from "./NavbarAction";
+import Logout from "./form/Logout";
 import './styles/Navbar.css';
 
 const Navbar = (props) => {
@@ -18,6 +19,7 @@ const Navbar = (props) => {
             if (sidebar.classList.contains("active")) {
                 Array.from(sidebar_items).map(item => {
                     item.onclick = closeSidebar;
+                    return true;
                 })
             }
         }
@@ -36,7 +38,7 @@ const Navbar = (props) => {
                 <ul className='nav-menu'>
                     {Sidebar.map((item, index) => {
                         return (
-                            <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`}>
+                            <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`} onClick={item.action}>
                                 <i className={item.icon}></i>
                                 <li className="px-3 py-2">
                                     {item.title}
@@ -44,6 +46,7 @@ const Navbar = (props) => {
                             </Link>
                         )
                     })}
+                    <Logout />
                 </ul>
                 <p>{props.loginName}</p>
             </div>

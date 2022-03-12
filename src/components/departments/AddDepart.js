@@ -1,28 +1,20 @@
-import React from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { Cookies } from "react-cookie";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default class AddDepart extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            "departmentName": "",
-            // "description": ""
-        }
-    }
+const AddDepart = () => {
+    const [departmentName, setDepartmentName] = useState("");
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate()
 
-    setParams = event => {
-        this.setState({ [event.target.name]: event.target.value })
-    }
-
-    addDepart = () => {
+    const handleAddDepart = () => {
         const cookies = new Cookies();
 
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
         const raw = JSON.stringify({
-            "departmentName": this.state.departmentName,
-            // "description": this.state.description
+            departmentName
         });
         const requestOptions = {
             method: 'POST',
@@ -31,59 +23,58 @@ export default class AddDepart extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: raw,
-            redirect: 'follow',
+            redirect: 'follow'
         };
         fetch("http://localhost:8080/department/add", requestOptions)
             .then(response => {
-                console.log(response);
                 if (response.ok) {
                     return response.json()
                 }
-                throw Error(response.message);
+
+                throw Error("Department name is exist")
             })
             .then(result => {
-                console.log(result.departmentName)
-                alert("Create department successfully!")
+                setMessage(result.message)
+                navigate('/departments')
             })
             .catch(error => {
-                console.log('error message', error.message)
-                alert(error.message)
+                createAlert(error)
             });
-    }
-    render() {
-        return (
-            <>
-                <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
-                    <h2 className="text-center mb-4">Add New Department</h2>
 
-                    <div className="form-group">
-                        <label htmlFor="departmentId">Department Name</label>
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
-                            placeholder="Enter Your Department Name"
-                            name="departmentName"
-                            value={this.departmentName}
-                            onChange={this.setParams}
-                        />
-                    </div>
-                    {/* <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
-                            placeholder="Enter Your Description"
-                            name="description"
-                            value={this.description}
-                            onChange={this.setParams}
-                        />
-                    </div> */}
-                    <div className="form-group text-right">
-                        <button className="btn btn-primary px-3 mr-3" onClick={this.addDepart}>Add Department</button>
-                        <Link to="/department" className="btn btn-danger px-3">Cancel</Link>
-                    </div>
-                </div>
-            </>
-        )
+        function createAlert(message) {
+            const title = document.querySelector("h3")
+            const alert = document.createElement("p")
+            if (!document.querySelector(".alert-danger")) {
+                title.after(alert)
+            } else {
+                return false
+            }
+            alert.textContent = message
+            alert.setAttribute("class", "alert alert-danger")
+        }
     }
+    return (
+        <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
+            <h3 className="text-center mb-4">Add New Department</h3>
+            <div className="form-group">
+                <label htmlFor="departmentId">Department Name</label>
+                <input
+                    type="text"
+                    className="form-control form-control-lg"
+                    placeholder="Enter Your Department Name"
+                    name="departmentName"
+                    value={departmentName.trim()}
+                    onChange={(e) => {
+                        setDepartmentName(e.target.value)
+                    }}
+                />
+            </div>
+            <div className="form-group text-right">
+                <button className="btn btn-primary px-3 mr-3" onClick={handleAddDepart}>Add Department</button>
+                <Link to="/departments" className="btn btn-danger px-3">Cancel</Link>
+            </div>
+        </div>
+    )
 }
+
+export default AddDepart;

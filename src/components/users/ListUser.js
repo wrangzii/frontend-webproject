@@ -1,24 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-import axios from "axios";
+import { Cookies } from "react-cookie";
 
 const ListUser = () => {
-    const [users, setUser] = useState([]);
+    const [users, setUsers] = useState([])
+    const cookies = new Cookies();
 
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + cookies.get('token'),
+            'Content-Type': 'application/json'
+        },
+        mode: 'no-cors',
+        redirect: 'follow'
+    };
     useEffect(() => {
-        loadUsers();
-    }, []);
-
-    const loadUsers = async () => {
-        const result = await axios.get("http://localhost:8080/users");
-        setUser(result.data);
-    }
-
-    const deleteUser = async id => {
-        await axios.delete(`http://localhost:8080/users/${id}`);
-        loadUsers();
-    }
+        fetch("http://localhost:8080/users", requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw Error(response.message);
+            })
+            .then(result => setUsers(result))
+            .catch(error => {
+                alert(error.message)
+            });
+    }, [])
 
     return (
         <div className="users">
@@ -37,7 +46,7 @@ const ListUser = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {
+                        {/* {
                             users.map((user, index) => (
                                 <tr key={index}>
                                     <th scope="row">{index + 1}</th>
@@ -51,7 +60,7 @@ const ListUser = () => {
                                     </td>
                                 </tr>
                             ))
-                        }
+                        } */}
                     </tbody>
                 </table>
             </div>

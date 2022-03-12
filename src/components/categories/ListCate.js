@@ -1,24 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-import axios from "axios";
+import { Cookies } from "react-cookie";
 
 const ListCate = () => {
+    const [isDeleted, setIsDeleted] = useState(false)
+    const [cates, setCates] = useState([]);
+    const cookies = new Cookies();
 
-    const [cates, setCate] = useState([]);
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + cookies.get('token'),
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow'
+    };
 
     useEffect(() => {
-        loadCates();
-    }, []);
+        fetch("http://localhost:8080/category/all", requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw Error(response.message);
+            })
+            .then(result => setCates(result))
+            .catch(error => {
+                alert(error.message)
+            });
+    }, [isDeleted])
 
-    const loadCates = async () => {
-        const result = await axios.get("http://localhost:8080/cates");
-        setCate(result.data);
-    }
-
-    const deleteCate = async id => {
-        await axios.delete(`http://localhost:8080/cates/${id}`);
-        loadCates();
+    const deleteCate = (cateId) => {
+        fetch(`http://localhost:8080/category/delete/${cateId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token'),
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(res => res.text()) // or res.json()
+            .then(res => console.log(res))
+        setIsDeleted(true)
     }
 
     return (
@@ -40,17 +62,17 @@ const ListCate = () => {
                     </thead>
                     <tbody>
                         {
-                            cates.map((cate, index) => (
-                                <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{cate.name}</td>
+                            cates.map(cate => (
+                                <tr key={cate.cateId}>
+                                    <th scope="row">{cate.cateId}</th>
+                                    <td>{cate.cateName}</td>
                                     <td>{cate.description}</td>
                                     <td>{cate.createDate}</td>
-                                    <td>{cate.lastEdit}</td>
+                                    <td>{cate.lastModifyDate}</td>
                                     <td>
-                                        <Link className="btn btn-primary mr-2" to={`/categories/${cate.id}`}>View</Link>
-                                        <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.id}`}>Edit</Link>
-                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.id)} to="/categories">Delete</Link>
+                                        <Link className="btn btn-primary mr-2" to={`/categories/${cate.cateId}`}>View</Link>
+                                        <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.cateId}`}>Edit</Link>
+                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.cateId)} to="/categories">Delete</Link>
                                     </td>
                                 </tr>
                             ))

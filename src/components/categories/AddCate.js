@@ -1,33 +1,25 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Cookies } from "react-cookie";
 
 import { Link, useNavigate } from "react-router-dom";
 
-export default class AddCate extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            "name": "",
-            "description": "",
-            "createDate": "",
-            "lastEdit": "",
-        }
-    }
+const AddCate = () => {
+    const [cateName, setCateName] = useState("")
+    const [description, setDescription] = useState("")
+    const [createDate, setCreateDate] = useState("")
+    // const [lastModifyDate, setLastModifyDate] = useState("")
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate()
 
-    setParams = event => {
-        this.setState({ [event.target.name]: event.target.value })
-    }
-
-    addCate = () => {
+    const handleAddCate = () => {
         const cookies = new Cookies();
 
         const raw = JSON.stringify({
-            "name": this.state.name,
-            "description": this.state.description,
-            "createDate": this.state.createDate,
-            "lastEdit": this.state.lastEdit
+            cateName,
+            description,
+            createDate,
         });
+
         const requestOptions = {
             method: 'POST',
             headers: {
@@ -37,67 +29,85 @@ export default class AddCate extends React.Component {
             body: raw,
             redirect: 'follow',
         };
-        fetch("http://localhost:8080/department/add", requestOptions)
+        fetch("http://localhost:8080/category/add", requestOptions)
             .then(response => {
-                console.log(response);
                 if (response.ok) {
-                    return response.json()
+                    return response.json();
                 }
-                throw Error(response.message);
+
+                throw new Error("Wrong input")
             })
             .then(result => {
-                console.log(result.name)
-                alert("Create category successfully!")
+                setMessage(result.message)
+                navigate('/categories')
             })
             .catch(error => {
-                console.log('error message', error.message)
-                alert(error.message)
-            });
+                createAlert(error)
+            })
+
+        function createAlert(message) {
+            const title = document.querySelector("h3")
+            const alert = document.createElement("p")
+            if (!document.querySelector(".alert-danger")) {
+                title.after(alert)
+            } else {
+                return false
+            }
+            alert.textContent = message
+            alert.setAttribute("class", "alert alert-danger")
+        }
     }
 
-    render() {
-        return (
-            <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
-                <h2 className="text-center mb-4">Add New Category</h2>
-                <form>
-                    <div className="form-group">
-                        <label htmlFor="category-name">Category Name</label>
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
-                            placeholder="Enter Category"
-                            name="name"
-                            value={this.name}
-                            onChange={this.setParams}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <input
-                            type="text"
-                            className="form-control form-control-lg"
-                            placeholder="Enter Description"
-                            name="description"
-                            value={this.description}
-                            onChange={this.setParams}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="createDate">Create Date</label>
-                        <input
-                            type="date"
-                            className="form-control form-control-lg"
-                            name="createDate"
-                            value={this.createDate}
-                            onChange={this.setParams}
-                        />
-                    </div>
-                    <div className="form-group text-right">
-                        <button type="button" className="btn btn-primary px-3 mr-3" onClick={this.addCate} >Add Category</button>
-                        <Link to="/categories" className="btn btn-danger px-3">Cancel</Link>
-                    </div>
-                </form>
-            </div>
-        )
-    }
+    return (
+        <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
+            <h3 className="text-center mb-4">Add New Category</h3>
+            <form>
+                <div className="form-group">
+                    <label htmlFor="category-name">Category Name</label>
+                    <input
+                        type="text"
+                        className="form-control form-control-lg"
+                        placeholder="Enter Category"
+                        name="name"
+                        value={cateName.trim()}
+                        onChange={(e) => {
+                            setCateName(e.target.value)
+                        }}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="description">Description</label>
+                    <input
+                        type="text"
+                        className="form-control form-control-lg"
+                        placeholder="Enter Description"
+                        name="description"
+                        value={description.trim()}
+                        onChange={(e) => {
+                            setDescription(e.target.value)
+                        }}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="createDate">Create Date</label>
+                    <input
+                        type="date"
+                        className="form-control form-control-lg"
+                        name="createDate"
+                        value={createDate}
+                        onChange={(e) => {
+                            setCreateDate(e.target.value)
+                        }}
+                    />
+                </div>
+                <div className="form-group text-right">
+                    <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddCate}>Add Category</button>
+                    <Link to="/categories" className="btn btn-danger px-3">Cancel</Link>
+                </div>
+            </form>
+        </div>
+    );
 }
+
+
+export default AddCate;
