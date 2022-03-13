@@ -2,22 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const EditDepart = () => {
-
-    // let navigate = useNavigate();
-
     const { id } = useParams();
 
     const [departmentName, setDepartmentName] = useState("");
 
-    const handleEditDepart = () => {
-        // navigate('/departments')
+    const editDepart = () => {
         const cookies = new Cookies();
 
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
         const raw = JSON.stringify({
             departmentName
         });
@@ -28,12 +22,16 @@ const EditDepart = () => {
                 'Content-Type': 'application/json'
             },
             body: raw,
-            redirect: 'follow'
         };
 
         fetch(`http://localhost:8080/department/edit/${id}`, requestOptions)
-            .then(response => response.json())
-            .then(result => setDepartmentName(result))
+            .then(response => {
+                if (response.ok)
+                    response.json()
+                throw Error(response)
+            })
+            .then(result => console.log(result))
+            .catch(err => console.log(err))
     }
 
     return (
@@ -47,12 +45,12 @@ const EditDepart = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Department"
                         name="name"
-                        value={departmentName.trim()}
+                        value={departmentName}
                         onChange={e => setDepartmentName(e.target.value)}
                     />
                 </div>
                 <div className="form-group text-right">
-                    <button className="btn btn-warning px-3 mr-3" onClick={handleEditDepart}>Update</button>
+                    <Link className="btn btn-warning px-3 mr-3" onClick={editDepart} to="/departments">Update</Link>
                     <Link to="/departments" className="btn btn-danger px-3">Cancel</Link>
                 </div>
             </form>

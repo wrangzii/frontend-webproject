@@ -31,7 +31,7 @@ const AddDepart = () => {
                     return response.json()
                 }
 
-                throw Error("Department name is exist")
+                throw Error(checkError())
             })
             .then(result => {
                 setMessage(result.message)
@@ -41,14 +41,26 @@ const AddDepart = () => {
                 createAlert(error)
             });
 
+        function checkError() {
+            let msg = ""
+            if (document.querySelector("input[type=text]").value === "") {
+                msg = "Not allow blank"
+            } else {
+                msg = "Department name is exist"
+            }
+            return msg
+        }
+
         function createAlert(message) {
             const title = document.querySelector("h3")
             const alert = document.createElement("p")
             if (!document.querySelector(".alert-danger")) {
                 title.after(alert)
             } else {
-                return false
+                document.querySelector(".alert-danger").remove()
+                title.after(alert)
             }
+
             alert.textContent = message
             alert.setAttribute("class", "alert alert-danger")
         }

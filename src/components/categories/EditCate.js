@@ -3,39 +3,38 @@ import { Link, useParams } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
 const EditCate = () => {
-    // const [cateName, setCateName] = useState("")
-    // const [description, setDescription] = useState("")
-    // const [createDate, setCreateDate] = useState("")
-    // const [lastModifyDate, setLastModifyDate] = useState("")
+    const [cateName, setCateName] = useState("")
+    const [description, setDescription] = useState("")
+    const [createDate, setCreateDate] = useState("")
+    const [lastModifyDate, setLastModifyDate] = useState("")
     const [cateId, setCateId] = useState(1)
     const [cate, setCate] = useState({})
-
-    const handleEditCate = () => {
-        // const raw = JSON.stringify({
-        //     cateName,
-        //     description,
-        //     createDate,
-        //     lastModifyDate,
-        // });
-    }
     const cookies = new Cookies();
 
+    const raw = JSON.stringify({
+        cateName,
+        description,
+        createDate,
+        lastModifyDate,
+    });
     const requestOptions = {
         method: 'PUT',
         headers: {
             'Authorization': 'Bearer ' + cookies.get('token'),
             'Content-Type': 'application/json'
         },
-        // body: raw,
-        redirect: 'follow',
+        body: raw,
     };
-    useEffect(() => {
-        fetch(`http://localhost:8080/category/edit/${cateId}`, requestOptions)
-            .then(response => {
-                return response.json();
-            })
-            .then(result => setCate(result))
-    }, [cateId])
+
+    fetch(`http://localhost:8080/category/edit/${cateId}`, requestOptions)
+        .then(response => {
+            return response.json();
+        })
+        .then(result => setCateId(cateId))
+
+    const editCate = cateId => {
+        // setCateId(cateId.filter(id => ))
+    }
 
 
     return (
@@ -49,7 +48,7 @@ const EditCate = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Category"
                         name="name"
-                        value={cate.cateName.trim()}
+                        value={cate.cateName}
                     // onChange={e => setCateName(e.target.value)}
                     />
                 </div>
@@ -60,7 +59,7 @@ const EditCate = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Your Description"
                         name="description"
-                        value={cate.description.trim()}
+                        value={cate.description}
                     // onChange={e => setDescription(e.target.value)}
                     />
                 </div>
@@ -86,7 +85,7 @@ const EditCate = () => {
                     />
                 </div>
                 <div className="form-group text-right">
-                    <button className="btn btn-warning px-3 mr-3" onClick={handleEditCate}>Update</button>
+                    <button className="btn btn-warning px-3 mr-3" onClick={editCate(cateId)}>Update</button>
                     <Link to="/categories" className="btn btn-danger px-3">Cancel</Link>
                 </div>
             </form>

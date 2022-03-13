@@ -27,7 +27,7 @@ const Login = () => {
 					return response.json()
 				}
 
-				throw Error("Wrong input");
+				throw Error(checkError());
 			})
 			.then(result => {
 				const cookies = new Cookies();
@@ -40,13 +40,25 @@ const Login = () => {
 				createAlert(error)
 			});
 
+		function checkError() {
+			let msg = ""
+			if ($("input[type=text]").value === "" || $("input[type=password]").value === "") {
+				msg = "Not allow blank"
+			} else {
+				msg = "Wrong information"
+			}
+			return msg
+		}
+
 		function createAlert(message) {
 			const alert = document.createElement("p")
 			if (!document.querySelector(".alert-danger")) {
 				$('h3').after(alert)
 			} else {
-				return false
+				$(".alert-danger").remove()
+				$('h3').after(alert)
 			}
+
 			alert.textContent = message
 			alert.setAttribute("class", "alert alert-danger")
 		}
@@ -57,13 +69,13 @@ const Login = () => {
 				<h3><b>Login to your account</b></h3>
 				<div className="form-group mb-3">
 					<label htmlFor="username" className="mb-2">Username</label>
-					<input type="text" name="username" className="form-control" placeholder="Enter username" onChange={(e) => {
+					<input type="text" name="username" className="form-control" placeholder="Enter username" value={Username} onChange={(e) => {
 						setUsername(e.target.value)
 					}} />
 				</div>
 				<div className="form-group mb-3">
 					<label htmlFor="password" className="mb-2">Password</label>
-					<input type="password" name="password" className="form-control" placeholder="Password" onChange={(e) => {
+					<input type="password" name="password" className="form-control" placeholder="Password" value={Password} onChange={(e) => {
 						setPassword(e.target.value)
 					}} />
 				</div>

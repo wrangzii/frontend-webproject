@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
 const ListDepart = () => {
     const [departs, setDeparts] = useState([])
-    const [isDeleted, setIsDeleted] = useState(false)
+    const [listDepart, setListDepart] = useState([])
+    const navigate = useNavigate()
     const cookies = new Cookies();
 
     const requestOptions = {
@@ -15,6 +16,7 @@ const ListDepart = () => {
         },
         redirect: 'follow'
     };
+
     useEffect(() => {
         fetch("http://localhost:8080/department/all", requestOptions)
             .then(response => {
@@ -25,9 +27,9 @@ const ListDepart = () => {
             })
             .then(result => setDeparts(result))
             .catch(error => {
-                alert(error.message)
+                navigate('/')
             });
-    }, [isDeleted])
+    }, [listDepart])
 
     const deleteDepart = departmentId => {
         fetch(`http://localhost:8080/department/delete/${departmentId}`, {
@@ -38,9 +40,13 @@ const ListDepart = () => {
             },
         })
             .then(res => res.json())
-            .then(res => {
-                setIsDeleted(true)
-                console.log(res)
+            .then(id => {
+                setListDepart(listDepart.filter(depart => id !== depart.departmentId))
+                // const div = document.querySelector(".overflow-auto")
+                // const alert = document.createElement('p')
+                // alert.setAttribute("class", "alert alert-success")
+                // alert.textContent = res.message
+                // div.after(alert)
             })
     }
 
@@ -62,7 +68,7 @@ const ListDepart = () => {
                         {
                             departs.map(depart => (
                                 <tr key={depart.departmentId}>
-                                    <th scope="row">{depart.departmentId}</th>
+                                    <th scope="row">#{depart.departmentId}</th>
                                     <td>{depart.departmentName}</td>
                                     <td>
                                         <Link className="btn btn-primary mr-2" to={`/departments/${depart.departmentId}`}>View</Link>

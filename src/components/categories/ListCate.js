@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
 const ListCate = () => {
-    const [isDeleted, setIsDeleted] = useState(false)
     const [cates, setCates] = useState([]);
+    const [listCate, setListCate] = useState([])
+    const navigate = useNavigate()
     const cookies = new Cookies();
+    const myHeaders = {
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        'Content-Type': 'application/json'
+    }
 
     const requestOptions = {
         method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + cookies.get('token'),
-            'Content-Type': 'application/json'
-        },
+        headers: myHeaders,
         redirect: 'follow'
     };
 
@@ -26,28 +28,22 @@ const ListCate = () => {
             })
             .then(result => setCates(result))
             .catch(error => {
-                alert(error.message)
+                navigate('/')
             });
-    }, [isDeleted])
+    }, [listCate])
 
-    const deleteCate = (cateId) => {
+    const deleteCate = cateId => {
         fetch(`http://localhost:8080/category/delete/${cateId}`, {
             method: 'DELETE',
-            headers: {
-                'Authorization': 'Bearer ' + cookies.get('token'),
-                'Content-Type': 'application/json'
-            },
+            headers: myHeaders,
         })
-            .then(res => res.text()) // or res.json()
-            .then(res => console.log(res))
-        setIsDeleted(true)
+            .then(res => res.json())
+            .then(id => setListCate(listCate.filter(cate => id !== cate.cateId)))
     }
 
     return (
         <div className="list-cate">
-
             <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>
-
             <div className="overflow-auto">
                 <table className="table border shadow">
                     <thead>
@@ -64,7 +60,7 @@ const ListCate = () => {
                         {
                             cates.map(cate => (
                                 <tr key={cate.cateId}>
-                                    <th scope="row">{cate.cateId}</th>
+                                    <th scope="row">#{cate.cateId}</th>
                                     <td>{cate.cateName}</td>
                                     <td>{cate.description}</td>
                                     <td>{cate.createDate}</td>
