@@ -1,22 +1,24 @@
 import { React, useState } from "react";
-import "../submission/Submit.css";
 import { Cookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AddSubmission = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
+    const [submissionName, setsubmissionName] = useState("");
+    const [description, setDescription] = useState("");
+    const [closureDate, setClosureDate] = useState("");
+    const [finalClosureDate, setFinalClosureDate] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate()
     const $ = document.querySelector.bind(document)
 
     const addSubmission = () => {
         const cookies = new Cookies();
 
         const raw = JSON.stringify({
-            name,
-            email,
-            phone
+            submissionName,
+            description,
+            closureDate,
+            finalClosureDate
         });
         const requestOptions = {
             method: 'POST',
@@ -36,9 +38,8 @@ const AddSubmission = () => {
                 throw Error(checkError())
             })
             .then(result => {
-                console.log(result);
                 setMessage(result.message)
-                // navigate('/departments')
+                navigate('/submission')
             })
             .catch(error => {
                 createAlert(error)
@@ -49,7 +50,7 @@ const AddSubmission = () => {
             if ($("input[type=text]").value === "" || $("input[type=email]").value === "" || $("input[type=number]").value === "") {
                 msg = "Not allow blank"
             } else {
-                msg = "User name is exist"
+                msg = "Submission is exist"
             }
             return msg
         }
@@ -70,31 +71,6 @@ const AddSubmission = () => {
     }
 
     return (
-        // <div className="submit">
-        //     <form >
-        //         <input
-        //             type="text"
-        //             value={name}
-        //             placeholder="Name"
-        //             onChange={(e) => setName(e.target.value)} />
-
-        //         <input
-        //             type="email"
-        //             value={email}
-        //             placeholder="Email"
-        //             onChange={(e) => setEmail(e.target.value)} />
-
-        //         <input
-        //             type="number"
-        //             value={phone}
-        //             placeholder="Phone Number"
-        //             onChange={(e) => setPhone(e.target.value)} />
-
-        //         <button type="button" onClick={handleSubmit}>Submit</button>
-
-        //         <div className=" alert-success">{message ? <p>{message}</p> : null}</div>
-        //     </form>
-        // </div>
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Add New Submission</h3>
             <div className="form-group">
@@ -102,30 +78,41 @@ const AddSubmission = () => {
                 <input
                     type="text"
                     className="form-control form-control-lg"
-                    placeholder="Enter Your Submission Name"
+                    placeholder="Enter Submission Name"
                     name="name"
-                    value={name.trim()}
-                    onChange={(e) => setName(e.target.value)} />
+                    value={submissionName.trim()}
+                    onChange={(e) => setsubmissionName(e.target.value)} />
             </div>
             <div className="form-group">
-                <label htmlFor="departmentId">Email</label>
-                <input
-                    type="email"
+                <label htmlFor="departmentId">Description</label>
+                <textarea
+                    type="text"
                     className="form-control form-control-lg"
-                    placeholder="Enter Your Email"
-                    name="email"
-                    value={email.trim()}
-                    onChange={(e) => setEmail(e.target.value)} />
+                    placeholder="Enter Your Description"
+                    name="description"
+                    value={description.trim()}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
             </div>
             <div className="form-group">
-                <label htmlFor="departmentId">Phone No.</label>
+                <label htmlFor="departmentId">Closure Date</label>
                 <input
-                    type="number"
+                    type="date"
                     className="form-control form-control-lg"
-                    placeholder="Enter Your Phone No."
+                    placeholder="Enter Closure Date"
                     name="phone"
-                    value={phone.trim()}
-                    onChange={(e) => setPhone(e.target.value)} />
+                    value={closureDate.trim()}
+                    onChange={(e) => setClosureDate(e.target.value)} />
+            </div>
+            <div className="form-group">
+                <label htmlFor="departmentId">Final Closure Date</label>
+                <input
+                    type="date"
+                    className="form-control form-control-lg"
+                    placeholder="Enter Final Closure Date"
+                    name="phone"
+                    value={finalClosureDate.trim()}
+                    onChange={(e) => setFinalClosureDate(e.target.value)} />
             </div>
             <div className="form-group text-right">
                 <button className="btn btn-primary px-3 mr-3" onClick={addSubmission}>Add Department</button>

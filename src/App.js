@@ -19,9 +19,11 @@ import ListDepart from './components/departments/ListDepart';
 import EditDepart from './components/departments/EditDepart';
 import AddDepart from './components/departments/AddDepart';
 import ViewDepart from './components/departments/ViewDepart';
-
+// Submmision
 import ListSubmission from './components/submission/ListSubmission';
+import EditSubmission from './components/submission/EditSubmission';
 import AddSubmission from './components/submission/AddSubmission';
+import ViewSubmission from './components/submission/ViewSubmission';
 
 import {
   BrowserRouter,
@@ -54,8 +56,10 @@ function App() {
               <Route path='/departments/add' element={<AddDepart />} />
               <Route path='/departments/edit/:id' element={<EditDepart />} />
               <Route path='/departments/:id' element={<ViewDepart />} />
-              {/* <Route path='/submission' element={<ListSubmission />} /> */}
+              <Route path='/submission' element={<ListSubmission />} />
               <Route path='/submission/add' element={<AddSubmission />} />
+              <Route path='/submission/edit/:id' element={<EditSubmission />} />
+              <Route path='/submission/:id' element={<ViewSubmission />} />
               {/* <Route path="*" element={<NotFound />}></Route> */}
             </Routes>
           </div>

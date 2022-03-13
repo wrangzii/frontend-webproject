@@ -19,8 +19,8 @@ export const Sidebar = [
         icon: 'fa-solid fa-list'
     },
     {
-        title: 'Academic-year',
-        path: '/academic-year',
+        title: 'Submission',
+        path: '/submission',
         className: 'nav-text text-white text-decoration-none',
         icon: 'fa-solid fa-calendar-check'
     },
