@@ -11,10 +11,11 @@ const AddUser = () => {
     const [role, setRole] = useState("");
     const [password, setPassword] = useState("");
     const [departmentId, setDepartmentId] = useState("");
+    const [message, setMessage] = useState("");
     const navigate = useNavigate()
+    const $ = document.querySelector.bind(document)
 
     const handleAddUser = () => {
-        navigate('/users')
         const cookies = new Cookies();
         const raw = JSON.stringify({
             email,
@@ -37,22 +38,54 @@ const AddUser = () => {
         };
         fetch("http://localhost:8080/users/add", requestOptions)
             .then(response => {
-                return response.json()
+                if (response.ok) {
+                    return response.json()
+                }
+
+                throw Error(checkError())
             })
             .then(result => {
-                console.log(result);
+                setMessage(result.message)
+                navigate('/users')
             })
+            .catch(error => {
+                createAlert(error)
+            });
+
+        function checkError() {
+            let msg = ""
+            if ($("input[type=text]").value === "" && $("input[type=email]").value === "" && $("input[type=number]").value === "" && $("input[type=password]").value === "") {
+                msg = "Not allow blank"
+            } else {
+                msg = "User name is exist"
+            }
+            return msg
+        }
+
+        function createAlert(message) {
+            const title = $("h3")
+            const alert = document.createElement("p")
+            if (!$(".alert-danger")) {
+                title.after(alert)
+            } else {
+                $(".alert-danger").remove()
+                title.after(alert)
+            }
+
+            alert.textContent = message
+            alert.setAttribute("class", "alert alert-danger")
+        }
     }
 
     return (
         <>
             <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
-                <h2 className="text-center mb-4">Add New User</h2>
+                <h3 className="text-center mb-4">Add New User</h3>
                 <div>
                     <div className="form-group">
                         <label htmlFor="Username">Username</label>
                         <input
-
+                            type="text"
                             className="form-control form-control-lg"
                             placeholder="Enter Your Username"
                             name="username"
@@ -65,7 +98,7 @@ const AddUser = () => {
                     <div className="form-group">
                         <label htmlFor="name">Full name</label>
                         <input
-
+                            type="text"
                             className="form-control form-control-lg"
                             placeholder="Enter Your Full Name"
                             name="fullName"
@@ -91,7 +124,7 @@ const AddUser = () => {
                     <div className="form-group">
                         <label htmlFor="phone">Phone No.</label>
                         <input
-
+                            type="number"
                             className="form-control form-control-lg"
                             placeholder="Enter Your Phone Number"
                             name="phoneNumber"

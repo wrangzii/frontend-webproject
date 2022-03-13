@@ -19,6 +19,10 @@ import ListDepart from './components/departments/ListDepart';
 import EditDepart from './components/departments/EditDepart';
 import AddDepart from './components/departments/AddDepart';
 import ViewDepart from './components/departments/ViewDepart';
+
+import ListSubmission from './components/submission/ListSubmission';
+import AddSubmission from './components/submission/AddSubmission';
+
 import {
   BrowserRouter,
   Routes,
@@ -50,6 +54,8 @@ function App() {
               <Route path='/departments/add' element={<AddDepart />} />
               <Route path='/departments/edit/:id' element={<EditDepart />} />
               <Route path='/departments/:id' element={<ViewDepart />} />
+              {/* <Route path='/submission' element={<ListSubmission />} /> */}
+              <Route path='/submission/add' element={<AddSubmission />} />
               {/* <Route path="*" element={<NotFound />}></Route> */}
             </Routes>
           </div>

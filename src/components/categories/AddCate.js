@@ -35,7 +35,7 @@ const AddCate = () => {
                     return response.json();
                 }
 
-                throw new Error("Wrong input")
+                throw new Error(checkError())
             })
             .then(result => {
                 setMessage(result.message)
@@ -44,6 +44,16 @@ const AddCate = () => {
             .catch(error => {
                 createAlert(error)
             })
+
+        function checkError() {
+            let msg = ""
+            if (document.querySelector("input[type=text]").value === "") {
+                msg = "Not allow blank"
+            } else {
+                msg = "Category name is exist"
+            }
+            return msg
+        }
 
         function createAlert(message) {
             const title = document.querySelector("h3")
@@ -77,7 +87,7 @@ const AddCate = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <input
+                    <textarea
                         type="text"
                         className="form-control form-control-lg"
                         placeholder="Enter Description"
@@ -86,7 +96,7 @@ const AddCate = () => {
                         onChange={(e) => {
                             setDescription(e.target.value)
                         }}
-                    />
+                    ></textarea>
                 </div>
                 <div className="form-group">
                     <label htmlFor="createDate">Create Date</label>

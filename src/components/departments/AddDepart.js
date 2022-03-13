@@ -11,8 +11,6 @@ const AddDepart = () => {
     const handleAddDepart = () => {
         const cookies = new Cookies();
 
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
         const raw = JSON.stringify({
             departmentName
         });

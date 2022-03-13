@@ -69,13 +69,13 @@ const Login = () => {
 				<h3><b>Login to your account</b></h3>
 				<div className="form-group mb-3">
 					<label htmlFor="username" className="mb-2">Username</label>
-					<input type="text" name="username" className="form-control" placeholder="Enter username" value={Username} onChange={(e) => {
+					<input type="text" name="username" className="form-control" placeholder="Enter username" value={Username.trim()} onChange={(e) => {
 						setUsername(e.target.value)
 					}} />
 				</div>
 				<div className="form-group mb-3">
 					<label htmlFor="password" className="mb-2">Password</label>
-					<input type="password" name="password" className="form-control" placeholder="Password" value={Password} onChange={(e) => {
+					<input type="password" name="password" className="form-control" placeholder="Password" value={Password.trim()} onChange={(e) => {
 						setPassword(e.target.value)
 					}} />
 				</div>
