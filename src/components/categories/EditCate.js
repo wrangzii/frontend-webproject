@@ -1,46 +1,46 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { Cookies } from "react-cookie";
 
 const EditCate = () => {
+    const [cateName, setCateName] = useState("")
+    const [description, setDescription] = useState("")
+    const [createDate, setCreateDate] = useState("")
+    const [lastModifyDate, setLastModifyDate] = useState("")
+    const [cateId, setCateId] = useState(1)
+    const [cate, setCate] = useState({})
+    const cookies = new Cookies();
 
-    let navigate = useNavigate();
-
-    const { id } = useParams();
-
-    const [cate, setCate] = useState({
-        name: "",
-        description: "",
-        createDate: "",
-        lastEdit: "",
+    const raw = JSON.stringify({
+        cateName,
+        description,
+        createDate,
+        lastModifyDate,
     });
-
-    const { name, description, createDate, lastEdit } = cate;
-    const onInputChange = e => {
-        setCate({ ...cate, [e.target.name]: e.target.value });
+    const requestOptions = {
+        method: 'PUT',
+        headers: {
+            'Authorization': 'Bearer ' + cookies.get('token'),
+            'Content-Type': 'application/json'
+        },
+        body: raw,
     };
 
-    useEffect(() => {
-        loadCate();
-    }, []);
+    fetch(`http://localhost:8080/category/edit/${cateId}`, requestOptions)
+        .then(response => {
+            return response.json();
+        })
+        .then(result => setCateId(cateId))
 
-    const onSubmit = async e => {
-        e.preventDefault();
-        await axios.put(`http://localhost:8080/cates/${id}`, cate);
-        navigate("/categories");
-    };
+    const editCate = cateId => {
+        // setCateId(cateId.filter(id => ))
+    }
 
-    const loadCate = async () => {
-        const result = await axios.get(`http://localhost:8080/cates/${id}`)
-        setCate(result.data);
-    };
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h2 className="text-center mb-4">Edit Category</h2>
-            <form onSubmit={e => onSubmit(e)}>
+            <form>
                 <div className="form-group">
                     <label htmlFor="category-name">Category Name</label>
                     <input
@@ -48,8 +48,8 @@ const EditCate = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Category"
                         name="name"
-                        value={name}
-                        onChange={e => onInputChange(e)}
+                        value={cate.cateName}
+                    // onChange={e => setCateName(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
@@ -59,8 +59,8 @@ const EditCate = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Your Description"
                         name="description"
-                        value={description}
-                        onChange={e => onInputChange(e)}
+                        value={cate.description}
+                    // onChange={e => setDescription(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
@@ -69,8 +69,8 @@ const EditCate = () => {
                         type="date"
                         className="form-control form-control-lg"
                         name="createDate"
-                        value={createDate}
-                        onChange={e => onInputChange(e)}
+                        value={cate.createDate}
+                    // onChange={e => setCreateDate(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
@@ -79,13 +79,13 @@ const EditCate = () => {
                         type="date"
                         className="form-control form-control-lg"
                         name="lastEdit"
-                        value={lastEdit}
-                        readOnly
-                        onChange={e => onInputChange(e)}
+                        value={cate.lastModifyDate}
+                    // readOnly
+                    // onChange={e => setLastModifyDate(e.target.value)}
                     />
                 </div>
                 <div className="form-group text-right">
-                    <button className="btn btn-warning px-3 mr-3">Update</button>
+                    <button className="btn btn-warning px-3 mr-3" onClick={editCate(cateId)}>Update</button>
                     <Link to="/categories" className="btn btn-danger px-3">Cancel</Link>
                 </div>
             </form>

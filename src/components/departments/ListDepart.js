@@ -1,134 +1,88 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
 
-import axios from "axios";
+const ListDepart = () => {
+    const [departs, setDeparts] = useState([])
+    const [listDepart, setListDepart] = useState([])
+    const navigate = useNavigate()
+    const cookies = new Cookies();
 
-export default class ListDepart extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            departs: [],
-        };
-    }
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + cookies.get('token'),
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow'
+    };
 
-    listDepart() {
-        fetch("http://localhost:8080/departs")
-        .then((res) => res.json())
-        .then((json) => {
-            this.setState({
-                departs: json
+    useEffect(() => {
+        fetch("http://localhost:8080/department/all", requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw Error(response.message);
+            })
+            .then(result => setDeparts(result))
+            .catch(error => {
+                navigate('/')
             });
+    }, [listDepart])
+
+    const deleteDepart = departmentId => {
+        fetch(`http://localhost:8080/department/delete/${departmentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token'),
+                'Content-Type': 'application/json'
+            },
         })
+            .then(res => res.json())
+            .then(id => {
+                setListDepart(listDepart.filter(depart => id !== depart.departmentId))
+                // const div = document.querySelector(".overflow-auto")
+                // const alert = document.createElement('p')
+                // alert.setAttribute("class", "alert alert-success")
+                // alert.textContent = res.message
+                // div.after(alert)
+            })
     }
 
-    deleteDepart() {
-        fetch(`http://localhost:8080/departs/${id}`, {
-            method: 'DELETE'
-        });
-    }
+    return (
+        <div className="list-depart">
 
-    render() {
+            <Link className="btn btn-outline-dark mb-3" to="/departments/add">Add Department</Link>
 
-        useEffect(() => {
-            listDepart()
-        }, [])
-
-        const { departs } = this.state;
-
-        return (
-            <>
-            <div className="list-depart">
-
-                <Link className="btn btn-outline-dark mb-3" to="/departments/add">Add Department</Link>
-
-                <div className="overflow-auto">
-                    <table className="table border shadow">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">departmentName</th>
-                                {/* <th scope="col">Description</th> */}
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                departs.map((depart, index) => (
-                                    <tr key={index}>
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{depart.departmentName}</td>
-                                        {/* <td>{depart.description}</td> */}
-                                        <td>
-                                            <Link className="btn btn-primary mr-2" to={`/departments/${depart.id}`}>View</Link>
-                                            <Link className="btn btn-outline-primary mr-2" to={`/departments/edit/${depart.id}`}>Edit</Link>
-                                            <Link className="btn btn-outline-danger mr-2" onClick={() => deleteDepart(depart.id)} to="/departments">Delete</Link>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </table>
-                </div>
+            <div className="overflow-auto">
+                <table className="table border shadow">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            departs.map(depart => (
+                                <tr key={depart.departmentId}>
+                                    <th scope="row">#{depart.departmentId}</th>
+                                    <td>{depart.departmentName}</td>
+                                    <td>
+                                        <Link className="btn btn-primary mr-2" to={`/departments/${depart.departmentId}`}>View</Link>
+                                        <Link className="btn btn-outline-primary mr-2" to={`/departments/edit/${depart.departmentId}`}>Edit</Link>
+                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteDepart(depart.departmentId)} to="/departments">Delete</Link>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
             </div>
-            </>
-        );
-    }
+        </div>
+    );
 }
 
-
-// const ListDepart = () => {
-
-//     const [departs, setDepart] = useState([]);
-
-//     useEffect(() => {
-//         loadDeparts();
-//     }, []);
-
-//     const loadDeparts = async () => {
-//         const result = await axios.get("http://localhost:8080/departs");
-//         setDepart(result.data);
-//     }
-
-    // const deleteDepart = async id => {
-    //     await axios.delete(`http://localhost:8080/departs/${id}`);
-    //     loadDeparts();
-    // }
-
-//     return (
-        // <div className="list-depart">
-
-        //     <Link className="btn btn-outline-dark mb-3" to="/departments/add">Add Department</Link>
-
-        //     <div className="overflow-auto">
-        //         <table className="table border shadow">
-        //             <thead>
-        //                 <tr>
-        //                     <th scope="col">ID</th>
-        //                     <th scope="col">Name</th>
-        //                     <th scope="col">Description</th>
-        //                     <th>Action</th>
-        //                 </tr>
-        //             </thead>
-        //             <tbody>
-        //                 {
-        //                     departs.map((depart, index) => (
-        //                         <tr key={index}>
-        //                             <th scope="row">{index + 1}</th>
-        //                             <td>{depart.name}</td>
-        //                             <td>{depart.description}</td>
-        //                             <td>
-        //                                 <Link className="btn btn-primary mr-2" to={`/departments/${depart.id}`}>View</Link>
-        //                                 <Link className="btn btn-outline-primary mr-2" to={`/departments/edit/${depart.id}`}>Edit</Link>
-        //                                 <Link className="btn btn-outline-danger mr-2" onClick={() => deleteDepart(depart.id)} to="/departments">Delete</Link>
-        //                             </td>
-        //                         </tr>
-        //                     ))
-        //                 }
-        //             </tbody>
-        //         </table>
-        //     </div>
-        // </div>
-//     );
-// }
-
-// export default ListDepart;
+export default ListDepart;

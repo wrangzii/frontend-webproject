@@ -1,31 +1,49 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
 
 const ListCate = () => {
-
-    const [cates, setCate] = useState([]);
-
-    useEffect(() => {
-        loadCates();
-    }, []);
-
-    const loadCates = async () => {
-        const result = await axios.get("http://localhost:8080/cates");
-        setCate(result.data);
+    const [cates, setCates] = useState([]);
+    const [listCate, setListCate] = useState([])
+    const navigate = useNavigate()
+    const cookies = new Cookies();
+    const myHeaders = {
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        'Content-Type': 'application/json'
     }
 
-    const deleteCate = async id => {
-        await axios.delete(`http://localhost:8080/cates/${id}`);
-        loadCates();
+    const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    useEffect(() => {
+        fetch("http://localhost:8080/category/all", requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw Error(response.message);
+            })
+            .then(result => setCates(result))
+            .catch(error => {
+                navigate('/')
+            });
+    }, [listCate])
+
+    const deleteCate = cateId => {
+        fetch(`http://localhost:8080/category/delete/${cateId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        })
+            .then(res => res.json())
+            .then(id => setListCate(listCate.filter(cate => id !== cate.cateId)))
     }
 
     return (
         <div className="list-cate">
-
             <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>
-
             <div className="overflow-auto">
                 <table className="table border shadow">
                     <thead>
@@ -40,17 +58,17 @@ const ListCate = () => {
                     </thead>
                     <tbody>
                         {
-                            cates.map((cate, index) => (
-                                <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{cate.name}</td>
+                            cates.map(cate => (
+                                <tr key={cate.cateId}>
+                                    <th scope="row">#{cate.cateId}</th>
+                                    <td>{cate.cateName}</td>
                                     <td>{cate.description}</td>
                                     <td>{cate.createDate}</td>
-                                    <td>{cate.lastEdit}</td>
+                                    <td>{cate.lastModifyDate}</td>
                                     <td>
-                                        <Link className="btn btn-primary mr-2" to={`/categories/${cate.id}`}>View</Link>
-                                        <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.id}`}>Edit</Link>
-                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.id)} to="/categories">Delete</Link>
+                                        <Link className="btn btn-primary mr-2" to={`/categories/${cate.cateId}`}>View</Link>
+                                        <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.cateId}`}>Edit</Link>
+                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.cateId)} to="/categories">Delete</Link>
                                     </td>
                                 </tr>
                             ))

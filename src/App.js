@@ -1,4 +1,4 @@
-import Home from './components/pages/Home'
+import Dashboard from './components/pages/Dashboard'
 import Navbar from './components/Navbar'
 // //Form
 import Login from './components/form/Login';
@@ -34,11 +34,9 @@ function App() {
         <div className="wrapper-content">
           <div className="px-3 px-md-5 my-5" id='container'>
             <Routes>
-              <Route exact path='/' element={<Home />} >
-
-              </Route>
+              <Route exact path='/' element={<Dashboard />} />
               <Route path='/login' element={<Login />} />
-              <Route path='/forgot' element={<ForgotPassword />} />
+              <Route path='/forgot-password' element={<ForgotPassword />} />
               <Route path='/reset' element={<ResetPassword />} />
               <Route path='/users' element={<ListUser />} />
               <Route path='/users/add' element={<AddUser />} />
@@ -52,6 +50,7 @@ function App() {
               <Route path='/departments/add' element={<AddDepart />} />
               <Route path='/departments/edit/:id' element={<EditDepart />} />
               <Route path='/departments/:id' element={<ViewDepart />} />
+              {/* <Route path="*" element={<NotFound />}></Route> */}
             </Routes>
           </div>
         </div>

@@ -1,36 +1,55 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
 
 const ListUser = () => {
-    const [users, setUser] = useState([]);
-
-    useEffect(() => {
-        loadUsers();
-    }, []);
-
-    const loadUsers = async () => {
-        const result = await axios.get("http://localhost:8080/users");
-        setUser(result.data);
+    const [users, setUsers] = useState([])
+    const [listUser, setListUser] = useState([])
+    const navigate = useNavigate()
+    const cookies = new Cookies();
+    const myHeaders = {
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        'Content-Type': 'application/json'
     }
 
-    const deleteUser = async id => {
-        await axios.delete(`http://localhost:8080/users/${id}`);
-        loadUsers();
+    const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    useEffect(() => {
+        fetch("http://localhost:8080/users/all", requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw Error(response.message);
+            })
+            .then(result => setUsers(result))
+            .catch(error => {
+                navigate('/')
+            });
+    }, [listUser])
+
+    const deleteUser = userId => {
+        fetch(`http://localhost:8080/users/delete/${userId}`, {
+            method: 'DELETE',
+            headers: myHeaders,
+        })
+            .then(res => res.json())
+            .then(id => setListUser(listUser.filter(user => id !== user.userId)))
     }
 
     return (
         <div className="users">
-
             <Link className="btn btn-outline-dark mb-3" to="/users/add">Add User</Link>
-
             <div className="overflow-auto">
                 <table className="table border shadow">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Name</th>
+                            <th scope="col">Username</th>
                             <th scope="col">Email</th>
                             <th scope="col">Department</th>
                             <th>Action</th>
@@ -38,16 +57,16 @@ const ListUser = () => {
                     </thead>
                     <tbody>
                         {
-                            users.map((user, index) => (
-                                <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{user.name}</td>
+                            users.map(user => (
+                                <tr key={user.userId}>
+                                    <th scope="row">#{user.userId}</th>
+                                    <td>{user.username}</td>
                                     <td>{user.email}</td>
-                                    <td>{user.department}</td>
+                                    <td>{user.departmentId.departmentName}</td>
                                     <td>
-                                        <Link className="btn btn-primary mr-2" to={`/users/${user.id}`}>View</Link>
-                                        <Link className="btn btn-outline-primary mr-2" to={`/users/edit/${user.id}`}>Edit</Link>
-                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteUser(user.id)} to="/users">Delete</Link>
+                                        <Link className="btn btn-primary mr-2" to={`/users/${user.userId}`}>View</Link>
+                                        <Link className="btn btn-outline-primary mr-2" to={`/users/edit/${user.userId}`}>Edit</Link>
+                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteUser(user.userId)} to="/users">Delete</Link>
                                     </td>
                                 </tr>
                             ))
