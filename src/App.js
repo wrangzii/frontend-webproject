@@ -25,19 +25,20 @@ import EditSubmission from './components/submission/EditSubmission';
 import AddSubmission from './components/submission/AddSubmission';
 import ViewSubmission from './components/submission/ViewSubmission';
 
+import Profile from './components/pages/Profile';
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
+import Goodbye from './components/pages/Goodbye';
 
 function App() {
-
   return (
     <BrowserRouter>
       <div className="App">
         <Navbar />
-        <div className="wrapper-content">
+        <div className="wrapper-content container">
           <div className="px-3 px-md-5 my-5" id='container'>
             <Routes>
               <Route exact path='/' element={<Dashboard />} />
@@ -60,12 +61,14 @@ function App() {
               <Route path='/submission/add' element={<AddSubmission />} />
               <Route path='/submission/edit/:id' element={<EditSubmission />} />
               <Route path='/submission/:id' element={<ViewSubmission />} />
+              <Route path='/profile' element={<Profile />} />
+              <Route path='/goodbye' element={<Goodbye />} />
               {/* <Route path="*" element={<NotFound />}></Route> */}
             </Routes>
           </div>
         </div>
       </div>
-    </BrowserRouter>
+    </BrowserRouter >
   );
 }
 

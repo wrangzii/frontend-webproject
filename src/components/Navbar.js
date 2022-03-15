@@ -1,41 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import NavbarAction from "./NavbarAction";
 import Logout from "./form/Logout";
 import './styles/Navbar.css';
+import { Cookies } from "react-cookie";
 
 const Navbar = (props) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const cookies = new Cookies()
 
-    window.onload = () => {
-        const sidebar = document.querySelector("ul.nav-menu");
-        const sidebar_items = document.querySelectorAll("ul.nav-menu a");
-        const barBtn = document.querySelector(".fa-bars");
+    let authen = false
+    if (cookies.get('token'))
+        authen = true
 
-        barBtn.onclick = toggleSidebar;
-
-        function toggleSidebar() {
-            sidebar.classList.toggle("active")
-            if (sidebar.classList.contains("active")) {
-                Array.from(sidebar_items).map(item => {
-                    item.onclick = closeSidebar;
-                    return true;
-                })
-            }
-        }
-
-        function closeSidebar() {
-            sidebar.classList.remove("active")
-        }
+    const toggleSidebar = () => {
+        setIsOpen(true)
+        isOpen && setIsOpen(false)
     }
 
     return (
-        <div className="navbar">
+        <div className="navbar position-sticky" style={{ top: 0 }}>
             <div className="wrapper">
-                <Link to="#" className="menu-bars">
+                <Link to="#" className="menu-bars" onClick={toggleSidebar}>
                     <i className="fa-solid fa-bars"></i>
                 </Link>
-                <ul className='nav-menu'>
+                {authen && <ul className={"nav-menu " + (isOpen ? "active" : null)}>
                     {Sidebar.map((item, index) => {
                         return (
                             <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`} onClick={item.action}>
@@ -47,7 +37,7 @@ const Navbar = (props) => {
                         )
                     })}
                     <Logout />
-                </ul>
+                </ul>}
                 <p>{props.loginName}</p>
             </div>
             <NavbarAction />

@@ -7,6 +7,7 @@ const AddDepart = () => {
     const [departmentName, setDepartmentName] = useState("");
     const [message, setMessage] = useState("");
     const navigate = useNavigate()
+    const $ = document.querySelector.bind(document)
 
     const handleAddDepart = () => {
         const cookies = new Cookies();
@@ -35,13 +36,11 @@ const AddDepart = () => {
                 setMessage(result.message)
                 navigate('/departments')
             })
-            .catch(error => {
-                createAlert(error)
-            });
+            .catch(error => createAlert(error));
 
         function checkError() {
             let msg = ""
-            if (document.querySelector("input[type=text]").value === "") {
+            if ($("input[type=text]").value === "") {
                 msg = "Not allow blank"
             } else {
                 msg = "Department name is exist"
@@ -50,12 +49,12 @@ const AddDepart = () => {
         }
 
         function createAlert(message) {
-            const title = document.querySelector("h3")
+            const title = $("h3")
             const alert = document.createElement("p")
-            if (!document.querySelector(".alert-danger")) {
+            if (!$(".alert-danger")) {
                 title.after(alert)
             } else {
-                document.querySelector(".alert-danger").remove()
+                $(".alert-danger").remove()
                 title.after(alert)
             }
 
@@ -63,6 +62,7 @@ const AddDepart = () => {
             alert.setAttribute("class", "alert alert-danger")
         }
     }
+
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Add New Department</h3>
@@ -80,7 +80,7 @@ const AddDepart = () => {
                 />
             </div>
             <div className="form-group text-right">
-                <button className="btn btn-primary px-3 mr-3" onClick={handleAddDepart}>Add Department</button>
+                <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddDepart}>Add Department</button>
                 <Link to="/departments" className="btn btn-danger px-3">Cancel</Link>
             </div>
         </div>

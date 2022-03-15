@@ -12,6 +12,7 @@ const AddUser = () => {
     const [password, setPassword] = useState("");
     const [departmentId, setDepartmentId] = useState("");
     const [message, setMessage] = useState("");
+    const [className, setClassName] = useState("");
     const navigate = useNavigate()
     const $ = document.querySelector.bind(document)
 
@@ -54,11 +55,12 @@ const AddUser = () => {
 
         function checkError() {
             let msg = ""
-            if ($("input[type=text]").value === "" && $("input[type=email]").value === "" && $("input[type=number]").value === "" && $("input[type=password]").value === "") {
+            if ($("input").value === "") {
                 msg = "Not allow blank"
             } else {
                 msg = "User name is exist"
             }
+
             return msg
         }
 
@@ -74,6 +76,18 @@ const AddUser = () => {
 
             alert.textContent = message
             alert.setAttribute("class", "alert alert-danger")
+        }
+    }
+
+    function checkNumber(type) {
+        if (!isNaN(type)) {
+            setMessage("Keep it on")
+            setClassName("mt-2 d-block text-success")
+            return true
+        } else {
+            setMessage("Please input only numbers")
+            setClassName("mt-2 d-block text-danger")
+            return false
         }
     }
 
@@ -102,7 +116,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your Full Name"
                             name="fullName"
-                            value={fullName.trim()}
+                            value={fullName}
                             onChange={(e) => {
                                 setFullName(e.target.value)
                             }}
@@ -124,15 +138,18 @@ const AddUser = () => {
                     <div className="form-group">
                         <label htmlFor="phone">Phone No.</label>
                         <input
-                            type="number"
+                            type="tel"
+                            pattern="[0-9]{10}"
                             className="form-control form-control-lg"
                             placeholder="Enter Your Phone Number"
                             name="phoneNumber"
                             value={phoneNumber.trim()}
                             onChange={(e) => {
                                 setPhoneNumber(e.target.value)
+                                checkNumber(e.target.value)
                             }}
                         />
+                        <small className={className}>{message}</small>
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
@@ -170,7 +187,7 @@ const AddUser = () => {
                             placeholder="Enter Your Role"
                             value={role}
                             onChange={(e) => {
-                                setRole(e.target.value)
+                                setRole([e.target.value])
                             }}
                         >
                             <option>Select a role</option>

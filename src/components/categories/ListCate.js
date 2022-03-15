@@ -28,7 +28,7 @@ const ListCate = () => {
             })
             .then(result => setCates(result))
             .catch(error => {
-                navigate('/')
+                navigate('/login')
             });
     }, [listCate])
 

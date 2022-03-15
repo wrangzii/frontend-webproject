@@ -8,7 +8,7 @@ const NavbarAction = () => {
     const fullName = cookies.get("fullName")
     if (token) {
         return (
-            <h4 className="text-light">{`Welcome ${fullName}!`}</h4>
+            <Link className="btn btn-outline-info text-decoration-none" to="/profile" data-toggle="tooltip" data-placement="bottom" title="Profile">{`Welcome ${fullName}!`}</Link>
         );
     } else {
         return (

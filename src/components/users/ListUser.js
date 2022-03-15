@@ -28,7 +28,7 @@ const ListUser = () => {
             })
             .then(result => setUsers(result))
             .catch(error => {
-                navigate('/')
+                navigate('/login')
             });
     }, [listUser])
 

@@ -7,13 +7,14 @@ const ListDepart = () => {
     const [listDepart, setListDepart] = useState([])
     const navigate = useNavigate()
     const cookies = new Cookies();
+    const myHeaders = {
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        'Content-Type': 'application/json'
+    }
 
     const requestOptions = {
         method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + cookies.get('token'),
-            'Content-Type': 'application/json'
-        },
+        headers: myHeaders,
         redirect: 'follow'
     };
 
@@ -25,28 +26,36 @@ const ListDepart = () => {
                 }
                 throw Error(response.message);
             })
-            .then(result => setDeparts(result))
+            .then(result => {
+                setDeparts(result)
+                alertSuccess(result.message)
+            })
             .catch(error => {
-                navigate('/')
+                navigate('/login')
             });
     }, [listDepart])
+
+    function alertSuccess(msg) {
+        return `
+            <p class="alert alert-success">${msg}</p>
+        `
+    }
 
     const deleteDepart = departmentId => {
         fetch(`http://localhost:8080/department/delete/${departmentId}`, {
             method: 'DELETE',
-            headers: {
-                'Authorization': 'Bearer ' + cookies.get('token'),
-                'Content-Type': 'application/json'
-            },
+            headers: myHeaders,
         })
             .then(res => res.json())
             .then(id => {
                 setListDepart(listDepart.filter(depart => id !== depart.departmentId))
-                // const div = document.querySelector(".overflow-auto")
-                // const alert = document.createElement('p')
-                // alert.setAttribute("class", "alert alert-success")
-                // alert.textContent = res.message
-                // div.after(alert)
+
+                // Alert success notification
+                const div = document.querySelector(".overflow-auto")
+                const alert = document.createElement('p')
+                alert.setAttribute("class", "alert alert-success")
+                alert.textContent = id.message
+                div.after(alert)
             })
     }
 
@@ -60,7 +69,7 @@ const ListDepart = () => {
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Name</th>
+                            <th scope="col">Department name</th>
                             <th>Action</th>
                         </tr>
                     </thead>

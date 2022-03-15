@@ -31,8 +31,15 @@ const Login = () => {
 			})
 			.then(result => {
 				const cookies = new Cookies();
+				console.log(cookies);
 				cookies.set('token', result.token, { path: '/' });
-				cookies.set('fullName', result.fullName,)
+				cookies.set('fullName', result.fullName)
+				cookies.set('email', result.email)
+				cookies.set('username', result.username)
+				cookies.set('id', result.id)
+				cookies.set('phoneNumber', result.phoneNumber)
+				cookies.set('dateOfBirth', result.dateOfBirth)
+				cookies.set('roles', result.roles)
 				navigate('/')
 				window.location.reload()
 			})

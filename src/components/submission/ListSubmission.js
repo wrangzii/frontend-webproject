@@ -4,7 +4,7 @@ import { Cookies } from "react-cookie";
 
 const ListSubmission = () => {
     const [submissions, setSubmissions] = useState([])
-    const [ListSubmission, setListSubmission] = useState([])
+    const [listSubmission, setListSubmission] = useState([])
     const navigate = useNavigate()
     const cookies = new Cookies();
     const myHeaders = {
@@ -28,9 +28,9 @@ const ListSubmission = () => {
             })
             .then(result => setSubmissions(result))
             .catch(error => {
-                navigate('/')
+                navigate('/login')
             });
-    }, [ListSubmission])
+    }, [listSubmission])
 
     const deleteSubmission = submissionId => {
         fetch(`http://localhost:8080/users/delete/${submissionId}`, {
@@ -38,7 +38,7 @@ const ListSubmission = () => {
             headers: myHeaders,
         })
             .then(res => res.json())
-            .then(id => setListSubmission(ListSubmission.filter(submission => id !== submission.submissionId)))
+            .then(id => setListSubmission(listSubmission.filter(submission => id !== submission.submissionId)))
     }
 
     return (
