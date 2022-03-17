@@ -6,6 +6,7 @@ const ListDepart = () => {
     const [departs, setDeparts] = useState([])
     const [listDepart, setListDepart] = useState([])
     const navigate = useNavigate()
+    const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -37,7 +38,7 @@ const ListDepart = () => {
 
     function alertSuccess(msg) {
         return `
-            <p class="alert alert-success">${msg}</p>
+            ${msg}
         `
     }
 
@@ -51,19 +52,21 @@ const ListDepart = () => {
                 setListDepart(listDepart.filter(depart => id !== depart.departmentId))
 
                 // Alert success notification
-                const div = document.querySelector(".overflow-auto")
+                const div = $(".overflow-auto")
                 const alert = document.createElement('p')
-                alert.setAttribute("class", "alert alert-success")
+                alert.setAttribute("class", "alert alert-success mt-3")
                 alert.textContent = id.message
                 div.after(alert)
             })
+
+        setTimeout(() => {
+            $(".alert").style.display = "none"
+        }, 3000)
     }
 
     return (
         <div className="list-depart">
-
             <Link className="btn btn-outline-dark mb-3" to="/departments/add">Add Department</Link>
-
             <div className="overflow-auto">
                 <table className="table border shadow">
                     <thead>

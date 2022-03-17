@@ -6,6 +6,8 @@ const ListUser = () => {
     const [users, setUsers] = useState([])
     const [listUser, setListUser] = useState([])
     const navigate = useNavigate()
+    const $ = document.querySelector.bind(document)
+
     const cookies = new Cookies();
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -26,11 +28,20 @@ const ListUser = () => {
                 }
                 throw Error(response.message);
             })
-            .then(result => setUsers(result))
+            .then(result => {
+                setUsers(result)
+                alertSuccess(result.message)
+            })
             .catch(error => {
                 navigate('/login')
             });
     }, [listUser])
+
+    function alertSuccess(msg) {
+        return `
+            ${msg}
+        `
+    }
 
     const deleteUser = userId => {
         fetch(`http://localhost:8080/users/delete/${userId}`, {
@@ -38,7 +49,19 @@ const ListUser = () => {
             headers: myHeaders,
         })
             .then(res => res.json())
-            .then(id => setListUser(listUser.filter(user => id !== user.userId)))
+            .then(id => {
+                setListUser(listUser.filter(user => id !== user.userId))
+                // Alert success notification
+                const div = $(".overflow-auto")
+                const alert = document.createElement('p')
+                alert.setAttribute("class", "alert alert-success mt-3")
+                alert.textContent = id.message
+                div.after(alert)
+            })
+
+        setTimeout(() => {
+            $(".alert").style.display = "none"
+        }, 3000)
     }
 
     return (

@@ -14,21 +14,16 @@ const Navbar = (props) => {
     if (cookies.get('token'))
         authen = true
 
-    const toggleSidebar = () => {
-        setIsOpen(true)
-        isOpen && setIsOpen(false)
-    }
-
     return (
         <div className="navbar position-sticky" style={{ top: 0 }}>
             <div className="wrapper">
-                <Link to="#" className="menu-bars" onClick={toggleSidebar}>
+                <Link to="#" className="menu-bars" onClick={() => setIsOpen(!isOpen)}>
                     <i className="fa-solid fa-bars"></i>
                 </Link>
                 {authen && <ul className={"nav-menu " + (isOpen ? "active" : null)}>
                     {Sidebar.map((item, index) => {
                         return (
-                            <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`} onClick={item.action}>
+                            <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`} onClick={() => setIsOpen(false)}>
                                 <i className={item.icon}></i>
                                 <li className="px-3 py-2">
                                     {item.title}

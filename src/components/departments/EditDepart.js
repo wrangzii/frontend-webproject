@@ -28,40 +28,40 @@ const EditDepart = () => {
             .then(response => {
                 if (response.ok)
                     response.json()
-                // throw Error(checkError())
+                throw Error(checkError())
             })
             .then(result => {
                 // setMessage(result.message)
                 console.log(result);
-                // navigate('/departments')
+                navigate('/departments')
             })
-        // .catch(error => createAlert(error))
+            .catch(error => createAlert(error))
 
     }
 
-    // function checkError() {
-    //     let msg = ""
-    //     if (document.querySelector("input[type=text]").value === "") {
-    //         msg = "Not allow blank"
-    //     } else {
-    //         msg = "Department name is exist"
-    //     }
-    //     return msg
-    // }
+    function checkError() {
+        let msg = ""
+        if (document.querySelector("input[type=text]").value === "") {
+            msg = "Not allow blank"
+        } else {
+            msg = "Department name is exist"
+        }
+        return msg
+    }
 
-    // function createAlert(message) {
-    //     const title = document.querySelector("h3")
-    //     const alert = document.createElement("p")
-    //     if (!document.querySelector(".alert-danger")) {
-    //         title.after(alert)
-    //     } else {
-    //         document.querySelector(".alert-danger").remove()
-    //         title.after(alert)
-    //     }
+    function createAlert(message) {
+        const title = document.querySelector("h3")
+        const alert = document.createElement("p")
+        if (!document.querySelector(".alert-danger")) {
+            title.after(alert)
+        } else {
+            document.querySelector(".alert-danger").remove()
+            title.after(alert)
+        }
 
-    //     alert.textContent = message
-    //     alert.setAttribute("class", "alert alert-danger")
-    // }
+        alert.textContent = message
+        alert.setAttribute("class", "alert alert-danger")
+    }
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">

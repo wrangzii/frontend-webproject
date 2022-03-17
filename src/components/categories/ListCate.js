@@ -6,6 +6,7 @@ const ListCate = () => {
     const [cates, setCates] = useState([]);
     const [listCate, setListCate] = useState([])
     const navigate = useNavigate()
+    const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -26,11 +27,20 @@ const ListCate = () => {
                 }
                 throw Error(response.message);
             })
-            .then(result => setCates(result))
+            .then(result => {
+                setCates(result)
+                alertSuccess(result.message)
+            })
             .catch(error => {
                 navigate('/login')
             });
     }, [listCate])
+
+    function alertSuccess(msg) {
+        return `
+            ${msg}
+        `
+    }
 
     const deleteCate = cateId => {
         fetch(`http://localhost:8080/category/delete/${cateId}`, {
@@ -38,7 +48,19 @@ const ListCate = () => {
             headers: myHeaders,
         })
             .then(res => res.json())
-            .then(id => setListCate(listCate.filter(cate => id !== cate.cateId)))
+            .then(id => {
+                setListCate(listCate.filter(cate => id !== cate.cateId))
+                // Alert success notification
+                const div = $(".overflow-auto")
+                const alert = document.createElement('p')
+                alert.setAttribute("class", "alert alert-success mt-3")
+                alert.textContent = id.message
+                div.after(alert)
+            })
+
+        setTimeout(() => {
+            $(".alert").style.display = "none"
+        }, 3000)
     }
 
     return (

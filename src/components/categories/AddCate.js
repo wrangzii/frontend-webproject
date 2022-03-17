@@ -79,7 +79,7 @@ const AddCate = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Category"
                         name="name"
-                        value={cateName.trim()}
+                        value={cateName}
                         onChange={(e) => {
                             setCateName(e.target.value)
                         }}
@@ -92,7 +92,7 @@ const AddCate = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Description"
                         name="description"
-                        value={description.trim()}
+                        value={description}
                         onChange={(e) => {
                             setDescription(e.target.value)
                         }}

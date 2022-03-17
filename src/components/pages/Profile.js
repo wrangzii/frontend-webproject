@@ -5,7 +5,7 @@ function Profile() {
     const cookies = new Cookies()
 
     return (
-        <div className="card">
+        <div className="card" style={{ "zIndex": -1 }}>
             <div className="card-body">
                 <h3 className="card-title">Profile information</h3>
                 <p className="card-text">User ID: #{cookies.get('id')}</p>

@@ -25,7 +25,7 @@ const ViewDepart = () => {
             })
             .then(result => setDeparts(result.data))
             .catch(error => {
-                alert(error.message)
+                alert(error)
             });
     }, [])
 
