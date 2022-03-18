@@ -27,7 +27,7 @@ const ViewUser = () => {
             .then(result => {
                 setUsets(result.data)
                 setRoles(result.data.roles.map(role => (
-                    <span className="d-block" key={role.roleId}>{role.roleName}</span>
+                    <span className="d-block text-danger" key={role.roleId}>{role.roleName}</span>
                 )))
             })
             .catch(error => {
@@ -42,10 +42,10 @@ const ViewUser = () => {
             <hr />
             <ul className="list-group col-12 col-md-9 col-lg-6 px-0" style={{ "zIndex": -1 }}>
                 <li className="list-group-item text-break">Email: {users.email}</li>
-                <li className="list-group-item text-break">Name: {users.username}</li>
-                <li className="list-group-item text-break">Name: {users.fullName}</li>
+                <li className="list-group-item text-break">Username: {users.username}</li>
+                <li className="list-group-item text-break">Full Name: {users.fullName}</li>
                 <li className="list-group-item text-break">Phone: {users.phoneNumber}</li>
-                <li className="list-group-item text-break">Phone: {users.dateOfBirth}</li>
+                <li className="list-group-item text-break">Date Of Birth: {new Date(users.dateOfBirth).toLocaleDateString()}</li>
                 <li className="list-group-item text-break">Role: {roles}</li>
             </ul>
         </>

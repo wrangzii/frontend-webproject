@@ -1,9 +1,17 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { Cookies } from 'react-cookie'
 
 function Profile() {
     const cookies = new Cookies()
-
+    const [roleName, setRoleName] = useState("")
+    useEffect(() => {
+        if (cookies.get('token')) {
+            setRoleName(cookies.get('roles').map(role => (
+                <span className='d-block text-danger' key={role}>{role}</span>
+            )))
+        }
+    },[])
+        
     return (
         <div className="card" style={{ "zIndex": -1 }}>
             <div className="card-body">
@@ -14,7 +22,7 @@ function Profile() {
                 <p className="card-text">Full name: {cookies.get('fullName')}</p>
                 <p className="card-text">Phone number: {cookies.get('phoneNumber')}</p>
                 <p className="card-text">Date of birth: {cookies.get('dateOfBirth')}</p>
-                <p className="card-text">Role: {cookies.get('roles')}</p>
+                <p className="card-text">Role: {roleName}</p>
             </div>
         </div>
     )
