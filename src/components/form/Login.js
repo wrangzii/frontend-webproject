@@ -38,7 +38,7 @@ const Login = () => {
 				cookies.set('username', result.username)
 				cookies.set('id', result.id)
 				cookies.set('phoneNumber', result.phoneNumber)
-				cookies.set('dateOfBirth', result.dateOfBirth)
+				cookies.set('dateOfBirth', new Date(result.dateOfBirth).toLocaleDateString())
 				cookies.set('roles', result.roles)
 				navigate('/')
 				window.location.reload()

@@ -80,7 +80,7 @@ const AddSubmission = () => {
                     className="form-control form-control-lg"
                     placeholder="Enter Submission Name"
                     name="name"
-                    value={submissionName.trim()}
+                    value={submissionName}
                     onChange={(e) => setsubmissionName(e.target.value)} />
             </div>
             <div className="form-group">
@@ -90,7 +90,7 @@ const AddSubmission = () => {
                     className="form-control form-control-lg"
                     placeholder="Enter Your Description"
                     name="description"
-                    value={description.trim()}
+                    value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
             </div>
@@ -101,7 +101,7 @@ const AddSubmission = () => {
                     className="form-control form-control-lg"
                     placeholder="Enter Closure Date"
                     name="phone"
-                    value={closureDate.trim()}
+                    value={closureDate}
                     onChange={(e) => setClosureDate(e.target.value)} />
             </div>
             <div className="form-group">
@@ -111,7 +111,7 @@ const AddSubmission = () => {
                     className="form-control form-control-lg"
                     placeholder="Enter Final Closure Date"
                     name="phone"
-                    value={finalClosureDate.trim()}
+                    value={finalClosureDate}
                     onChange={(e) => setFinalClosureDate(e.target.value)} />
             </div>
             <div className="form-group text-right">

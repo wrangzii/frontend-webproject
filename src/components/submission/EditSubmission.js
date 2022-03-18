@@ -74,7 +74,7 @@ const EditSubmission = () => {
             <h3 className="text-center mb-4">Edit Submission</h3>
             <form>
                 <div className="form-group">
-                    <label htmlFor="submission-name">Submission Name</label>
+                    <label htmlFor="submissiontName">Submission Name</label>
                     <input
                         type="text"
                         className="form-control form-control-lg"
@@ -83,7 +83,10 @@ const EditSubmission = () => {
                         value={submissionName}
                         onChange={e => setsubmissionName(e.target.value)}
                     />
-                    <input
+                </div>
+                <div className="form-group">
+                    <label htmlFor="description">Description</label>
+                    <textarea
                         type="text"
                         className="form-control form-control-lg"
                         placeholder="Enter Description"
@@ -91,6 +94,9 @@ const EditSubmission = () => {
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                     />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="closureDate">Closure Date</label>
                     <input
                         type="date"
                         className="form-control form-control-lg"
@@ -99,10 +105,13 @@ const EditSubmission = () => {
                         value={closureDate}
                         onChange={e => setClosureDate(e.target.value)}
                     />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="finalClosureDate">Final Closure Date</label>
                     <input
                         type="date"
                         className="form-control form-control-lg"
-                        placeholder="Enter FinalClosureDate"
+                        placeholder="Enter Final Closure Date"
                         name="finalClosureDate"
                         value={finalClosureDate}
                         onChange={e => setFinalClosureDate(e.target.value)}

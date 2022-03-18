@@ -6,6 +6,7 @@ const ListSubmission = () => {
     const [submissions, setSubmissions] = useState([])
     const [listSubmission, setListSubmission] = useState([])
     const navigate = useNavigate()
+    const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -26,19 +27,41 @@ const ListSubmission = () => {
                 }
                 throw Error(response.message);
             })
-            .then(result => setSubmissions(result))
+            .then(result => {
+                setSubmissions(result)
+                alertSuccess(result.message)
+            })
             .catch(error => {
                 navigate('/login')
             });
     }, [listSubmission])
 
+    function alertSuccess(msg) {
+        return `
+            ${msg}
+        `
+    }
+
     const deleteSubmission = submissionId => {
-        fetch(`http://localhost:8080/users/delete/${submissionId}`, {
+        fetch(`http://localhost:8080/submission/delete/${submissionId}`, {
             method: 'DELETE',
             headers: myHeaders,
         })
             .then(res => res.json())
-            .then(id => setListSubmission(listSubmission.filter(submission => id !== submission.submissionId)))
+            .then(id => {
+                setListSubmission(listSubmission.filter(submissions => id !== submissions.submissionId))
+
+                // Alert success notification
+                const div = $(".overflow-auto")
+                const alert = document.createElement('p')
+                alert.setAttribute("class", "alert alert-success mt-3")
+                alert.textContent = id.message
+                div.after(alert)
+            })
+
+        setTimeout(() => {
+            $(".alert").style.display = "none"
+        }, 3000)
     }
 
     return (
@@ -66,7 +89,7 @@ const ListSubmission = () => {
                                     <td>{submission.closureDate}</td>
                                     <td>{submission.finalClosureDate}</td>
                                     <td>
-                                        <Link className="btn btn-primary mr-2" to={`/users/${submission.submissionId}`}>View</Link>
+                                        <Link className="btn btn-primary mr-2" to={`/submission/${submission.submissionId}`}>View</Link>
                                         <Link className="btn btn-outline-primary mr-2" to={`/submission/edit/${submission.submissionId}`}>Edit</Link>
                                         <Link className="btn btn-outline-danger mr-2" onClick={() => deleteSubmission(submission.submissionId)} to="/submission">Delete</Link>
                                     </td>

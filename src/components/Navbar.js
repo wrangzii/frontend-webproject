@@ -15,7 +15,7 @@ const Navbar = (props) => {
         authen = true
 
     return (
-        <div className="navbar position-sticky" style={{ top: 0 }}>
+        <div className="navbar position-sticky" style={{ top: 0, zIndex: 1 }}>
             <div className="wrapper">
                 <Link to="#" className="menu-bars" onClick={() => setIsOpen(!isOpen)}>
                     <i className="fa-solid fa-bars"></i>

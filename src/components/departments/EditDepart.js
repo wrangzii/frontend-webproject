@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import { useParams } from "react-router-dom";
@@ -6,20 +6,44 @@ import { useParams } from "react-router-dom";
 const EditDepart = () => {
     const { id } = useParams();
     const [departmentName, setDepartmentName] = useState("");
-    const [message, setMessage] = useState("")
     const navigate = useNavigate()
+    const $ = document.querySelector.bind(document)
+    const cookies = new Cookies();
+    const myHeaders = {
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        'Content-Type': 'application/json'
+    }
+    const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+    useEffect(() => {
+        fetch(`http://localhost:8080/department/${id}`, requestOptions)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw Error(response.message);
+            })
+            .then(result => setDepartmentName(result.data.departmentName))
+            .catch(error => {
+                console.log(error)
+            });
+        
+        return () => {
+            console.log("clean");
+        }
+    }, [])
+
     const editDepart = () => {
-        const cookies = new Cookies();
 
         const raw = JSON.stringify({
             departmentName
         });
         const requestOptions = {
             method: 'PUT',
-            headers: {
-                'Authorization': 'Bearer ' + cookies.get('token'),
-                'Content-Type': 'application/json'
-            },
+            headers: myHeaders,
             body: raw,
             redirect: 'follow'
         };
@@ -31,12 +55,11 @@ const EditDepart = () => {
                 throw Error(checkError())
             })
             .then(result => {
-                // setMessage(result.message)
                 console.log(result);
-                navigate('/departments')
+                setDepartmentName(result.data.departmentName)
+                // navigate('/departments')
             })
             .catch(error => createAlert(error))
-
     }
 
     function checkError() {
@@ -50,12 +73,12 @@ const EditDepart = () => {
     }
 
     function createAlert(message) {
-        const title = document.querySelector("h3")
+        const title = $("h3")
         const alert = document.createElement("p")
-        if (!document.querySelector(".alert-danger")) {
+        if (!$(".alert-danger")) {
             title.after(alert)
         } else {
-            document.querySelector(".alert-danger").remove()
+            $(".alert-danger").remove()
             title.after(alert)
         }
 
@@ -68,7 +91,7 @@ const EditDepart = () => {
             <h3 className="text-center mb-4">Edit Department</h3>
             <form>
                 <div className="form-group">
-                    <label htmlFor="department-name">Department Name</label>
+                    <label htmlFor="departmentName">Department Name</label>
                     <input
                         type="text"
                         className="form-control form-control-lg"

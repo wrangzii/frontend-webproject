@@ -73,10 +73,8 @@ const AddDepart = () => {
                     className="form-control form-control-lg"
                     placeholder="Enter Your Department Name"
                     name="departmentName"
-                    value={departmentName.trim()}
-                    onChange={(e) => {
-                        setDepartmentName(e.target.value)
-                    }}
+                    value={departmentName}
+                    onChange={e => setDepartmentName(e.target.value) }
                 />
             </div>
             <div className="form-group text-right">
