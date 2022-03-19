@@ -8,8 +8,9 @@ const AddSubmission = () => {
     const [closureDate, setClosureDate] = useState("");
     const [finalClosureDate, setFinalClosureDate] = useState("");
     const [message, setMessage] = useState("");
+    const [isAlert, setIsAlert] = useState(false);
+    const [className, setClassName] = useState("alert-success");
     const navigate = useNavigate()
-    const $ = document.querySelector.bind(document)
 
     const addSubmission = () => {
         const cookies = new Cookies();
@@ -30,49 +31,26 @@ const AddSubmission = () => {
             redirect: 'follow'
         };
         fetch("http://localhost:8080/submission/add", requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-
-                throw Error(checkError())
-            })
+            .then(response => response.json())
             .then(result => {
                 setMessage(result.message)
-                navigate('/submission')
+                setIsAlert(true)
+                if (result.status === "201 CREATED") {
+                    setClassName("alert-success")
+                    setTimeout(() => {
+                        navigate('/submission')
+                    }, 2000);
+                } else {
+                    setClassName("alert-danger")
+                }
+                window.scrollTo(0, 0)
             })
-            .catch(error => {
-                createAlert(error)
-            });
-
-        function checkError() {
-            let msg = ""
-            if ($("input[type=text]").value === "" || $("input[type=email]").value === "" || $("input[type=number]").value === "") {
-                msg = "Not allow blank"
-            } else {
-                msg = "Submission is exist"
-            }
-            return msg
-        }
-
-        function createAlert(message) {
-            const title = $("h3")
-            const alert = document.createElement("p")
-            if (!$(".alert-danger")) {
-                title.after(alert)
-            } else {
-                $(".alert-danger").remove()
-                title.after(alert)
-            }
-
-            alert.textContent = message
-            alert.setAttribute("class", "alert alert-danger")
-        }
     }
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Add New Submission</h3>
+            {isAlert && <p className={`alert ${className}`}>{message}</p>}
             <div className="form-group">
                 <label htmlFor="departmentId">Submission</label>
                 <input

@@ -61,7 +61,7 @@ const ListUser = () => {
 
         setTimeout(() => {
             $(".alert").style.display = "none"
-        }, 3000)
+        }, 2000)
     }
 
     return (

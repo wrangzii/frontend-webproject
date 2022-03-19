@@ -61,7 +61,7 @@ const ListSubmission = () => {
 
         setTimeout(() => {
             $(".alert").style.display = "none"
-        }, 3000)
+        }, 2000)
     }
 
     return (
@@ -85,7 +85,7 @@ const ListSubmission = () => {
                                 <tr key={submission.submissionId}>
                                     <th scope="row">#{submission.submissionId}</th>
                                     <td>{submission.submissionName}</td>
-                                    <td>{submission.description}</td>
+                                    <td><span className="d-block overflow-hidden" style={{ textOverflow: 'ellipsis', width: '160px' }}>{submission.description}</span></td>
                                     <td>{new Date(submission.closureDate).toLocaleDateString()}</td>
                                     <td>{new Date(submission.finalClosureDate).toLocaleDateString()}</td>
                                     <td>

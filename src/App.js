@@ -24,7 +24,12 @@ import ListSubmission from './components/submission/ListSubmission';
 import EditSubmission from './components/submission/EditSubmission';
 import AddSubmission from './components/submission/AddSubmission';
 import ViewSubmission from './components/submission/ViewSubmission';
+// Idea
+// import IdeaHomePage from './components/idea/IdeaHomePage'
+// import Comment from './components/idea/Comment'
+// import TopicIdeas from './components/idea/TopicIdeas'
 
+import NotFound from './components/NotFound';
 import Profile from './components/pages/Profile';
 import {
   BrowserRouter,
@@ -63,7 +68,7 @@ function App() {
               <Route path='/submission/:id' element={<ViewSubmission />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/goodbye' element={<Goodbye />} />
-              {/* <Route path="*" element={<NotFound />}></Route> */}
+              <Route path="*" element={<NotFound />}></Route>
             </Routes>
           </div>
         </div>

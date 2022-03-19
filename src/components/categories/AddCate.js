@@ -8,7 +8,9 @@ const AddCate = () => {
     const [description, setDescription] = useState("")
     const [createDate, setCreateDate] = useState("")
     // const [lastModifyDate, setLastModifyDate] = useState("")
+    const [className, setClassName] = useState("alert-success");
     const [message, setMessage] = useState("");
+    const [isAlert, setIsAlert] = useState(false);
     const navigate = useNavigate()
 
     const handleAddCate = () => {
@@ -30,47 +32,26 @@ const AddCate = () => {
             redirect: 'follow',
         };
         fetch("http://localhost:8080/category/add", requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-
-                throw new Error(checkError())
-            })
+            .then(response => response.json())
             .then(result => {
-                setMessage(result.message)
-                navigate('/categories')
+                setMessage(result.message || result.error)
+                setIsAlert(true)
+                if (result.status === "201 CREATED") {
+                    setClassName("alert-success")
+                    setTimeout(() => {
+                        navigate('/categories')
+                    }, 2000);
+                } else {
+                    setClassName("alert-danger")
+                }
+                window.scrollTo(0, 0)
             })
-            .catch(error => {
-                createAlert(error)
-            })
-
-        function checkError() {
-            let msg = ""
-            if (document.querySelector("input[type=text]").value === "") {
-                msg = "Not allow blank"
-            } else {
-                msg = "Category name is exist"
-            }
-            return msg
-        }
-
-        function createAlert(message) {
-            const title = document.querySelector("h3")
-            const alert = document.createElement("p")
-            if (!document.querySelector(".alert-danger")) {
-                title.after(alert)
-            } else {
-                return false
-            }
-            alert.textContent = message
-            alert.setAttribute("class", "alert alert-danger")
-        }
     }
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Add New Category</h3>
+            {isAlert && <p className={`alert ${className}`}>{message}</p>}
             <form>
                 <div className="form-group">
                     <label htmlFor="category-name">Category Name</label>

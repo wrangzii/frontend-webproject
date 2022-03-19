@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
 const ListCate = () => {
     const [cates, setCates] = useState([]);
     const [listCate, setListCate] = useState([])
-    const navigate = useNavigate()
+    const [message, setMessage] = useState("")
+    const [isDeleted, setIsDeleted] = useState(false)
     const $ = document.querySelector.bind(document)
+    const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -21,26 +23,17 @@ const ListCate = () => {
 
     useEffect(() => {
         fetch("http://localhost:8080/category/all", requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw Error(response.message);
-            })
+            .then(response => response.json())
             .then(result => {
                 setCates(result)
-                alertSuccess(result.message)
             })
-            .catch(error => {
-                navigate('/login')
-            });
     }, [listCate])
 
-    function alertSuccess(msg) {
-        return `
-            ${msg}
-        `
-    }
+    useEffect(() => {
+        setTimeout(() => {
+            [...$$(".alert")].map(item => item.style.display = "none")
+        }, 2000)
+    }, [listCate])
 
     const deleteCate = cateId => {
         fetch(`http://localhost:8080/category/delete/${cateId}`, {
@@ -50,17 +43,9 @@ const ListCate = () => {
             .then(res => res.json())
             .then(id => {
                 setListCate(listCate.filter(cate => id !== cate.cateId))
-                // Alert success notification
-                const div = $(".overflow-auto")
-                const alert = document.createElement('p')
-                alert.setAttribute("class", "alert alert-success mt-3")
-                alert.textContent = id.message
-                div.after(alert)
+                setIsDeleted(true)
+                setMessage(id.message)
             })
-
-        setTimeout(() => {
-            $(".alert").style.display = "none"
-        }, 3000)
     }
 
     return (
@@ -85,8 +70,8 @@ const ListCate = () => {
                                     <th scope="row">#{cate.cateId}</th>
                                     <td>{cate.cateName}</td>
                                     <td>{cate.description}</td>
-                                    <td>{cate.createDate}</td>
-                                    <td>{cate.lastModifyDate}</td>
+                                    <td>{new Date(cate.createDate).toLocaleDateString()}</td>
+                                    <td>{new Date(cate.lastModifyDate).toLocaleDateString()}</td>
                                     <td>
                                         <Link className="btn btn-primary mr-2" to={`/categories/${cate.cateId}`}>View</Link>
                                         <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.cateId}`}>Edit</Link>
@@ -97,6 +82,7 @@ const ListCate = () => {
                         }
                     </tbody>
                 </table>
+                {isDeleted && <p className="alert alert-success">{message}</p>}
             </div>
         </div>
     );

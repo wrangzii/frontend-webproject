@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
 const ListDepart = () => {
     const [departs, setDeparts] = useState([])
     const [listDepart, setListDepart] = useState([])
     const [message, setMessage] = useState("")
-    const navigate = useNavigate()
-    const $ = document.querySelector.bind(document)
+    const [isDeleted, setIsDeleted] = useState(false)
+    const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -22,29 +22,17 @@ const ListDepart = () => {
 
     useEffect(() => {
         fetch("http://localhost:8080/department/all", requestOptions)
-            .then(response => {
-                return response.json()
-                // if (response.ok) {
-                // }
-                // throw Error(response.message);
-            })
+            .then(response => response.json())
             .then(result => {
                 setDeparts(result)
             })
-            // .catch(error => {
-            //     navigate('/login')
-            // });
     }, [listDepart])
 
     useEffect(() => {
-        alertSuccess(message)
-    },[listDepart])
-
-    function alertSuccess(msg) {
-        return `
-            ${msg}
-        `
-    }
+        setTimeout(() => {
+            [...$$(".alert")].map(item => item.style.display = "none")
+        }, 2000)
+    }, [listDepart])
 
     const deleteDepart = departmentId => {
         fetch(`http://localhost:8080/department/delete/${departmentId}`, {
@@ -54,18 +42,9 @@ const ListDepart = () => {
             .then(res => res.json())
             .then(id => {
                 setListDepart(listDepart.filter(depart => id !== depart.departmentId))
-
-                // Alert success notification
-                const div = $(".overflow-auto")
-                const alert = document.createElement('p')
-                alert.setAttribute("class", "alert alert-success mt-3")
-                alert.textContent = id.message
-                div.after(alert)
+                setIsDeleted(true)
+                setMessage(id.message)
             })
-
-        setTimeout(() => {
-            $(".alert").style.display = "none"
-        }, 3000)
     }
 
     return (
@@ -96,6 +75,7 @@ const ListDepart = () => {
                         }
                     </tbody>
                 </table>
+                {isDeleted && <p className="alert alert-success">{ message }</p>}
             </div>
         </div>
     );

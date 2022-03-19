@@ -12,9 +12,10 @@ const AddUser = () => {
     const [password, setPassword] = useState("");
     const [departmentId, setDepartmentId] = useState("");
     const [message, setMessage] = useState("");
-    const [className, setClassName] = useState("");
+    const [className, setClassName] = useState("alert-success");
+    const [isAlert, setIsAlert] = useState(false);
     const navigate = useNavigate()
-    const $ = document.querySelector.bind(document)
+    // const $ = document.querySelector.bind(document)
 
     const handleAddUser = () => {
         const cookies = new Cookies();
@@ -38,45 +39,20 @@ const AddUser = () => {
             redirect: 'follow',
         };
         fetch("http://localhost:8080/users/add", requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-
-                throw Error(checkError())
-            })
+            .then(response => response.json())
             .then(result => {
-                setMessage(result.message)
-                navigate('/users')
+                setMessage(result.message || result.error)
+                setIsAlert(true)
+                if (result.status === "201 CREATED") {
+                    setClassName("alert-success")
+                    setTimeout(() => {
+                        navigate('/users')
+                    }, 2000);
+                } else {
+                    setClassName("alert-danger")
+                }
+                window.scrollTo(0, 0)
             })
-            .catch(error => {
-                createAlert(error)
-            });
-
-        function checkError() {
-            let msg = ""
-            if ($("input").value === "") {
-                msg = "Not allow blank"
-            } else {
-                msg = "User name is exist"
-            }
-
-            return msg
-        }
-
-        function createAlert(message) {
-            const title = $("h3")
-            const alert = document.createElement("p")
-            if (!$(".alert-danger")) {
-                title.after(alert)
-            } else {
-                $(".alert-danger").remove()
-                title.after(alert)
-            }
-
-            alert.textContent = message
-            alert.setAttribute("class", "alert alert-danger")
-        }
     }
 
     function checkNumber(type) {
@@ -95,6 +71,7 @@ const AddUser = () => {
         <>
             <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
                 <h3 className="text-center mb-4">Add New User</h3>
+                {isAlert && <p className={`alert ${className}`}>{ message }</p>}
                 <div>
                     <div className="form-group">
                         <label htmlFor="Username">Username</label>
@@ -103,7 +80,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Username"
                             name="username"
-                            value={username}
+                            value={username.trim()}
                             onChange={(e) => {
                                 setUsername(e.target.value)
                             }}
@@ -129,7 +106,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your E-mail Address"
                             name="email"
-                            value={email}
+                            value={email.trim()}
                             onChange={(e) => {
                                 setEmail(e.target.value)
                             }}
@@ -143,13 +120,13 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your Phone Number"
                             name="phoneNumber"
-                            value={phoneNumber}
+                            value={phoneNumber.trim()}
                             onChange={(e) => {
                                 setPhoneNumber(e.target.value)
                                 checkNumber(e.target.value)
                             }}
                         />
-                        <small className={className}>{message}</small>
+                        {/* <small className={className}>{message}</small> */}
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
@@ -158,7 +135,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your Password"
                             name="password"
-                            value={password}
+                            value={password.trim()}
                             onChange={(e) => {
                                 setPassword(e.target.value)
                             }}
@@ -204,7 +181,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your Department ID"
                             name="departmentId"
-                            value={departmentId}
+                            value={departmentId.trim()}
                             onChange={(e) => {
                                 setDepartmentId(e.target.value)
                             }}

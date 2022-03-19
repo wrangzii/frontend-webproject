@@ -41,8 +41,8 @@ const ViewCate = () => {
             <ul className="list-group col-12 col-md-9 col-lg-6 px-0" style={{ "zIndex": -1 }}>
                 <li className="list-group-item text-break">Name: {cates.cateName}</li>
                 <li className="list-group-item text-break">Description: {cates.description}</li>
-                <li className="list-group-item text-break">Created Date: {cates.createDate}</li>
-                <li className="list-group-item text-break">Last Modified: {cates.lastModifyDate}</li>
+                <li className="list-group-item text-break">Created Date: {new Date(cates.createDate).toLocaleDateString()}</li>
+                <li className="list-group-item text-break">Last Modified: {new Date(cates.lastModifyDate).toLocaleDateString()}</li>
             </ul>
         </>
     );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Cookies } from "react-cookie";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -6,10 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 const AddDepart = () => {
     const [departmentName, setDepartmentName] = useState("");
     const [message, setMessage] = useState("");
-    const [isAlert, setIsAlert] = useState(false)
+    const [isAlert, setIsAlert] = useState(false);
+    const [className, setClassName] = useState("alert-success");
     const navigate = useNavigate()
-    // const $ = document.querySelector.bind(document)
-
+    
     const handleAddDepart = () => {
         const cookies = new Cookies();
 
@@ -28,18 +28,24 @@ const AddDepart = () => {
         fetch("http://localhost:8080/department/add", requestOptions)
             .then(response => response.json())
             .then(result => {
-                setIsAlert(true)
                 setMessage(result.message)
+                setIsAlert(true)
                 if (result.status === "200 OK") {
-                    navigate('/departments')
+                    setClassName("alert-success")
+                    setTimeout(() => {
+                        navigate('/departments')
+                    }, 2000);
+                } else {
+                    setClassName("alert-danger")
                 }
+                window.scrollTo(0, 0)
             })
     }
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Add New Department</h3>
-            {isAlert && <p className="alert alert-danger">{message}</p>}
+            {isAlert && <p className={`alert ${className}`}>{message}</p>}
             <div className="form-group">
                 <label htmlFor="departmentId">Department Name</label>
                 <input
