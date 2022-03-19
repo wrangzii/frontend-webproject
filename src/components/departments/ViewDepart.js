@@ -4,6 +4,7 @@ import { Cookies } from "react-cookie";
 
 const ViewDepart = () => {
     const [departs, setDeparts] = useState([])
+    // const [isMounted, setIsMounted] = useState(false)
     const { id } = useParams();
 
     const cookies = new Cookies();
@@ -27,6 +28,8 @@ const ViewDepart = () => {
             .catch(error => {
                 alert(error)
             });
+        
+        // return () => setIsMounted(true)
     }, [])
 
     return (

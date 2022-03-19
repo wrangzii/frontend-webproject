@@ -101,9 +101,9 @@ const AddUser = () => {
                         <input
                             type="text"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your Username"
+                            placeholder="Enter Username"
                             name="username"
-                            value={username.trim()}
+                            value={username}
                             onChange={(e) => {
                                 setUsername(e.target.value)
                             }}
@@ -129,7 +129,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your E-mail Address"
                             name="email"
-                            value={email.trim()}
+                            value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value)
                             }}
@@ -143,7 +143,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your Phone Number"
                             name="phoneNumber"
-                            value={phoneNumber.trim()}
+                            value={phoneNumber}
                             onChange={(e) => {
                                 setPhoneNumber(e.target.value)
                                 checkNumber(e.target.value)
@@ -158,7 +158,7 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Your Password"
                             name="password"
-                            value={password.trim()}
+                            value={password}
                             onChange={(e) => {
                                 setPassword(e.target.value)
                             }}

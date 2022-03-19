@@ -37,8 +37,8 @@ const ViewSubmission = () => {
             <ul className="list-group col-12 col-md-9 col-lg-6 px-0">
                 <li className="list-group-item text-break">Submission Name: {submissions.submissionName}</li>
                 <li className="list-group-item text-break">Description: {submissions.description}</li>
-                <li className="list-group-item text-break">Closure Date: {submissions.closureDate}</li>
-                <li className="list-group-item text-break">Final Closure Date: {submissions.finalClosureDate}</li>
+                <li className="list-group-item text-break">Closure Date: {new Date(submissions.closureDate).toLocaleDateString()}</li>
+                <li className="list-group-item text-break">Final Closure Date: {new Date(submissions.finalClosureDate).toLocaleDateString()}</li>
             </ul>
         </div>
     );

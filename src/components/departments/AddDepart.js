@@ -6,8 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 const AddDepart = () => {
     const [departmentName, setDepartmentName] = useState("");
     const [message, setMessage] = useState("");
+    const [isAlert, setIsAlert] = useState(false)
     const navigate = useNavigate()
-    const $ = document.querySelector.bind(document)
+    // const $ = document.querySelector.bind(document)
 
     const handleAddDepart = () => {
         const cookies = new Cookies();
@@ -25,47 +26,20 @@ const AddDepart = () => {
             redirect: 'follow'
         };
         fetch("http://localhost:8080/department/add", requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-
-                throw Error(checkError())
-            })
+            .then(response => response.json())
             .then(result => {
+                setIsAlert(true)
                 setMessage(result.message)
-                navigate('/departments')
+                if (result.status === "200 OK") {
+                    navigate('/departments')
+                }
             })
-            .catch(error => createAlert(error));
-
-        function checkError() {
-            let msg = ""
-            if ($("input[type=text]").value === "") {
-                msg = "Not allow blank"
-            } else {
-                msg = "Department name is exist"
-            }
-            return msg
-        }
-
-        function createAlert(message) {
-            const title = $("h3")
-            const alert = document.createElement("p")
-            if (!$(".alert-danger")) {
-                title.after(alert)
-            } else {
-                $(".alert-danger").remove()
-                title.after(alert)
-            }
-
-            alert.textContent = message
-            alert.setAttribute("class", "alert alert-danger")
-        }
     }
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Add New Department</h3>
+            {isAlert && <p className="alert alert-danger">{message}</p>}
             <div className="form-group">
                 <label htmlFor="departmentId">Department Name</label>
                 <input
@@ -74,7 +48,7 @@ const AddDepart = () => {
                     placeholder="Enter Your Department Name"
                     name="departmentName"
                     value={departmentName}
-                    onChange={e => setDepartmentName(e.target.value) }
+                    onChange={e => setDepartmentName(e.target.value)}
                 />
             </div>
             <div className="form-group text-right">

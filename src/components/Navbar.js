@@ -33,7 +33,7 @@ const Navbar = (props) => {
                     })}
                     <Logout />
                 </ul>}
-                <p>{props.loginName}</p>
+                {/* <p>{props.loginName}</p> */}
             </div>
             <NavbarAction />
         </div>

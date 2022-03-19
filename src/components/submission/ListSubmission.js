@@ -86,8 +86,8 @@ const ListSubmission = () => {
                                     <th scope="row">#{submission.submissionId}</th>
                                     <td>{submission.submissionName}</td>
                                     <td>{submission.description}</td>
-                                    <td>{submission.closureDate}</td>
-                                    <td>{submission.finalClosureDate}</td>
+                                    <td>{new Date(submission.closureDate).toLocaleDateString()}</td>
+                                    <td>{new Date(submission.finalClosureDate).toLocaleDateString()}</td>
                                     <td>
                                         <Link className="btn btn-primary mr-2" to={`/submission/${submission.submissionId}`}>View</Link>
                                         <Link className="btn btn-outline-primary mr-2" to={`/submission/edit/${submission.submissionId}`}>Edit</Link>

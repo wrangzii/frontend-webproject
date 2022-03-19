@@ -5,6 +5,7 @@ import { Cookies } from "react-cookie";
 const ListDepart = () => {
     const [departs, setDeparts] = useState([])
     const [listDepart, setListDepart] = useState([])
+    const [message, setMessage] = useState("")
     const navigate = useNavigate()
     const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
@@ -22,19 +23,22 @@ const ListDepart = () => {
     useEffect(() => {
         fetch("http://localhost:8080/department/all", requestOptions)
             .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw Error(response.message);
+                return response.json()
+                // if (response.ok) {
+                // }
+                // throw Error(response.message);
             })
             .then(result => {
                 setDeparts(result)
-                alertSuccess(result.message)
             })
-            .catch(error => {
-                navigate('/login')
-            });
+            // .catch(error => {
+            //     navigate('/login')
+            // });
     }, [listDepart])
+
+    useEffect(() => {
+        alertSuccess(message)
+    },[listDepart])
 
     function alertSuccess(msg) {
         return `

@@ -4,8 +4,8 @@ import { Cookies } from "react-cookie";
 
 const ViewCate = () => {
     const { id } = useParams();
-
     const [cates, setCates] = useState([]);
+    const [isMounted, setIsMounted] = useState(true)
 
     const cookies = new Cookies();
     const requestOptions = {
@@ -17,17 +17,20 @@ const ViewCate = () => {
         redirect: 'follow'
     };
     useEffect(() => {
-        fetch(`http://localhost:8080/category/${id}`, requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw Error(response.message);
-            })
-            .then(result => setCates(result.data))
-            .catch(error => {
-                alert(error)
-            });
+        if (isMounted) {
+            fetch(`http://localhost:8080/category/${id}`, requestOptions)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json()
+                    }
+                    throw Error(response.message);
+                })
+                .then(result => setCates(result.data))
+                .catch(error => {
+                    alert(error)
+                });
+        }
+        return () => {setIsMounted(false)}
     }, [])
 
     return (
