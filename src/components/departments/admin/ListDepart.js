@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import axios from "axios";
 
 const ListDepart = () => {
     const [departs, setDeparts] = useState([])
@@ -9,23 +10,24 @@ const ListDepart = () => {
     const [isDeleted, setIsDeleted] = useState(false)
     const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
+    const bodyFormData = new FormData();
+    bodyFormData.append("pageNumber", 0)
+    
+
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
-        'Content-Type': 'application/json'
+        'Content-Type': 'multipart/form-data'
     }
 
-    const requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
-
     useEffect(() => {
-        fetch("http://localhost:8080/department/all", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                setDeparts(result)
-            })
+        axios({
+            method: "get",
+            url: "http://localhost:8080/department/all",
+            data: bodyFormData,
+            headers: myHeaders,
+        })
+            .then(response => setDeparts(response))
+            .catch(error => console.log(error.message));
     }, [listDepart])
 
     useEffect(() => {
@@ -75,7 +77,7 @@ const ListDepart = () => {
                         }
                     </tbody>
                 </table>
-                {isDeleted && <p className="alert alert-success">{ message }</p>}
+                {isDeleted && <p className="alert alert-success">{message}</p>}
             </div>
         </div>
     );

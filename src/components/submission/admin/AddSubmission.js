@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import { Cookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
+import Alert from "../../alert/Alert";
 
 const AddSubmission = () => {
     const [submissionName, setsubmissionName] = useState("");
@@ -50,7 +51,7 @@ const AddSubmission = () => {
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Add New Submission</h3>
-            {isAlert && <p className={`alert ${className}`}>{message}</p>}
+            <Alert isAlert={isAlert} className={className} message={message} />
             <div className="form-group">
                 <label htmlFor="departmentId">Submission</label>
                 <input

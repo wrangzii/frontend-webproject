@@ -5,25 +5,25 @@ import Login from './components/form/Login';
 import ForgotPassword from './components/form/ForgotPassword'
 import ResetPassword from './components/form/ResetPassword';
 //User
-import ListUser from './components/users/ListUser';
-import AddUser from './components/users/AddUser';
-import EditUser from './components/users/EditUser';
-import ViewUser from './components/users/ViewUser';
+import ListUser from './components/users/admin/ListUser';
+import AddUser from './components/users/admin/AddUser';
+import EditUser from './components/users/admin/EditUser';
+import ViewUser from './components/users/admin/ViewUser';
 //Category
-import ListCate from './components/categories/ListCate';
-import EditCate from './components/categories/EditCate';
-import AddCate from './components/categories/AddCate';
-import ViewCate from './components/categories/ViewCate';
+import ListCate from './components/categories/admin/ListCate';
+import EditCate from './components/categories/admin/EditCate';
+import AddCate from './components/categories/admin/AddCate';
+import ViewCate from './components/categories/admin/ViewCate';
 // Department
-import ListDepart from './components/departments/ListDepart';
-import EditDepart from './components/departments/EditDepart';
-import AddDepart from './components/departments/AddDepart';
-import ViewDepart from './components/departments/ViewDepart';
+import ListDepart from './components/departments/admin/ListDepart';
+import EditDepart from './components/departments/admin/EditDepart';
+import AddDepart from './components/departments/admin/AddDepart';
+import ViewDepart from './components/departments/admin/ViewDepart';
 // Submmision
-import ListSubmission from './components/submission/ListSubmission';
-import EditSubmission from './components/submission/EditSubmission';
-import AddSubmission from './components/submission/AddSubmission';
-import ViewSubmission from './components/submission/ViewSubmission';
+import ListSubmission from './components/submission/admin/ListSubmission';
+import EditSubmission from './components/submission/admin/EditSubmission';
+import AddSubmission from './components/submission/admin/AddSubmission';
+import ViewSubmission from './components/submission/admin/ViewSubmission';
 // Idea
 // import IdeaHomePage from './components/idea/IdeaHomePage'
 // import Comment from './components/idea/Comment'

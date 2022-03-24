@@ -1,7 +1,23 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Button from "./Button";
 
 const ResetPassword = () => {
+    const requestOptions = {
+        method: 'POST',
+        header: {
+            'Content-Type': 'application/json'
+        },
+        redirect: 'follow'
+    };
+
+    // useEffect(() => {
+    //     fetch("http://localhost:8080/confirm_reset?token=103b2f6f-f128-4612-bcee-110a4a71d1cf", requestOptions)
+    //         .then(response => response.json())
+    //         .then(result => {
+    //             console.log(result);
+    //         })
+    // }, [])
+
     return (
         <div className="authentication container">
             <form className="d-flex flex-column mx-auto">

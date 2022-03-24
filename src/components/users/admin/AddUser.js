@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import Alert from "../../alert/Alert";
 
 const AddUser = () => {
     const [email, setEmail] = useState("");
@@ -71,7 +72,7 @@ const AddUser = () => {
         <>
             <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
                 <h3 className="text-center mb-4">Add New User</h3>
-                {isAlert && <p className={`alert ${className}`}>{ message }</p>}
+                <Alert isAlert={isAlert} className={className} message={message} />
                 <div>
                     <div className="form-group">
                         <label htmlFor="Username">Username</label>
@@ -91,7 +92,7 @@ const AddUser = () => {
                         <input
                             type="text"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your Full Name"
+                            placeholder="Enter Full Name"
                             name="fullName"
                             value={fullName}
                             onChange={(e) => {
@@ -104,7 +105,7 @@ const AddUser = () => {
                         <input
                             type="email"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your E-mail Address"
+                            placeholder="Enter E-mail Address"
                             name="email"
                             value={email.trim()}
                             onChange={(e) => {
@@ -118,7 +119,7 @@ const AddUser = () => {
                             type="tel"
                             pattern="[0-9]{10}"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your Phone Number"
+                            placeholder="Enter Phone Number"
                             name="phoneNumber"
                             value={phoneNumber.trim()}
                             onChange={(e) => {
@@ -133,7 +134,7 @@ const AddUser = () => {
                         <input
                             type="password"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your Password"
+                            placeholder="Enter Password"
                             name="password"
                             value={password.trim()}
                             onChange={(e) => {
@@ -147,7 +148,7 @@ const AddUser = () => {
                         <input
                             type="date"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your Birthday"
+                            placeholder="Enter Birthday"
                             name="dateOfBirth"
                             value={dateOfBirth}
                             onChange={(e) => {
@@ -161,7 +162,7 @@ const AddUser = () => {
                         <select
                             name="role"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your Role"
+                            placeholder="Enter Role"
                             value={role}
                             onChange={(e) => {
                                 setRole([e.target.value])
@@ -179,7 +180,7 @@ const AddUser = () => {
                         <input
                             type="number"
                             className="form-control form-control-lg"
-                            placeholder="Enter Your Department ID"
+                            placeholder="Enter Department ID"
                             name="departmentId"
                             value={departmentId.trim()}
                             onChange={(e) => {

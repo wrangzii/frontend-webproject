@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Alert from "../alert/Alert";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("")
-    const $ = document.querySelector.bind(document)
-    const navigate = useNavigate()
+    const [isAlert, setIsAlert] = useState(false)
+    const [message, setMessage] = useState("")
+    const [className, setClassName] = useState("alert-success")
+
     const handleForgotPassword = () => {
         const raw = JSON.stringify({
             email
@@ -14,61 +17,24 @@ const ForgotPassword = () => {
             body: raw,
             headers: { 'Content-Type': 'application/json' },
         })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                console.log(response);
-                throw Error(checkError())
-            })
+            .then(response => response.json())
             .then(result => {
-                notifySuccess(result.message)
+                setMessage(result.message)
+                setIsAlert(true)
+                if (result.status === "200 OK") {
+                    setClassName("alert-success")
+                } else {
+                    setClassName("alert-danger")
+                }
+                window.scrollTo(0, 0)
             })
-            .catch(error => createAlert(error))
-    }
-
-    function checkError() {
-        let msg = ""
-        if ($("input[type=email]").value === "") {
-            msg = "Not allow blank"
-        } else {
-            msg = "This email address does not exist!"
-        }
-        return msg
-    }
-
-    function notifySuccess(msg) {
-        const title = $("h3")
-        const alert = document.createElement("p")
-        title.after(alert)
-        if (!$(".alert-success")) {
-            title.after(alert)
-        } else {
-            $(".alert-success").remove()
-            title.after(alert)
-        }
-        alert.textContent = msg
-        alert.setAttribute("class", "alert alert-success")
-    }
-
-    function createAlert(message) {
-        const title = $("h3")
-        const alert = document.createElement("p")
-        if (!$(".alert-danger")) {
-            title.after(alert)
-        } else {
-            $(".alert-danger").remove()
-            title.after(alert)
-        }
-
-        alert.textContent = message
-        alert.setAttribute("class", "alert alert-danger")
     }
 
     return (
         <div className="authentication container">
             <form className="d-flex flex-column mx-auto">
                 <h3><b>Forgot password</b></h3>
+                <Alert isAlert={isAlert} className={className} message={message} />
                 <div className="form-group mb-3">
                     <label htmlFor="email" className="mb-2">Email address</label>
                     <input type="email" className="form-control" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />

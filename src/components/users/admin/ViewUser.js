@@ -47,6 +47,7 @@ const ViewUser = () => {
                 <li className="list-group-item text-break">Phone: {users.phoneNumber}</li>
                 <li className="list-group-item text-break">Date Of Birth: {new Date(users.dateOfBirth).toLocaleDateString()}</li>
                 <li className="list-group-item text-break">Role: {roles}</li>
+                <li className="list-group-item text-break">Password Token: {users.password}</li>
             </ul>
         </>
     );
