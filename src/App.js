@@ -25,9 +25,9 @@ import EditSubmission from './components/submission/admin/EditSubmission';
 import AddSubmission from './components/submission/admin/AddSubmission';
 import ViewSubmission from './components/submission/admin/ViewSubmission';
 // Idea
-// import IdeaHomePage from './components/idea/IdeaHomePage'
-// import Comment from './components/idea/Comment'
-// import TopicIdeas from './components/idea/TopicIdeas'
+import ListIdea from './components/idea/ListIdea';
+import ListComment from './components/idea/ListComment'
+import AddIdea from './components/idea/AddIdea'
 
 import NotFound from './components/NotFound';
 import Profile from './components/pages/Profile';
@@ -68,6 +68,9 @@ function App() {
               <Route path='/submission/:id' element={<ViewSubmission />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/goodbye' element={<Goodbye />} />
+              <Route path='/ideas' element={<ListIdea />} />
+              <Route path='/ideas/add' element={<AddIdea />} />
+              <Route path='/comments' element={<ListComment />} />
               <Route path="*" element={<NotFound />}></Route>
             </Routes>
           </div>

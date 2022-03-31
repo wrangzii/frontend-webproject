@@ -1,41 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
-import axios from "axios";
 
 const ListDepart = () => {
     const [departs, setDeparts] = useState([])
     const [listDepart, setListDepart] = useState([])
     const [message, setMessage] = useState("")
     const [isDeleted, setIsDeleted] = useState(false)
-    const $$ = document.querySelectorAll.bind(document)
+    const [pageNumber, setPageNumber] = useState(0)
+    const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
-    const bodyFormData = new FormData();
-    bodyFormData.append("pageNumber", 0)
-    
 
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
-        'Content-Type': 'multipart/form-data'
+        'Accept': 'application/json'
     }
 
     useEffect(() => {
-        axios({
-            method: "get",
-            url: "http://localhost:8080/department/all",
-            data: bodyFormData,
+        fetch(`http://localhost:8080/department/all?pageNumber=${pageNumber}`, {
+            method: "GET",
             headers: myHeaders,
         })
-            .then(response => setDeparts(response))
-            .catch(error => console.log(error.message));
-    }, [listDepart])
+            .then(response => response.json())
+            .then(result => setDeparts(result))
+    }, [pageNumber])
 
-    useEffect(() => {
-        setTimeout(() => {
-            [...$$(".alert")].map(item => item.style.display = "none")
-        }, 2000)
-    }, [listDepart])
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         [...$$(".alert")].map(item => item.style.display = "none")
+    //     }, 2000)
+    // }, [listDepart])
 
+    // Delete item
     const deleteDepart = departmentId => {
         fetch(`http://localhost:8080/department/delete/${departmentId}`, {
             method: 'DELETE',
@@ -45,12 +41,20 @@ const ListDepart = () => {
             .then(id => {
                 setListDepart(listDepart.filter(depart => id !== depart.departmentId))
                 setIsDeleted(true)
+                setListDepart(listDepart)
                 setMessage(id.message)
             })
     }
 
+    // Handle pagination action
+    useEffect(() => {
+        (function checkPage() {
+            pageNumber <= 0 ? $(".prev").classList.add("pe-none") : $(".prev").classList.remove("pe-none")
+        })()
+    },[pageNumber])
+
     return (
-        <div className="list-depart">
+        <form className="list-depart">
             <Link className="btn btn-outline-dark mb-3" to="/departments/add">Add Department</Link>
             <div className="overflow-auto">
                 <table className="table border shadow">
@@ -79,7 +83,23 @@ const ListDepart = () => {
                 </table>
                 {isDeleted && <p className="alert alert-success">{message}</p>}
             </div>
-        </div>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item prev" onClick={() => setPageNumber(pageNumber - 1)}>
+                        <Link className="page-link" to={`?pageNumber=${pageNumber - 1}`} aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span className="sr-only">Previous</span>
+                        </Link>
+                    </li>
+                    <li className="page-item next" onClick={() => setPageNumber(pageNumber + 1)}>
+                        <Link className="page-link" to={`?pageNumber=${pageNumber + 1}`} aria-label="Previous">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span className="sr-only">Next</span>
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
+        </form>
     );
 }
 

@@ -1,68 +1,56 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
 const ListUser = () => {
     const [users, setUsers] = useState([])
     const [listUser, setListUser] = useState([])
-    const navigate = useNavigate()
+    const [message, setMessage] = useState("")
+    const [pageNumber, setPageNumber] = useState(0)
+    const [isDeleted, setIsDeleted] = useState(false)
     const $ = document.querySelector.bind(document)
-
+    const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
+
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
-        'Content-Type': 'application/json'
+        'Accept': 'application/json'
     }
-
-    const requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
 
     useEffect(() => {
-        fetch("http://localhost:8080/users/all", requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw Error(response.message);
-            })
-            .then(result => {
-                setUsers(result)
-                alertSuccess(result.message)
-            })
-            .catch(error => {
-                navigate('/login')
-            });
+        fetch(`http://localhost:8080/users/all?pageNumber=${pageNumber}`, {
+            method: "GET",
+            headers: myHeaders,
+        })
+            .then(response => response.json())
+            .then(result => setUsers(result))
+    }, [pageNumber])
+
+    useEffect(() => {
+        setTimeout(() => {
+            [...$$(".alert")].map(item => item.style.display = "none")
+        }, 2000)
     }, [listUser])
 
-    function alertSuccess(msg) {
-        return `
-            ${msg}
-        `
-    }
-
     const deleteUser = userId => {
-        fetch(`http://localhost:8080/users/delete/${userId}`, {
+        fetch(`http://localhost:8080/department/delete/${userId}`, {
             method: 'DELETE',
             headers: myHeaders,
         })
             .then(res => res.json())
             .then(id => {
                 setListUser(listUser.filter(user => id !== user.userId))
-                // Alert success notification
-                const div = $(".overflow-auto")
-                const alert = document.createElement('p')
-                alert.setAttribute("class", "alert alert-success mt-3")
-                alert.textContent = id.message
-                div.after(alert)
+                setIsDeleted(true)
+                setMessage(id.message)
             })
-
-        setTimeout(() => {
-            $(".alert").style.display = "none"
-        }, 2000)
     }
+    
+    // Handle pagination action
+    useEffect(() => {
+        (function checkPage() {
+            pageNumber <= 0 ? $(".prev").classList.add("pe-none") : $(".prev").classList.remove("pe-none")
+        })()
+    }, [pageNumber])
 
     return (
         <div className="users">
@@ -96,7 +84,24 @@ const ListUser = () => {
                         }
                     </tbody>
                 </table>
+                {isDeleted && <p className="alert alert-success">{message}</p>}
             </div>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item prev" onClick={() => setPageNumber(pageNumber - 1)}>
+                        <Link className="page-link" to={`?pageNumber=${pageNumber - 1}`} aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span className="sr-only">Previous</span>
+                        </Link>
+                    </li>
+                    <li className="page-item next" onClick={() => setPageNumber(pageNumber + 1)}>
+                        <Link className="page-link" to={`?pageNumber=${pageNumber + 1}`} aria-label="Previous">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span className="sr-only">Next</span>
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
         </div>
     );
 }

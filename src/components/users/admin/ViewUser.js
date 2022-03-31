@@ -4,7 +4,7 @@ import { Cookies } from "react-cookie";
 
 const ViewUser = () => {
     const { id } = useParams();
-    const [users, setUsets] = useState([]);
+    const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([])
 
     const cookies = new Cookies();
@@ -25,7 +25,7 @@ const ViewUser = () => {
                 throw Error(response.message);
             })
             .then(result => {
-                setUsets(result.data)
+                setUsers(result.data)
                 setRoles(result.data.roles.map(role => (
                     <span className="d-block text-danger" key={role.roleId}>{role.roleName}</span>
                 )))
@@ -43,11 +43,10 @@ const ViewUser = () => {
             <ul className="list-group col-12 col-md-9 col-lg-6 px-0" style={{ "zIndex": -1 }}>
                 <li className="list-group-item text-break">Email: {users.email}</li>
                 <li className="list-group-item text-break">Username: {users.username}</li>
-                <li className="list-group-item text-break">Full Name: {users.fullName}</li>
+                <li className="list-group-item text-break">Fullname: {users.fullName}</li>
                 <li className="list-group-item text-break">Phone: {users.phoneNumber}</li>
                 <li className="list-group-item text-break">Date Of Birth: {new Date(users.dateOfBirth).toLocaleDateString()}</li>
                 <li className="list-group-item text-break">Role: {roles}</li>
-                <li className="list-group-item text-break">Password Token: {users.password}</li>
             </ul>
         </>
     );

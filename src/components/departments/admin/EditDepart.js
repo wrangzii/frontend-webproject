@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import Alert from "../../alert/Alert";
 
 const EditDepart = () => {
     const { id } = useParams();
@@ -9,6 +10,7 @@ const EditDepart = () => {
     const [departmentName, setDepartmentName] = useState("");
     const [isAlert, setIsAlert] = useState(false)
     const [message, setMessage] = useState("")
+    const [className, setClassName] = useState("alert-success");
 
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -20,20 +22,18 @@ const EditDepart = () => {
         redirect: 'follow'
     };
 
+    // Fill current data
     useEffect(() => {
         fetch(`http://localhost:8080/department/${id}`, requestOptions)
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw Error(response.message);
-            })
+            .then(response => response.json())
             .then(result => {
-                setDepartmentName(result.data.departmentName)
+                if (result.status === '200 OK') {
+                    setClassName("alert-success")
+                    setDepartmentName(result.data.departmentName)
+                } else {
+                    setClassName("alert-danger")
+                }
             })
-            .catch(error => {
-                console.log(error)
-            });
     }, [])
 
     const editDepart = () => {
@@ -51,22 +51,25 @@ const EditDepart = () => {
         fetch(`http://localhost:8080/department/edit/${id}`, requestOptions)
             .then(response => response.json())
             .then(result => {
-                setMessage(result.message)
+                setMessage(result.message || result.error)
                 setIsAlert(true)
-                setDepartmentName(result.data.departmentName)
+                if (result.status === "200 OK") {
+                    setDepartmentName(result.data.departmentName)
+                    setClassName("alert-success")
+                    setTimeout(() => {
+                        navigate('/departments')
+                    }, 2000);
+                } else {
+                    setClassName("alert-danger")
+                }
+                window.scrollTo(0, 0)
             })
     }
-
-    useEffect(() => {
-        setTimeout(() => {
-            if (isAlert) navigate('/departments')
-        }, 2000)
-    }, [isAlert])
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Edit Department</h3>
-            {isAlert && <p className="alert alert-success">{message}</p>}
+            <Alert isAlert={isAlert} className={className} message={message} />
             <form>
                 <div className="form-group">
                     <label htmlFor="departmentName">Department Name</label>

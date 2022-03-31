@@ -7,9 +7,11 @@ const ListCate = () => {
     const [listCate, setListCate] = useState([])
     const [message, setMessage] = useState("")
     const [isDeleted, setIsDeleted] = useState(false)
+    const [pageNumber, setPageNumber] = useState(0)
     const $ = document.querySelector.bind(document)
     const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
+
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
         'Content-Type': 'application/json'
@@ -22,12 +24,10 @@ const ListCate = () => {
     };
 
     useEffect(() => {
-        fetch("http://localhost:8080/category/all", requestOptions)
+        fetch(`http://localhost:8080/category/all?pageNumber=${pageNumber}`, requestOptions)
             .then(response => response.json())
-            .then(result => {
-                setCates(result)
-            })
-    }, [listCate])
+            .then(result => setCates(result))
+    }, [pageNumber])
 
     useEffect(() => {
         setTimeout(() => {
@@ -47,6 +47,12 @@ const ListCate = () => {
                 setMessage(id.message)
             })
     }
+
+    useEffect(() => {
+        (function checkPage() {
+            pageNumber <= 0 ? $(".prev").classList.add("pe-none") : $(".prev").classList.remove("pe-none")
+        })()
+    }, [pageNumber])
 
     return (
         <div className="list-cate">
@@ -84,6 +90,22 @@ const ListCate = () => {
                 </table>
                 {isDeleted && <p className="alert alert-success">{message}</p>}
             </div>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item prev" onClick={() => setPageNumber(pageNumber - 1)}>
+                        <Link className="page-link" to={`?pageNumber=${pageNumber - 1}`} aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span className="sr-only">Previous</span>
+                        </Link>
+                    </li>
+                    <li className="page-item next" onClick={() => setPageNumber(pageNumber + 1)}>
+                        <Link className="page-link" to={`?pageNumber=${pageNumber + 1}`} aria-label="Previous">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span className="sr-only">Next</span>
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
         </div>
     );
 }
