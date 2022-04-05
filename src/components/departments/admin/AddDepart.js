@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { Cookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../../alert/Alert";
@@ -32,9 +32,10 @@ const AddDepart = () => {
                 setIsAlert(true)
                 if (result.status === "200 OK") {
                     setClassName("alert-success")
-                    setTimeout(() => {
-                        navigate('/departments')
-                    }, 2000);
+                    // setTimeout(() => {
+                    //     navigate('/departments')
+                    // }, 2000);
+                    navigate('/departments')
                 } else {
                     setClassName("alert-danger")
                 }

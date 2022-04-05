@@ -8,9 +8,23 @@ const ListCate = () => {
     const [message, setMessage] = useState("")
     const [isDeleted, setIsDeleted] = useState(false)
     const [pageNumber, setPageNumber] = useState(0)
+    const [mounted, setMounted] = useState(true)
+    const [isAdmin, setIsAdmin] = useState(false)
     const $ = document.querySelector.bind(document)
     const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
+
+    useEffect(() => {
+        if (cookies.get("token")) {
+            if (cookies.get("roles").some(role => role === "ROLE_ADMIN")) {
+                setIsAdmin(true)
+            } else {
+                setIsAdmin(false)
+                // navigate("/")
+            }
+        }
+        return () => setMounted(false)
+    }, [])
 
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -56,7 +70,8 @@ const ListCate = () => {
 
     return (
         <div className="list-cate">
-            <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>
+            <h3>Category List</h3>
+            {isAdmin && <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>}
             <div className="overflow-auto">
                 <table className="table border shadow">
                     <thead>
@@ -66,7 +81,7 @@ const ListCate = () => {
                             <th scope="col">Description</th>
                             <th scope="col">Created Date</th>
                             <th scope="col">Last Modified</th>
-                            <th>Action</th>
+                            {isAdmin && <th>Action</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -78,11 +93,15 @@ const ListCate = () => {
                                     <td>{cate.description}</td>
                                     <td>{new Date(cate.createDate).toLocaleDateString()}</td>
                                     <td>{new Date(cate.lastModifyDate).toLocaleDateString()}</td>
-                                    <td>
-                                        <Link className="btn btn-primary mr-2" to={`/categories/${cate.cateId}`}>View</Link>
-                                        <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.cateId}`}>Edit</Link>
-                                        <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.cateId)} to="/categories">Delete</Link>
-                                    </td>
+                                    {isAdmin &&
+                                        <td>
+                                            <>
+                                                <Link className="btn btn-primary mr-2" to={`/categories/${cate.cateId}`}>View</Link>
+                                                <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.cateId}`}>Edit</Link>
+                                                <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.cateId)} to="/categories">Delete</Link>
+                                            </>
+                                        </td>
+                                    }
                                 </tr>
                             ))
                         }

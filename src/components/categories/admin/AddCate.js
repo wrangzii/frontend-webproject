@@ -36,7 +36,7 @@ const AddCate = () => {
             .then(result => {
                 setMessage(result.message || result.error)
                 setIsAlert(true)
-                if (result.status === "201 CREATED") {
+                if (result.status === "201 CREATED" || result.status === "200 OK") {
                     setClassName("alert-success")
                     setTimeout(() => {
                         navigate('/categories')

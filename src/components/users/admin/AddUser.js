@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import Alert from "../../alert/Alert";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 const AddUser = () => {
     const [email, setEmail] = useState("");
@@ -15,8 +17,8 @@ const AddUser = () => {
     const [message, setMessage] = useState("");
     const [className, setClassName] = useState("alert-success");
     const [isAlert, setIsAlert] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null)
     const navigate = useNavigate()
-    // const $ = document.querySelector.bind(document)
 
     const handleAddUser = () => {
         const cookies = new Cookies();
@@ -72,6 +74,7 @@ const AddUser = () => {
         <>
             <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
                 <h3 className="text-center mb-4">Add New User</h3>
+
                 <Alert isAlert={isAlert} className={className} message={message} />
                 <div>
                     <div className="form-group">
@@ -140,21 +143,16 @@ const AddUser = () => {
                             onChange={(e) => {
                                 setPassword(e.target.value)
                             }}
-
                         />
                     </div>
                     <div className="form-group">
                         <label htmlFor="dateOfBirth">Date of birth</label>
-                        <input
-                            type="date"
+                        <DatePicker
                             className="form-control form-control-lg"
-                            placeholder="Enter Birthday"
-                            name="dateOfBirth"
-                            value={dateOfBirth}
-                            onChange={(e) => {
-                                setDateOfBirth(e.target.value)
-                            }}
-
+                            selected={selectedDate}
+                            onChange={date => setSelectedDate(date)}
+                            dateFormat="yyyy-MM-dd"
+                            maxDate={new Date()}
                         />
                     </div>
                     <div className="form-group">

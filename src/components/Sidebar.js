@@ -24,4 +24,10 @@ export const Sidebar = [
         className: 'nav-text text-white text-decoration-none',
         icon: 'fa-solid fa-calendar-check'
     },
+    {
+        title: 'Idea',
+        path: '/',
+        className: 'nav-text text-white text-decoration-none',
+        icon: 'fa-solid fa-lightbulb'
+    },
 ]

@@ -1,4 +1,4 @@
-import Dashboard from './components/pages/Dashboard'
+// import Dashboard from './components/pages/Dashboard'
 import Navbar from './components/Navbar'
 // //Form
 import Login from './components/form/Login';
@@ -26,19 +26,24 @@ import AddSubmission from './components/submission/admin/AddSubmission';
 import ViewSubmission from './components/submission/admin/ViewSubmission';
 // Idea
 import ListIdea from './components/idea/ListIdea';
-import ListComment from './components/idea/ListComment'
+import ViewIdea from './components/idea/ViewIdea';
 import AddIdea from './components/idea/AddIdea'
 
 import NotFound from './components/NotFound';
 import Profile from './components/pages/Profile';
+import Terms from './components/Terms';
+
+import Goodbye from './components/pages/Goodbye';
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
-import Goodbye from './components/pages/Goodbye';
+
+import { Cookies } from 'react-cookie';
 
 function App() {
+  const cookies = new Cookies()
   return (
     <BrowserRouter>
       <div className="App">
@@ -46,10 +51,10 @@ function App() {
         <div className="wrapper-content container">
           <div className="px-3 px-md-5 my-5" id='container'>
             <Routes>
-              <Route exact path='/' element={<Dashboard />} />
-              <Route path='/login' element={<Login />} />
+              {/* <Route exact path='/' element={<Dashboard />} /> */}
+              {/* <Route path='/login' element={<Login />} /> */}
               <Route path='/forgot-password' element={<ForgotPassword />} />
-              <Route path='/reset' element={<ResetPassword />} />
+              <Route path='/confirm_reset' element={<ResetPassword />} />
               <Route path='/users' element={<ListUser />} />
               <Route path='/users/add' element={<AddUser />} />
               <Route path='/users/edit/:id' element={<EditUser />} />
@@ -68,9 +73,15 @@ function App() {
               <Route path='/submission/:id' element={<ViewSubmission />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/goodbye' element={<Goodbye />} />
-              <Route path='/ideas' element={<ListIdea />} />
-              <Route path='/ideas/add' element={<AddIdea />} />
-              <Route path='/comments' element={<ListComment />} />
+              {cookies.get("token") ? (
+                <>
+                  <Route exact path='/' element={<ListIdea />} />
+                  <Route path='/add/:id' element={<AddIdea />} />
+                  <Route path='/:id' element={<ViewIdea />} />
+                </>
+              ) : <Route path='/' element={<Login />} />}
+              
+              <Route path='/terms-and-condition' element={<Terms />} />
               <Route path="*" element={<NotFound />}></Route>
             </Routes>
           </div>

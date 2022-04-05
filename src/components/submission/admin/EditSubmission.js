@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Cookies } from "react-cookie";
-import { useParams } from "react-router-dom";
+import Alert from "../../alert/Alert";
 
 const EditSubmission = () => {
     const { id } = useParams();
@@ -9,10 +9,37 @@ const EditSubmission = () => {
     const [description, setDescription] = useState("");
     const [closureDate, setClosureDate] = useState("");
     const [finalClosureDate, setFinalClosureDate] = useState("");
-    // const [message, setMessage] = useState("")
+    const [message, setMessage] = useState("")
+    const [isAlert, setIsAlert] = useState(false)
+    const [className, setClassName] = useState("alert-success");
     const navigate = useNavigate()
+    const cookies = new Cookies();
+    
+    const myHeaders = {
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        'Content-Type': 'application/json'
+    }
+    const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/submission/${id}`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === '200 OK' || result.status === "201 CREATED") {
+                    setClassName("alert-success")
+                    setsubmissionName(result.data.submissionName)
+                    setDescription(result.data.description)
+                } else {
+                    setClassName("alert-danger")
+                }
+            })
+    }, [])
+
     const editSubmission = () => {
-        const cookies = new Cookies();
 
         const raw = JSON.stringify({
             submissionName,
@@ -22,56 +49,32 @@ const EditSubmission = () => {
         });
         const requestOptions = {
             method: 'PUT',
-            headers: {
-                'Authorization': 'Bearer ' + cookies.get('token'),
-                'Content-Type': 'application/json'
-            },
+            headers: myHeaders,
             body: raw,
             redirect: 'follow'
         };
 
         fetch(`http://localhost:8080/submission/edit/${id}`, requestOptions)
-            .then(response => {
-                if (response.ok)
-                    response.json()
-                throw Error(checkError())
-            })
+            .then(response => response.json())
             .then(result => {
-                // setMessage(result.message)
-                console.log(result);
-                navigate('/submission')
+                setMessage(result.message || result.error)
+                setIsAlert(true)
+                if (result.status === "200 OK" || result.status === "201 CREATED") {
+                    setsubmissionName(result.data.submissionName)
+                    setClassName("alert-success")
+                    setTimeout(() => {
+                        navigate('/submission')
+                    }, 2000);
+                } else {
+                    setClassName("alert-danger")
+                }
+                window.scrollTo(0, 0)
             })
-            .catch(error => createAlert(error))
-
     }
-
-    function checkError() {
-        let msg = ""
-        if (document.querySelector("input[type=text]").value === "") {
-            msg = "Not allow blank"
-        } else {
-            msg = "Submission name is exist"
-        }
-        return msg
-    }
-
-    function createAlert(message) {
-        const title = document.querySelector("h3")
-        const alert = document.createElement("p")
-        if (!document.querySelector(".alert-danger")) {
-            title.after(alert)
-        } else {
-            document.querySelector(".alert-danger").remove()
-            title.after(alert)
-        }
-
-        alert.textContent = message
-        alert.setAttribute("class", "alert alert-danger")
-    }
-
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
             <h3 className="text-center mb-4">Edit Submission</h3>
+            <Alert isAlert={isAlert} className={className} message={message} />
             <form>
                 <div className="form-group">
                     <label htmlFor="submissiontName">Submission Name</label>

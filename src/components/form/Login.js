@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from "react-cookie";
+import Alert from "../alert/Alert"
 
 const Login = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [isAlert, setIsAlert] = useState(false)
 	const [message, setMessage] = useState("")
+	const [className, setClassName] = useState("alert-success")
 	const navigate = useNavigate()
 	const cookies = new Cookies();
 
@@ -32,18 +34,23 @@ const Login = () => {
 			.then(result => {
 				setMessage(result.message || result.error)
 				setIsAlert(true)
-				if (result.token) {
-					cookies.set('token', result.token, { path: '/' })
-					cookies.set('fullName', result.fullName)
-					cookies.set('email', result.email)
-					cookies.set('username', result.username)
-					cookies.set('id', result.id)
-					cookies.set('phoneNumber', result.phoneNumber)
-					cookies.set('dateOfBirth', new Date(result.dateOfBirth).toLocaleDateString())
-					cookies.set('roles', result.roles)
+				if (result.data.token) {
+					cookies.set('token', result.data.token, { path: '/' })
+					cookies.set('fullName', result.data.fullName)
+					cookies.set('email', result.data.email)
+					cookies.set('username', result.data.username)
+					cookies.set('id', result.data.id)
+					cookies.set('phoneNumber', result.data.phoneNumber)
+					cookies.set('dateOfBirth', new Date(result.data.dateOfBirth).toLocaleDateString())
+					cookies.set('roles', result.data.roles)
 					navigate('/')
 					window.location.reload()
 				}
+			})
+			.catch(error => {
+				setIsAlert(true)
+				setClassName("alert-danger")
+				console.log(error.message);
 			})
 	};
 
@@ -51,7 +58,7 @@ const Login = () => {
 		<div className="authentication container">
 			<form className="d-flex flex-column mx-auto">
 				<h3><b>Login to your account</b></h3>
-				{isAlert && <p className="alert alert-danger">{message}</p>}
+				<Alert isAlert={isAlert} className={className} message={message} />
 				<div className="form-group mb-3">
 					<label htmlFor="username" className="mb-2">Username</label>
 					<input type="text" name="username" className="form-control" placeholder="Enter username" value={username.trim()} onChange={e => setUsername(e.target.value)} />
@@ -67,6 +74,7 @@ const Login = () => {
 			</form>
 		</div>
 	)
+
 }
 
 export default Login;

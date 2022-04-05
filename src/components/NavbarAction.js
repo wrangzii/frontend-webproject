@@ -22,7 +22,7 @@ const NavbarAction = () => {
         );
     } else {
         return (
-            <Link to="/login" className="btn btn-success">Login</Link>
+            <Link to="/" className="btn btn-success">Login</Link>
         )
     }
 }

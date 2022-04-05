@@ -26,6 +26,7 @@ const ViewUser = () => {
             })
             .then(result => {
                 setUsers(result.data)
+                console.log(result.data);
                 setRoles(result.data.roles.map(role => (
                     <span className="d-block text-danger" key={role.roleId}>{role.roleName}</span>
                 )))
@@ -45,7 +46,7 @@ const ViewUser = () => {
                 <li className="list-group-item text-break">Username: {users.username}</li>
                 <li className="list-group-item text-break">Fullname: {users.fullName}</li>
                 <li className="list-group-item text-break">Phone: {users.phoneNumber}</li>
-                <li className="list-group-item text-break">Date Of Birth: {new Date(users.dateOfBirth).toLocaleDateString()}</li>
+                <li className="list-group-item text-break">Date Of Birth: {users.dateOfBirth}</li>
                 <li className="list-group-item text-break">Role: {roles}</li>
             </ul>
         </>

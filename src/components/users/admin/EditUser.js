@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import Alert from "../../alert/Alert";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 const EditUser = () => {
     const { id } = useParams();
@@ -18,6 +20,7 @@ const EditUser = () => {
     const [fullName, setFullName] = useState("");
     const [roles, setRoles] = useState([]);
     const [departmentId, setDepartmentId] = useState("");
+    const [selectedDate, setSelectedDate] = useState(null)
 
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -74,10 +77,11 @@ const EditUser = () => {
                 setMessage(result.message || result.error)
                 setIsAlert(true)
                 if (result.status === "200 OK") {
+                    console.log(result);
                     setEmail(result.data.email)
                     setUsername(result.data.username)
                     setPhoneNumber(result.data.phoneNumber)
-                    setDateOfBirth(result.data.dateOfBirth || "")
+                    setDateOfBirth(result.data.dateOfBirth)
                     setFullName(result.data.fullName)
                     setDepartmentId(result.data.departmentId.departmentId)
                     setRoles(result.date.roles.map(user => user.roleName))
@@ -91,6 +95,8 @@ const EditUser = () => {
                 window.scrollTo(0, 0)
             })
     }
+
+    console.log(dateOfBirth);
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
@@ -115,7 +121,7 @@ const EditUser = () => {
                         className="form-control form-control-lg"
                         placeholder="Enter Fullname"
                         name="fullName"
-                        value={fullName.trim()}
+                        value={fullName}
                         onChange={e => setFullName(e.target.value)}
                     />
                 </div>
@@ -143,13 +149,12 @@ const EditUser = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="dateOfBirth">Enter D.O.B</label>
-                    <input
-                        type="date"
+                    <DatePicker
                         className="form-control form-control-lg"
-                        placeholder="Enter Your D.O.B"
-                        name="dateOfBirth"
-                        value={dateOfBirth}
-                        onChange={e => setDateOfBirth(e.target.value)}
+                        selected={selectedDate}
+                        onChange={date => setSelectedDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        maxDate={new Date()}
                     />
                 </div>
                 <div className="form-group">

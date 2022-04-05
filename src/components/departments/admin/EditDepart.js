@@ -27,7 +27,7 @@ const EditDepart = () => {
         fetch(`http://localhost:8080/department/${id}`, requestOptions)
             .then(response => response.json())
             .then(result => {
-                if (result.status === '200 OK') {
+                if (result.status === '200 OK' || result.status === "201 CREATED") {
                     setClassName("alert-success")
                     setDepartmentName(result.data.departmentName)
                 } else {
@@ -53,7 +53,7 @@ const EditDepart = () => {
             .then(result => {
                 setMessage(result.message || result.error)
                 setIsAlert(true)
-                if (result.status === "200 OK") {
+                if (result.status === "200 OK" || result.status === "201 CREATED") {
                     setDepartmentName(result.data.departmentName)
                     setClassName("alert-success")
                     setTimeout(() => {
