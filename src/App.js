@@ -28,6 +28,7 @@ import ViewSubmission from './components/submission/admin/ViewSubmission';
 import ListIdea from './components/idea/ListIdea';
 import ViewIdea from './components/idea/ViewIdea';
 import AddIdea from './components/idea/AddIdea'
+import EditIdea from './components/idea/EditIdea'
 
 import NotFound from './components/NotFound';
 import Profile from './components/pages/Profile';
@@ -77,6 +78,7 @@ function App() {
                 <>
                   <Route exact path='/' element={<ListIdea />} />
                   <Route path='/add/:id' element={<AddIdea />} />
+                  <Route path='/edit/:id' element={<EditIdea />} />
                   <Route path='/:id' element={<ViewIdea />} />
                 </>
               ) : <Route path='/' element={<Login />} />}

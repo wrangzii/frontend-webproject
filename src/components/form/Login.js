@@ -8,7 +8,7 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const [isAlert, setIsAlert] = useState(false)
 	const [message, setMessage] = useState("")
-	const [className, setClassName] = useState("alert-success")
+	const [className, setClassName] = useState("")
 	const navigate = useNavigate()
 	const cookies = new Cookies();
 
@@ -33,7 +33,7 @@ const Login = () => {
 			})
 			.then(result => {
 				setMessage(result.message || result.error)
-				setIsAlert(true)
+				// setIsAlert(true)
 				if (result.data.token) {
 					cookies.set('token', result.data.token, { path: '/' })
 					cookies.set('fullName', result.data.fullName)

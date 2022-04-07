@@ -19,6 +19,7 @@ function AddIdea() {
     const [message, setMessage] = useState("")
     const [className, setClassName] = useState("alert-success")
     const [isAlert, setIsAlert] = useState(false)
+    const $ = document.querySelector.bind(document)
     const cookies = new Cookies()
     const bodyFormData = new FormData();
     let cate_id = useRef(null)
@@ -89,6 +90,11 @@ function AddIdea() {
             .catch(error => console.log(error))
     }, [pageNumber])
 
+    // isAnonymous
+    useEffect(() => {
+        setIsAnonymous($("#anonymous").checked ? true : false);
+    }, [isAnonymous])
+
     const handleSubmit = () => {
         checked ? addIdea() : alert("You need to agree with Terms & Condition!")
     }
@@ -137,6 +143,10 @@ function AddIdea() {
                     <div className="file form-group">
                         <label htmlFor="file">Upload your file</label>
                         <input type="file" id='file' className="file form-control" onChange={handleSelectFile} />
+                    </div>
+                    <div className="d-flex align-items-center pb-2">
+                        <input type="checkbox" id="anonymous" className='mr-2' onChange={e => setIsAnonymous(e.target.checked)} />
+                        <label className="form-check-label fw-bold text-danger" htmlFor="anonymous">Post as anonymous</label>
                     </div>
                     <div className="term">
                         <input type="checkbox" onChange={() => setChecked(!checked)} id='term' className="file mr-2" value={checked} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 
@@ -10,6 +10,7 @@ const ListSubmission = () => {
     const [pageNumber, setPageNumber] = useState(0)
     const [mounted, setMounted] = useState(true)
     const [isAdmin, setIsAdmin] = useState(false)
+    const [className, setClassName] = useState("")
     const $ = document.querySelector.bind(document)
     const navigate = useNavigate()
     const cookies = new Cookies();
@@ -62,6 +63,15 @@ const ListSubmission = () => {
         })()
     }, [pageNumber])
 
+    
+    const closure_date = useRef(null)
+    useEffect(() => {
+        // if (new Date().toLocaleDateString() )
+        console.log(closure_date.current);
+    }, [])
+
+    console.log(new Date().toLocaleDateString());
+
     return (
         <div className="submission">
             <h3>Submission List</h3>
@@ -81,14 +91,14 @@ const ListSubmission = () => {
                     <tbody>
                         {
                             submissions.map(submission => (
-                                <tr key={submission.submissionId}>
+                                <tr key={submission.submissionId} className={className}>
                                     <th scope="row">#{submission.submissionId}</th>
                                     <td>{submission.submissionName}</td>
                                     <td><span className="d-block overflow-hidden" style={{ textOverflow: 'ellipsis', width: '160px' }}>{submission.description}</span></td>
-                                    <td>{new Date(submission.closureDate).toLocaleDateString()}</td>
+                                    <td ref={closure_date}>{new Date(submission.closureDate).toLocaleDateString()}</td>
                                     <td>{new Date(submission.finalClosureDate).toLocaleDateString()}</td>
                                     <td>
-                                        <Link className="btn btn-primary mr-2" to={isAdmin ? `/submission/${submission.submissionId}` : `/add/${submission.submissionId}`}>{isAdmin ? "View" : "Add" }</Link>
+                                        <Link className="btn btn-primary mr-2" to={isAdmin ? `/submission/${submission.submissionId}` : `/add/${submission.submissionId}`}>{isAdmin ? "View" : "Add"}</Link>
                                         {isAdmin &&
                                             <>
                                                 <Link className="btn btn-outline-primary mr-2" to={`/submission/edit/${submission.submissionId}`}>Edit</Link>

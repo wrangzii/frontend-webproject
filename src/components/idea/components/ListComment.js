@@ -6,10 +6,7 @@ import { Cookies } from 'react-cookie'
 function ListComment() {
     const [comments, setComments] = useState([])
     const [mounted, setMounted] = useState(true)
-    // const [content, setContent] = useState("")
-    // const [userId, setUserId] = useState("")
-    // const [ideaId, setIdeaId] = useState("")
-    // const [isAnonymous, setIsAnonymous] = useState(false)
+    const [isAnonymous, setIsAnonymous] = useState(false)
     const cookies = new Cookies()
 
     const myHeaders = {
@@ -32,11 +29,11 @@ function ListComment() {
     return (
         <div className="user-comment bg-light p-2 border-bottom">
             {comments.map(comment => (
-                <div key={comment.commentId}>
+                <div key={comment.commentId} className="border-top">
                     <div className="user d-flex align-items-center gap-2 py-3">
                         <div className="user-image"><img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} /></div>
                         <div className="user-info">
-                            <p className="user-name fz-20">{comment.username}</p>
+                            <p className="user-name fz-20">{comment.isAnonymous ? "Anonymous" : comment.username}</p>
                             <small className="post-date">{new Date(comment.createDate).toLocaleDateString()}</small>
                         </div>
                     </div>

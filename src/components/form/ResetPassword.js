@@ -9,15 +9,16 @@ const ResetPassword = () => {
     const [message, setMessage] = useState("");
     const [isAlert, setIsAlert] = useState(false);
     const [className, setClassName] = useState("alert-success");
+    const [isValid, setIsValid] = useState(false);
 
     const href = window.location.href
     let resetToken = href.substring(href.indexOf('=') + 1)
 
     useEffect(() => {
-        if (password !== confirmPassword) {
-            console.log("no!");
+        if (password === confirmPassword) {
+            setIsValid(true)
         } else {
-            console.log("yes");
+            setIsValid(false)
         }
     }, [password])
 
@@ -53,7 +54,7 @@ const ResetPassword = () => {
                     <label htmlFor="confirmNewPassword" className="mb-2">Confirm new password</label>
                     <input type="password" className="form-control" placeholder="Confirm new password" value={password} onChange={e => setPassword(e.target.value)} />
                 </div>
-                <Button value="Reset password" color="success" action={handleResetPassword} />
+                {isValid && <Button value="Reset password" color="success" action={handleResetPassword} />}
             </form>
         </div>
     );
