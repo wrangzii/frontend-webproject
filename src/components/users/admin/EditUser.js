@@ -21,6 +21,9 @@ const EditUser = () => {
     const [roles, setRoles] = useState([]);
     const [departmentId, setDepartmentId] = useState("");
     const [selectedDate, setSelectedDate] = useState(null)
+    const [departs, setDeparts] = useState([])
+    const [mounted, setMounted] = useState(true)
+    const [pageNumber, setPageNumber] = useState(0)
 
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -52,6 +55,20 @@ const EditUser = () => {
             })
     }, [])
 
+    // Get departments
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/department/all?pageNumber=${pageNumber}`, {
+            method: "GET",
+            headers: myHeaders,
+        })
+            .then(response => response.json())
+            .then(result => {
+                setDeparts(result)
+            })
+        return () => setMounted(false)
+    }, [])
+
     const editUser = () => {
 
         const raw = JSON.stringify({
@@ -77,7 +94,6 @@ const EditUser = () => {
                 setMessage(result.message || result.error)
                 setIsAlert(true)
                 if (result.status === "200 OK") {
-                    console.log(result);
                     setEmail(result.data.email)
                     setUsername(result.data.username)
                     setPhoneNumber(result.data.phoneNumber)
@@ -95,8 +111,6 @@ const EditUser = () => {
                 window.scrollTo(0, 0)
             })
     }
-
-    console.log(dateOfBirth);
 
     return (
         <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
@@ -151,26 +165,11 @@ const EditUser = () => {
                     <label htmlFor="dateOfBirth">Enter D.O.B</label>
                     <DatePicker
                         className="form-control form-control-lg"
-                        selected={selectedDate}
-                        onChange={date => setSelectedDate(date)}
+                        selected={dateOfBirth}
+                        onChange={date => setDateOfBirth(date)}
                         dateFormat="yyyy-MM-dd"
                         maxDate={new Date()}
                     />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="departmentId">Choose Department</label>
-                    <select
-                        name="departmentId"
-                        className="form-control form-control-lg"
-                        value={departmentId.departmentName}
-                        onChange={e => setDepartmentId(e.target.value)}
-                    >
-                        <optgroup label="Department">
-                            <option value="1">QA department</option>
-                            <option value="2">Falcuty of IT</option>
-                            <option value="3">HR department</option>
-                        </optgroup>
-                    </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="role">Choose Role</label>
@@ -182,9 +181,24 @@ const EditUser = () => {
                     >
                         <optgroup label="Role">
                             <option value="admin">Admin</option>
-                            <option value="qa_manager">QA manager</option>
-                            <option value="qa_coordinator">QA coordinator</option>
+                            <option value="qa_manager">QA Manager</option>
+                            <option value="qa_coordinator">QA Coordinator</option>
                             <option value="staff">Staff</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="departmentId">Choose Department</label>
+                    <select
+                        name="departmentId"
+                        className="form-control form-control-lg"
+                        value={departmentId}
+                        onChange={e => setDepartmentId(e.target.value)}
+                    >
+                        <optgroup label="Department">
+                            {departs.map(depart => (
+                                <option key={depart.departmentId} value={depart.departmentId}>{depart.departmentName}</option>
+                            ))}
                         </optgroup>
                     </select>
                 </div>

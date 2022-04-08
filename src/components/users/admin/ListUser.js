@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import axios from "axios";
 
 const ListUser = () => {
     const [users, setUsers] = useState([])
-    const [listUser, setListUser] = useState([])
     const [message, setMessage] = useState("")
     const [pageNumber, setPageNumber] = useState(0)
-    const [isDeleted, setIsDeleted] = useState(false)
     const [mounted, setMounted] = useState(true)
     const [isAdmin, setIsAdmin] = useState(false)
     const $ = document.querySelector.bind(document)
-    const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
     // const navigate = useNavigate()
 
@@ -42,22 +40,32 @@ const ListUser = () => {
         return () => setMounted(false)
     }, [pageNumber])
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         [...$$(".alert")].map(item => item.style.display = "none")
-    //     }, 2000)
-    // }, [listUser])
+    // const deleteUser = userId => {
+    //     fetch(`http://localhost:8080/users/delete/${userId}`, {
+    //         method: 'DELETE',
+    //         headers: myHeaders,
+    //     })
+    //         .then(res => res.json())
+    //         .then(id => {
+    //             setListUser([...listUser.filter(user => id !== user.userId), listUser])
+    //             setIsDeleted(true)
+    //             setMessage(id.message)
+    //         })
+    // }
 
+    // Delete item
     const deleteUser = userId => {
-        fetch(`http://localhost:8080/users/delete/${userId}`, {
-            method: 'DELETE',
-            headers: myHeaders,
+        axios({
+            method: "DELETE",
+            url: `http://localhost:8080/users/delete/${userId}`,
+            headers: { 'Authorization': 'Bearer ' + cookies.get('token') }
         })
-            .then(res => res.json())
-            .then(id => {
-                setListUser(listUser.filter(user => id !== user.userId))
-                setIsDeleted(true)
-                setMessage(id.message)
+            .then(res => {
+                const newListUser = [...users]
+                const index = users.findIndex(user => user.id === userId)
+                newListUser.splice(index, 1)
+                setUsers(newListUser)
+                setMessage(res.data.message)
             })
     }
 
@@ -103,7 +111,7 @@ const ListUser = () => {
                             }
                         </tbody>
                     </table>
-                    {isDeleted && <p className="alert alert-success">{message}</p>}
+                    {message && <p className="alert alert-success">{message}</p>}
                 </div>
                 <nav aria-label="Page navigation example">
                     <ul className="pagination">

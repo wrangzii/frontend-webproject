@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import axios from "axios";
 
 const ListCate = () => {
     const [cates, setCates] = useState([]);
-    const [listCate, setListCate] = useState([])
     const [message, setMessage] = useState("")
-    const [isDeleted, setIsDeleted] = useState(false)
     const [pageNumber, setPageNumber] = useState(0)
     const [mounted, setMounted] = useState(true)
     const [isAdmin, setIsAdmin] = useState(false)
     const $ = document.querySelector.bind(document)
-    const $$ = document.querySelectorAll.bind(document)
     const cookies = new Cookies();
 
     useEffect(() => {
@@ -43,22 +41,19 @@ const ListCate = () => {
             .then(result => setCates(result))
     }, [pageNumber])
 
-    useEffect(() => {
-        setTimeout(() => {
-            [...$$(".alert")].map(item => item.style.display = "none")
-        }, 2000)
-    }, [listCate])
-
+    // Delete item
     const deleteCate = cateId => {
-        fetch(`http://localhost:8080/category/delete/${cateId}`, {
-            method: 'DELETE',
-            headers: myHeaders,
+        axios({
+            method: "DELETE",
+            url: `http://localhost:8080/category/delete/${cateId}`,
+            headers: { 'Authorization': 'Bearer ' + cookies.get('token') }
         })
-            .then(res => res.json())
-            .then(id => {
-                setListCate(listCate.filter(cate => id !== cate.cateId))
-                setIsDeleted(true)
-                setMessage(id.message)
+            .then(res => {
+                const newListCategory = [...cates]
+                const index = cates.findIndex(cate => cate.id === cateId)
+                newListCategory.splice(index, 1)
+                setCates(newListCategory)
+                setMessage(res.data.message)
             })
     }
 
@@ -107,7 +102,7 @@ const ListCate = () => {
                         }
                     </tbody>
                 </table>
-                {isDeleted && <p className="alert alert-success">{message}</p>}
+                {message && <p className="alert alert-success">{message}</p>}
             </div>
             <nav aria-label="Page navigation example">
                 <ul className="pagination">

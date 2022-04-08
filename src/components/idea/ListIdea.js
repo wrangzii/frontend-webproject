@@ -15,6 +15,7 @@ const ListIdea = () => {
     }
     const bodyFormData = new FormData();
 
+    // Get list idea
     useEffect(() => {
         axios({
             'method': "GET",
@@ -26,12 +27,23 @@ const ListIdea = () => {
             .catch(error => console.log(error))
     }, [pageNumber])
 
+    // Get posts' view count
+    // useEffect(() => {
+    //     axios({
+    //         'method': "GET",
+    //         'url': `http://localhost:8080/submit_idea/viewCount/${id}`,
+    //         'headers': { 'Authorization': 'Bearer ' + cookies.get('token') },
+    //     })
+    //         .then(res => console.log(res))
+    //         .catch(err => console.log(err.response.data.error))
+    // }, [])
+
+    // Check pagination
     useEffect(() => {
         (function checkPage() {
             pageNumber <= 0 ? $(".prev").classList.add("pe-none") : $(".prev").classList.remove("pe-none")
         })()
     }, [pageNumber])
-
 
     return (
         <div className="list-idea">

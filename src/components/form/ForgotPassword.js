@@ -40,7 +40,7 @@ const ForgotPassword = () => {
                     <input type="email" className="form-control" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
                 </div>
                 <button type="button" onClick={handleForgotPassword} className="btn btn-success">Reset password</button>
-                <Link to="/login" className="btn btn-danger mt-2">Back to login</Link>
+                <Link to="/" className="btn btn-danger mt-2">Back to login</Link>
             </form>
         </div>
     );

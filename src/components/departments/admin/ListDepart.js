@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import axios from "axios"
 
 const ListDepart = () => {
     const [departs, setDeparts] = useState([])
-    const [listDepart, setListDepart] = useState([])
     const [message, setMessage] = useState("")
-    const [isDeleted, setIsDeleted] = useState(false)
     const [pageNumber, setPageNumber] = useState(0)
     const [isAdmin, setIsAdmin] = useState(false)
     const [mounted, setMounted] = useState(true)
@@ -43,16 +42,17 @@ const ListDepart = () => {
 
     // Delete item
     const deleteDepart = departmentId => {
-        fetch(`http://localhost:8080/department/delete/${departmentId}`, {
-            method: 'DELETE',
-            headers: myHeaders,
+        axios({
+            method: "DELETE",
+            url: `http://localhost:8080/department/delete/${departmentId}`,
+            headers: { 'Authorization': 'Bearer ' + cookies.get('token') }
         })
-            .then(res => res.json())
-            .then(id => {
-                setListDepart(listDepart.filter(depart => id !== depart.departmentId))
-                setIsDeleted(true)
-                setListDepart(listDepart)
-                setMessage(id.message)
+            .then(res => {
+                const newListDepart = [...departs]
+                const index = departs.findIndex(depart => depart.id === departmentId)
+                newListDepart.splice(index, 1)
+                setDeparts(newListDepart)
+                setMessage(res.data.message)
             })
     }
 
@@ -63,7 +63,7 @@ const ListDepart = () => {
         })()
         return () => setMounted(false)
     }, [pageNumber])
-    
+
     if (isAdmin) {
         return (
             <form className="list-depart">
@@ -87,14 +87,14 @@ const ListDepart = () => {
                                         <td>
                                             <Link className="btn btn-primary mr-2" to={`/departments/${depart.departmentId}`}>View</Link>
                                             <Link className="btn btn-outline-primary mr-2" to={`/departments/edit/${depart.departmentId}`}>Edit</Link>
-                                            <Link className="btn btn-outline-danger mr-2" onClick={() => deleteDepart(depart.departmentId)} to="/departments">Delete</Link>
+                                            <button type="button" className="btn btn-outline-danger mr-2" onClick={() => deleteDepart(depart.departmentId)} >Delete</button>
                                         </td>
                                     </tr>
                                 ))
                             }
                         </tbody>
                     </table>
-                    {isDeleted && <p className="alert alert-success">{message}</p>}
+                    {message && <p className="alert alert-success">{message}</p>}
                 </div>
                 <nav aria-label="Page navigation example">
                     <ul className="pagination">

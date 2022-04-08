@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import axios from "axios";
 
 const ListSubmission = () => {
     const [submissions, setSubmissions] = useState([])
-    const [listSubmission, setListSubmission] = useState([])
     const [message, setMessage] = useState("")
-    const [isDeleted, setIsDeleted] = useState(false)
     const [pageNumber, setPageNumber] = useState(0)
     const [mounted, setMounted] = useState(true)
     const [isAdmin, setIsAdmin] = useState(false)
@@ -43,16 +42,17 @@ const ListSubmission = () => {
 
     // Delete item
     const deleteSubmission = submissionId => {
-        fetch(`http://localhost:8080/submission/delete/${submissionId}`, {
-            method: 'DELETE',
-            headers: myHeaders,
+        axios({
+            method: "DELETE",
+            url: `http://localhost:8080/submission/delete/${submissionId}`,
+            headers: { 'Authorization': 'Bearer ' + cookies.get('token') }
         })
-            .then(res => res.json())
-            .then(id => {
-                setListSubmission(listSubmission.filter(submission => id !== submission.submissionId))
-                setIsDeleted(true)
-                setListSubmission(listSubmission)
-                setMessage(id.message)
+            .then(res => {
+                const newListSubmission = [...submissions]
+                const index = submissions.findIndex(submission => submission.id === submissionId)
+                newListSubmission.splice(index, 1)
+                setSubmissions(newListSubmission)
+                setMessage(res.data.message)
             })
     }
 
@@ -63,7 +63,6 @@ const ListSubmission = () => {
         })()
     }, [pageNumber])
 
-    
     const closure_date = useRef(null)
     useEffect(() => {
         // if (new Date().toLocaleDateString() )
@@ -110,7 +109,7 @@ const ListSubmission = () => {
                         }
                     </tbody>
                 </table>
-                {isDeleted && <p className="alert alert-success">{message}</p>}
+                {message && <p className="alert alert-success">{message}</p>}
             </div>
             <nav aria-label="Page navigation example">
                 <ul className="pagination">

@@ -1,27 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Cookies } from "react-cookie";
 import Alert from "../../alert/Alert";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import { Cookies } from "react-cookie";
 
 const AddUser = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [fullName, setFullName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState(null);
     const [role, setRole] = useState("");
     const [password, setPassword] = useState("");
     const [departmentId, setDepartmentId] = useState("");
     const [message, setMessage] = useState("");
     const [className, setClassName] = useState("alert-success");
     const [isAlert, setIsAlert] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(null)
+    const [mounted, setMounted] = useState(true)
+    const [departs, setDeparts] = useState([])
+    const [pageNumber, setPageNumber] = useState(0)
     const navigate = useNavigate()
+    const cookies = new Cookies();
 
     const handleAddUser = () => {
-        const cookies = new Cookies();
         const raw = JSON.stringify({
             email,
             username,
@@ -58,20 +60,26 @@ const AddUser = () => {
             })
     }
 
-    function checkNumber(type) {
-        if (!isNaN(type)) {
-            setMessage("Keep it on")
-            setClassName("mt-2 d-block text-success")
-            return true
-        } else {
-            setMessage("Please input only numbers")
-            setClassName("mt-2 d-block text-danger")
-            return false
-        }
+    // Get departments
+    const myHeaders = {
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        'Accept': 'application/json'
     }
 
+    useEffect(() => {
+        fetch(`http://localhost:8080/department/all?pageNumber=${pageNumber}`, {
+            method: "GET",
+            headers: myHeaders,
+        })
+            .then(response => response.json())
+            .then(result => {
+                setDeparts(result)
+            })
+        return () => setMounted(false)
+    }, [])
+
     return (
-        <>
+        <div className="add-user">
             <div className="col-12 col-md-9 col-lg-6 mx-auto shadow p-3 p-md-5">
                 <h3 className="text-center mb-4">Add New User</h3>
 
@@ -127,10 +135,8 @@ const AddUser = () => {
                             value={phoneNumber.trim()}
                             onChange={(e) => {
                                 setPhoneNumber(e.target.value)
-                                checkNumber(e.target.value)
                             }}
                         />
-                        {/* <small className={className}>{message}</small> */}
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
@@ -149,8 +155,9 @@ const AddUser = () => {
                         <label htmlFor="dateOfBirth">Date of birth</label>
                         <DatePicker
                             className="form-control form-control-lg"
-                            selected={selectedDate}
-                            onChange={date => setSelectedDate(date)}
+                            selected={dateOfBirth}
+                            value={dateOfBirth}
+                            onChange={date => setDateOfBirth(date)}
                             dateFormat="yyyy-MM-dd"
                             maxDate={new Date()}
                         />
@@ -160,7 +167,6 @@ const AddUser = () => {
                         <select
                             name="role"
                             className="form-control form-control-lg"
-                            placeholder="Enter Role"
                             value={role}
                             onChange={(e) => {
                                 setRole([e.target.value])
@@ -175,17 +181,20 @@ const AddUser = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="departmentId">Department No.</label>
-                        <input
-                            type="number"
+                        <select
                             className="form-control form-control-lg"
-                            placeholder="Enter Department ID"
                             name="departmentId"
-                            value={departmentId.trim()}
+                            value={departmentId}
                             onChange={(e) => {
                                 setDepartmentId(e.target.value)
                             }}
-
-                        />
+                        >
+                            <optgroup label="Department">
+                                {departs.map(depart => (
+                                    <option key={depart.departmentId} value={depart.departmentId}>{depart.departmentName}</option>
+                                ))}
+                            </optgroup>
+                        </select>
                     </div>
                     <div className="form-group text-right">
                         <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddUser}>Add User</button>
@@ -193,7 +202,7 @@ const AddUser = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

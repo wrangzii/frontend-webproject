@@ -22,6 +22,7 @@ function ViewIdea({ image, date }) {
         'Authorization': 'Bearer ' + cookies.get('token')
     }
 
+    // Get idea by id
     useEffect(() => {
         axios({
             method: "GET",
@@ -32,10 +33,16 @@ function ViewIdea({ image, date }) {
                 setIdea(response.data.data)
                 setAuthor(response.data.data.userId);
                 setIdeaId(response.data.data.ideaId);
-                setUserId(cookies.cookies.id);
-
+                setUserId(response.data.data.userId.userId);
+                setIsAnonymous(response.data.data.isAnonymous)
             })
             .catch(error => console.log(error))
+        }, [])
+        
+    // Check post owner
+    useEffect(() => {
+        console.log(cookies.cookies.id, userId);
+        setIsAnonymous(true)
     }, [])
 
     const handleComment = () => $("textarea").focus()
@@ -93,15 +100,15 @@ function ViewIdea({ image, date }) {
     }
 
     // Get posting views
-    useEffect(() => {
-        axios({
-            'method': "GET",
-            'url': `http://localhost:8080/submit_idea/viewCount/${id}`,
-            'headers': { 'Authorization': 'Bearer ' + cookies.get('token') },
-        })
-            .then(res => console.log(res))
-            .catch(err => console.log(err.response.data.error))
-    }, [])
+    // useEffect(() => {
+    //     axios({
+    //         'method': "GET",
+    //         'url': `http://localhost:8080/submit_idea/viewCount/${id}`,
+    //         'headers': { 'Authorization': 'Bearer ' + cookies.get('token') },
+    //     })
+    //         .then(res => console.log(res))
+    //         .catch(err => console.log(err.response.data.error))
+    // }, [])
 
     const handleLike = () => {
         if ($(".fa-thumbs-down").classList.contains("text-danger")) {
@@ -139,9 +146,10 @@ function ViewIdea({ image, date }) {
     //     })
     //     .then(response => console.log(response))
     // },[])
-    
+
     return (
         <div className='view-idea'>
+            <Link className='btn btn-danger' to={"/"}>Idea List</Link>
             <div className="shadow rounded" key={idea.ideaId}>
                 <div className="user d-flex align-items-center justify-content-between p-3 border-bottom bg-light">
                     <div className="user d-flex align-items-center gap-2">
@@ -153,6 +161,7 @@ function ViewIdea({ image, date }) {
                             <small className="post-date text-muted">{new Date(idea.createDate).toLocaleDateString()}</small>
                         </div>
                     </div>
+                    {/* {isAnonymous && <Link to={`/edit/${idea.ideaId}`} className='btn btn-warning float-end'>Edit</Link>} */}
                     <Link to={`/edit/${idea.ideaId}`} className='btn btn-warning float-end'>Edit</Link>
                 </div>
                 <div className="status p-3">
@@ -181,7 +190,7 @@ function ViewIdea({ image, date }) {
                     <textarea required placeholder="Write your idea..." cols="80" rows="2" className="px-2 form-control" value={content} onChange={e => setContent(e.target.value)}></textarea>
                     {content && <button type='submit' className="btn btn-primary h-100 mt-auto" onClick={() => handlePostComment(content)}>Post</button>}
                 </div>
-                <div className="d-flex align-items-center ml-4 pb-3">
+                <div className="d-flex align-items-center ml-3 pb-3">
                     <input type="checkbox" id="anonymous" className='mr-2' onChange={e => setIsAnonymous(e.target.checked)} />
                     <label className="form-check-label fw-bold text-danger" htmlFor="anonymous">Post as anonymous</label>
                 </div>
