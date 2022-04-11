@@ -15,12 +15,11 @@ const EditUser = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [password, setPassword] = useState("");
+    // const [password, setPassword] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [fullName, setFullName] = useState("");
-    const [roles, setRoles] = useState([]);
+    const [role, setRole] = useState([]);
     const [departmentId, setDepartmentId] = useState("");
-    const [selectedDate, setSelectedDate] = useState(null)
     const [departs, setDeparts] = useState([])
     const [mounted, setMounted] = useState(true)
     const [pageNumber, setPageNumber] = useState(0)
@@ -46,8 +45,7 @@ const EditUser = () => {
                     setDateOfBirth(result.data.dateOfBirth)
                     setFullName(result.data.fullName)
                     setDepartmentId(result.data.departmentId.departmentId)
-                    setRoles(result.data.roles.map(user => user.roleName))
-                    setPassword(result.data.password)
+                    // setRole(result.data.role.map(user => user.roleName))
                     setClassName("alert-success")
                 } else {
                     setClassName("alert-danger")
@@ -56,7 +54,6 @@ const EditUser = () => {
     }, [])
 
     // Get departments
-
     useEffect(() => {
         fetch(`http://localhost:8080/department/all?pageNumber=${pageNumber}`, {
             method: "GET",
@@ -78,8 +75,8 @@ const EditUser = () => {
             dateOfBirth,
             fullName,
             departmentId,
-            roles,
-            password,
+            role,
+            // password,
         });
         const requestOptions = {
             method: 'PUT',
@@ -100,7 +97,7 @@ const EditUser = () => {
                     setDateOfBirth(result.data.dateOfBirth)
                     setFullName(result.data.fullName)
                     setDepartmentId(result.data.departmentId.departmentId)
-                    setRoles(result.date.roles.map(user => user.roleName))
+                    // setRole(result.date.role.map(user => user.roleName))
                     setClassName("alert-success")
                     setTimeout(() => {
                         navigate('/users')
@@ -166,6 +163,7 @@ const EditUser = () => {
                     <DatePicker
                         className="form-control form-control-lg"
                         selected={dateOfBirth}
+                        value={dateOfBirth}
                         onChange={date => setDateOfBirth(date)}
                         dateFormat="yyyy-MM-dd"
                         maxDate={new Date()}
@@ -176,8 +174,8 @@ const EditUser = () => {
                     <select
                         name="role"
                         className="form-control form-control-lg"
-                        value={roles.roleId}
-                        onChange={e => setRoles(e.target.value)}
+                        value={role.roleId}
+                        onChange={e => setRole(e.target.value)}
                     >
                         <optgroup label="Role">
                             <option value="admin">Admin</option>
@@ -201,16 +199,6 @@ const EditUser = () => {
                             ))}
                         </optgroup>
                     </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        className="form-control form-control-lg"
-                        name="password"
-                        value={password.trim()}
-                        onChange={e => setPassword(e.target.value)}
-                    />
                 </div>
                 <div className="form-group text-right">
                     <button type="button" onClick={editUser} className="btn btn-warning px-3 mr-3">Update</button>

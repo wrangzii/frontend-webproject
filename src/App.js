@@ -23,7 +23,6 @@ import ViewDepart from './components/departments/admin/ViewDepart';
 import ListSubmission from './components/submission/admin/ListSubmission';
 import EditSubmission from './components/submission/admin/EditSubmission';
 import AddSubmission from './components/submission/admin/AddSubmission';
-import ViewSubmission from './components/submission/admin/ViewSubmission';
 // Idea
 import ListIdea from './components/idea/ListIdea';
 import ViewIdea from './components/idea/ViewIdea';
@@ -33,6 +32,7 @@ import EditIdea from './components/idea/EditIdea'
 import NotFound from './components/NotFound';
 import Profile from './components/pages/Profile';
 import Terms from './components/Terms';
+import Chart from "./components/Dashboard/Chart"
 
 import Goodbye from './components/pages/Goodbye';
 import {
@@ -71,7 +71,7 @@ function App() {
               <Route path='/submission' element={<ListSubmission />} />
               <Route path='/submission/add' element={<AddSubmission />} />
               <Route path='/submission/edit/:id' element={<EditSubmission />} />
-              <Route path='/submission/:id' element={<ViewSubmission />} />
+              <Route path='/dashboard' element={<Chart />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/goodbye' element={<Goodbye />} />
               {cookies.get("token") ? (

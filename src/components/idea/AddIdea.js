@@ -19,6 +19,7 @@ function AddIdea() {
     const [message, setMessage] = useState("")
     const [className, setClassName] = useState("alert-success")
     const [isAlert, setIsAlert] = useState(false)
+    const [mounted, setMounted] = useState(true)
     const $ = document.querySelector.bind(document)
     const cookies = new Cookies()
     const bodyFormData = new FormData();
@@ -48,12 +49,14 @@ function AddIdea() {
             .then(response => {
                 setSubmission(response.data.data)
             })
+        return () => setMounted(false)
     }, [])
 
     // Assign value to payload
     useEffect(() => {
         setUserId(cookies.get("id"))
         setSubmissionId(submission.submissionId)
+        return () => setMounted(false)
     }, [submission])
 
     const addIdea = () => {
@@ -69,9 +72,10 @@ function AddIdea() {
                 setClassName("alert-success")
             })
             .catch(error => {
+                console.log({ error });
                 setIsAlert(true)
                 setClassName("alert-danger")
-                setMessage(error.response.data.message)
+                setMessage(error.response.data.message || error.response.data.error)
             })
     }
 
@@ -88,11 +92,13 @@ function AddIdea() {
                 setCateId(cate_id.current.value)
             })
             .catch(error => console.log(error))
+        return () => setMounted(false)
     }, [pageNumber])
 
     // isAnonymous
     useEffect(() => {
         setIsAnonymous($("#anonymous").checked ? true : false);
+        return () => setMounted(false)
     }, [isAnonymous])
 
     const handleSubmit = () => {
@@ -153,7 +159,16 @@ function AddIdea() {
                         <label htmlFor="term">Do you agree <Link to={"/terms-and-condition"}>Terms and Condition</Link>?</label>
                     </div>
                     <Alert isAlert={isAlert} className={className} message={message} />
-                    <button type='button' className='btn btn-primary float-end my-3' onClick={handleSubmit}>Post your idea</button>
+                    <div className="d-flex gap-3 justify-content-end align-items-center">
+                        <button type='button' className='btn btn-success my-3' onClick={handleSubmit}>Post your idea</button>
+                        {isAlert && (
+                            <Link className='btn btn-primary' to={"/"}>
+                                <i className="fa-solid fa-angles-left mr-2"></i>
+                                Idea List
+                            </Link>
+                        )}
+                        {!(title || description) && <Link to={"/"} className="btn btn-danger">Cancel</Link>}
+                    </div>
                 </div>
             </form>
         </div>

@@ -78,3 +78,7 @@ npm i axios ||
 npm install react-icons --save ||
 npm i js-cookie --save ||
 npm i react-cookie ||
+npm i react-csv ||
+npm i --save react-apexcharts apexcharts ||
+npm i jszip ||
+npm i react-filesaver ||

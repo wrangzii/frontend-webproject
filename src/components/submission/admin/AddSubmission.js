@@ -2,6 +2,8 @@ import { React, useState } from "react";
 import { Cookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../../alert/Alert";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 const AddSubmission = () => {
     const [submissionName, setsubmissionName] = useState("");
@@ -74,24 +76,26 @@ const AddSubmission = () => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="departmentId">Closure Date</label>
-                <input
-                    type="date"
+                <label htmlFor="closureDate">Closure Date</label>
+                <DatePicker
                     className="form-control form-control-lg"
-                    placeholder="Enter Closure Date"
-                    name="phone"
+                    selected={closureDate}
                     value={closureDate}
-                    onChange={(e) => setClosureDate(e.target.value)} />
+                    onChange={date => setClosureDate(date)}
+                    dateFormat="yyyy-MM-dd"
+                    minDate={new Date()}
+                />
             </div>
             <div className="form-group">
-                <label htmlFor="departmentId">Final Closure Date</label>
-                <input
-                    type="date"
+                <label htmlFor="finalClosureDate">Final Closure Date</label>
+                <DatePicker
                     className="form-control form-control-lg"
-                    placeholder="Enter Final Closure Date"
-                    name="phone"
+                    selected={finalClosureDate}
                     value={finalClosureDate}
-                    onChange={(e) => setFinalClosureDate(e.target.value)} />
+                    onChange={date => setFinalClosureDate(date)}
+                    dateFormat="yyyy-MM-dd"
+                    minDate={closureDate}
+                />
             </div>
             <div className="form-group text-right">
                 <button className="btn btn-primary px-3 mr-3" onClick={addSubmission}>Add Department</button>

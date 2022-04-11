@@ -15,15 +15,15 @@ const Navbar = (props) => {
         authen = true
 
     return (
-        <div className="navbar position-sticky" style={{ top: 0, zIndex: 1 }}>
+        <div className="navbar position-sticky" style={{ top: 0, zIndex: 100 }}>
             <div className="wrapper">
-                <Link to="#" className="menu-bars" onClick={() => setIsOpen(!isOpen)}>
+                <Link to="#" className="menu-bars text-decoration-none" onClick={() => setIsOpen(!isOpen)}>
                     <i className="fa-solid fa-bars"></i>
                 </Link>
                 {authen && <ul className={"nav-menu " + (isOpen ? "active" : null)}>
                     {Sidebar.map((item, index) => {
                         return (
-                            <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`} onClick={() => setIsOpen(false)}>
+                            <Link to={item.path} key={index} className={`${item.className} d-flex align-items-center px-3`} onClick={() => setIsOpen(!isOpen)}>
                                 <i className={item.icon}></i>
                                 <li className="px-3 py-2">
                                     {item.title}

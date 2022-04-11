@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import axios from "axios";
@@ -14,6 +14,7 @@ const ListSubmission = () => {
     const navigate = useNavigate()
     const cookies = new Cookies();
 
+    // Check role
     useEffect(() => {
         if (cookies.get("token")) {
             if (cookies.get("roles").some(role => role === "ROLE_ADMIN")) {
@@ -31,13 +32,16 @@ const ListSubmission = () => {
         'Content-Type': 'application/json'
     }
 
+    // Get submission list
     useEffect(() => {
         fetch(`http://localhost:8080/submission/all?pageNumber=${pageNumber}`, {
             method: "GET",
             headers: myHeaders,
         })
             .then(response => response.json())
-            .then(result => setSubmissions(result))
+            .then(result => {
+                setSubmissions(result)
+            })
     }, [pageNumber])
 
     // Delete item
@@ -63,14 +67,6 @@ const ListSubmission = () => {
         })()
     }, [pageNumber])
 
-    const closure_date = useRef(null)
-    useEffect(() => {
-        // if (new Date().toLocaleDateString() )
-        console.log(closure_date.current);
-    }, [])
-
-    console.log(new Date().toLocaleDateString());
-
     return (
         <div className="submission">
             <h3>Submission List</h3>
@@ -90,14 +86,14 @@ const ListSubmission = () => {
                     <tbody>
                         {
                             submissions.map(submission => (
-                                <tr key={submission.submissionId} className={className}>
+                                <tr key={submission.submissionId}>
                                     <th scope="row">#{submission.submissionId}</th>
                                     <td>{submission.submissionName}</td>
                                     <td><span className="d-block overflow-hidden" style={{ textOverflow: 'ellipsis', width: '160px' }}>{submission.description}</span></td>
-                                    <td ref={closure_date}>{new Date(submission.closureDate).toLocaleDateString()}</td>
+                                    <td>{new Date(submission.closureDate).toLocaleDateString()}</td>
                                     <td>{new Date(submission.finalClosureDate).toLocaleDateString()}</td>
                                     <td>
-                                        <Link className="btn btn-primary mr-2" to={isAdmin ? `/submission/${submission.submissionId}` : `/add/${submission.submissionId}`}>{isAdmin ? "View" : "Add"}</Link>
+                                        <Link className={`btn btn-primary mr-2 ${submission.closureDate < new Date().getTime() ? "pe-none opacity-50" : ""}`} to={`/add/${submission.submissionId}`}>Add</Link>
                                         {isAdmin &&
                                             <>
                                                 <Link className="btn btn-outline-primary mr-2" to={`/submission/edit/${submission.submissionId}`}>Edit</Link>

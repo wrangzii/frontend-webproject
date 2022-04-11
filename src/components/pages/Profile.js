@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Cookies } from 'react-cookie'
 
 function Profile() {
@@ -10,12 +10,15 @@ function Profile() {
                 <span className='d-block text-danger' key={role}>{role}</span>
             )))
         }
-    },[])
-        
+    }, [])
+
     return (
         <div className="card" style={{ "zIndex": -1 }}>
             <div className="card-body">
-                <h3 className="card-title">Profile information</h3>
+                <h3 className="card-title text-info">
+                    <i className="fa-solid fa-circle-info mr-2"></i>
+                    Profile information
+                </h3>
                 <p className="card-text">User ID: #{cookies.get('id')}</p>
                 <p className="card-text">Email: {cookies.get('email')}</p>
                 <p className="card-text">Username: {cookies.get('username')}</p>

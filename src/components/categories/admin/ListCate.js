@@ -9,6 +9,7 @@ const ListCate = () => {
     const [pageNumber, setPageNumber] = useState(0)
     const [mounted, setMounted] = useState(true)
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isManager, setIsManager] = useState(false)
     const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
 
@@ -18,7 +19,12 @@ const ListCate = () => {
                 setIsAdmin(true)
             } else {
                 setIsAdmin(false)
-                // navigate("/")
+            }
+
+            if (cookies.get("roles").some(role => role === "ROLE_QA_MANAGER")) {
+                setIsManager(true)
+            } else {
+                setIsManager(false)
             }
         }
         return () => setMounted(false)
@@ -57,6 +63,25 @@ const ListCate = () => {
             })
     }
 
+    // Export CSV File
+    const downloadCSV = cateId => {
+        axios({
+            method: "GET",
+            url: `http://localhost:8080/category/download/${cateId}`,
+            headers: { 'Authorization': 'Bearer ' + cookies.get('token') },
+            responseType: 'blob'
+        })
+            .then(response => {
+                console.log(response);
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `Report_${new Date().toLocaleDateString()}.zip`);
+                document.body.appendChild(link);
+                link.click();
+            })
+    }
+
     useEffect(() => {
         (function checkPage() {
             pageNumber <= 0 ? $(".prev").classList.add("pe-none") : $(".prev").classList.remove("pe-none")
@@ -76,7 +101,7 @@ const ListCate = () => {
                             <th scope="col">Description</th>
                             <th scope="col">Created Date</th>
                             <th scope="col">Last Modified</th>
-                            {isAdmin && <th>Action</th>}
+                            {(isAdmin || isManager) && <th>Action</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -97,6 +122,14 @@ const ListCate = () => {
                                             </>
                                         </td>
                                     }
+                                    <td>
+                                        {isManager && (
+                                            <button className="btn btn-warning" onClick={() => downloadCSV(cate.cateId)}>
+                                                <i className="fa-solid fa-download mr-2"></i>
+                                                Export CSV
+                                            </button>
+                                        )}
+                                    </td>
                                 </tr>
                             ))
                         }

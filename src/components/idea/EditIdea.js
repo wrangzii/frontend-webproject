@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Cookies } from 'react-cookie'
+import Alert from '../alert/Alert'
 
 function EditIdea() {
     const [files, setFiles] = useState([])
@@ -17,6 +18,9 @@ function EditIdea() {
     const [cates, setCates] = useState({})
     const [submissions, setSubmissions] = useState({})
     const [checked, setChecked] = useState(false)
+    const [isAlert, setIsAlert] = useState(false)
+    const [className, setClassName] = useState("alert-success")
+    const [message, setMessage] = useState("")
     const cookies = new Cookies()
     const { id } = useParams()
     const myHeaders = {
@@ -24,6 +28,7 @@ function EditIdea() {
         'Authorization': 'Bearer ' + cookies.get('token')
     }
 
+    // Handle edit idea
     const editIdea = () => {
         const bodyFormData = new FormData();
         bodyFormData.append("file", files)
@@ -40,6 +45,16 @@ function EditIdea() {
             url: `http://localhost:8080/submit_idea/edit/${id}`,
             data: bodyFormData
         })
+            .then(response => {
+                setIsAlert(true)
+                setClassName("alert-success")
+                setMessage(response.data.message)
+            })
+            .catch(error => {
+                setIsAlert(true)
+                setClassName("alert-danger")
+                setMessage(error.response.data.error)
+            })
     }
 
     // Get idea
@@ -88,14 +103,20 @@ function EditIdea() {
                     <p className="card-text">Description: {submissions.description}</p>
                 </div>
             </div>
-            <div className="shadow rounded" key={idea.ideaId}>
-                <div className="user d-flex align-items-center gap-2 p-3 border-bottom bg-light">
-                    <div className="user-image">
-                        <img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} />
+            <div className="shadow rounded my-3" key={idea.ideaId}>
+                <div className="user d-flex align-items-center justify-content-between p-3 border-bottom bg-light">
+                    <div className="d-flex align-items-center gap-2">
+                        <div className="user-image">
+                            <img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} />
+                        </div>
+                        <div className="user-info">
+                            <p className="user-name fz-20 text-primary fw-bold">{username}</p>
+                            <small className="post-date text-muted">{new Date(createDate).toLocaleDateString()}</small>
+                        </div>
                     </div>
-                    <div className="user-info">
-                        <p className="user-name fz-20 text-primary fw-bold">{username}</p>
-                        <small className="post-date text-muted">{new Date(createDate).toLocaleDateString()}</small>
+                    <div className='idea-info'>
+                        <p className='text-right'><b>Closure Date:</b> {new Date(submissions.closureDate).toLocaleDateString()}</p>
+                        <p className='text-right'><b>Final Closure Date:</b> {new Date(submissions.finalClosureDate).toLocaleDateString()}</p>
                     </div>
                 </div>
                 <div className="status p-3">
@@ -119,8 +140,12 @@ function EditIdea() {
                     </div>
                 </div>
             </div>
-            <div className="d-flex gap-2 justify-content-end py-3">
-                <button className="btn btn-warning" onClick={handleSubmit}>Update</button>
+            <Alert isAlert={isAlert} className={className} message={message} />
+            <div className="d-flex gap-2 justify-content-end">
+                <button className="btn btn-warning" onClick={handleSubmit}>
+                    <i className="fa-solid fa-pen-to-square mr-2"></i>
+                    Update
+                </button>
                 <Link to={`/${id}`} className="btn btn-danger">Cancel</Link>
             </div>
         </div>

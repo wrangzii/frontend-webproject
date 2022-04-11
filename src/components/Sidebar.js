@@ -30,4 +30,10 @@ export const Sidebar = [
         className: 'nav-text text-white text-decoration-none',
         icon: 'fa-solid fa-lightbulb'
     },
+    {
+        title: 'Dashboard',
+        path: '/dashboard',
+        className: 'nav-text text-white text-decoration-none',
+        icon: 'fa-solid fa-chart-line'
+    },
 ]

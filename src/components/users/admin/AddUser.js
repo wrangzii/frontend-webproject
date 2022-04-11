@@ -174,7 +174,7 @@ const AddUser = () => {
                         >
                             <option>Select a role</option>
                             <option value="admin">Admin</option>
-                            <option value="qa_manger">QA manager</option>
+                            <option value="qa_manager">QA manager</option>
                             <option value="qa_coordinator">QA coordinator</option>
                             <option value="staff">Staff</option>
                         </select>
@@ -184,6 +184,7 @@ const AddUser = () => {
                         <select
                             className="form-control form-control-lg"
                             name="departmentId"
+                            id="departmentId"
                             value={departmentId}
                             onChange={(e) => {
                                 setDepartmentId(e.target.value)

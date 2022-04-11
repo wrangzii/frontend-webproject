@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import Alert from "../../alert/Alert";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 const EditSubmission = () => {
     const { id } = useParams();
@@ -25,6 +27,7 @@ const EditSubmission = () => {
         redirect: 'follow'
     };
 
+    // Get submission by idea
     useEffect(() => {
         fetch(`http://localhost:8080/submission/${id}`, requestOptions)
             .then(response => response.json())
@@ -33,6 +36,8 @@ const EditSubmission = () => {
                     setClassName("alert-success")
                     setsubmissionName(result.data.submissionName)
                     setDescription(result.data.description)
+                    setClosureDate(result.data.closureDate)
+                    setFinalClosureDate(result.data.finalClosureDate)
                 } else {
                     setClassName("alert-danger")
                 }
@@ -100,24 +105,24 @@ const EditSubmission = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="closureDate">Closure Date</label>
-                    <input
-                        type="date"
+                    <DatePicker
                         className="form-control form-control-lg"
-                        placeholder="Enter ClosureDate"
-                        name="closureDate"
+                        selected={closureDate}
                         value={closureDate}
-                        onChange={e => setClosureDate(e.target.value)}
+                        onChange={date => setClosureDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        minDate={new Date()}
                     />
                 </div>
                 <div className="form-group">
                     <label htmlFor="finalClosureDate">Final Closure Date</label>
-                    <input
-                        type="date"
+                    <DatePicker
                         className="form-control form-control-lg"
-                        placeholder="Enter Final Closure Date"
-                        name="finalClosureDate"
+                        selected={finalClosureDate}
                         value={finalClosureDate}
-                        onChange={e => setFinalClosureDate(e.target.value)}
+                        onChange={date => setFinalClosureDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        minDate={closureDate}
                     />
                 </div>
                 <div className="form-group text-right">
