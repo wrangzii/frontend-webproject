@@ -53,6 +53,23 @@ function ViewIdea({ image, date }) {
             .catch(error => console.log(error))
     }, [])
 
+    // Get reaction list
+    useEffect(() => {
+        axios({
+            method: "GET",
+            url: `http://localhost:8080/reaction/${id}`,
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token')
+            }
+        })
+            .then(response => {
+                // console.log(response.data.data.map(username => username.username))
+                setMyUsername(response.data.data.map(username => username.username))
+                return response.data.data
+            })
+            .then(response => response.find(reaction => reaction.reactionType === "like" ? setThumb(true) : setThumb(false)))
+    }, [])
+
     const handleComment = () => {
         setIsShowCmt(true)
         window.scrollTo(0, document.body.clientHeight)
@@ -91,30 +108,6 @@ function ViewIdea({ image, date }) {
         setIsAnonymous($("#anonymous").checked ? true : false);
     }, [isAnonymous])
 
-    // Add reaction
-    const handleThumb = (idea_id, type) => {
-        if (type === 1) {
-            like.classList.toggle("text-primary")
-        } else if (type === 2) {
-            dislike.classList.toggle("text-danger")
-        }
-        axios({
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + cookies.get('token')
-            },
-            url: "http://localhost:8080/reaction/add",
-            data: JSON.stringify({ reactionType, userId, ideaId })
-        })
-            .then(response => {
-                setReactionType("like")
-                setUserId(cookies.cookies.id)
-                setIdeaId(idea_id)
-            })
-            .catch(error => console.log(error))
-    }
-
     // Delete reaction
     const deleteReaction = (idea_id) => {
         axios({
@@ -133,21 +126,63 @@ function ViewIdea({ image, date }) {
             .catch(error => console.log(error))
     }
 
-    // Get reaction list
-    useEffect(() => {
-        axios({
-            method: "GET",
-            url: `http://localhost:8080/reaction/${id}`,
-            headers: {
-                'Authorization': 'Bearer ' + cookies.get('token')
-            }
-        })
-            .then(response => {
-                console.log(response.data.data)
-                setMyUsername(response.data.data.username)
-                return response.data.data
+    // Add reaction
+    const handleThumb = (idea_id, type) => {
+        if (type === 1) {
+            like.classList.toggle("text-primary")
+        } else if (type === 2) {
+            dislike.classList.toggle("text-danger")
+        }
+
+        if (reactionType === like || reactionType === dislike) {
+            deleteReaction()
+        } else {
+            axios({
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer ' + cookies.get('token')
+                },
+                url: "http://localhost:8080/reaction/add",
+                data: JSON.stringify({ reactionType, userId, ideaId })
             })
-            .then(response => response.find(reaction => reaction.reactionType === "like" ? setThumb(true) : setThumb(false)))
+                .then(response => {
+                    setReactionType("like")
+                    setUserId(cookies.cookies.id)
+                    setIdeaId(idea_id)
+                })
+                .catch(error => console.log(error))
+        }
+    }
+
+    // Toggle reaction display
+    useEffect(() => {
+        if (reactionType === "like" && myUsername) {
+            if (myUsername.map(username => username === cookies.cookies.username)) {
+                like.classList.add("text-primary")
+            } else {
+                like.classList.remove("text-primary")
+            }
+        } else if (reactionType === "dislike" && myUsername) {
+            if (myUsername.map(username => username === cookies.cookies.username)) {
+                dislike.classList.add("text-danger")
+            } else {
+                dislike.classList.remove("text-danger")
+            }
+        }
+    }, [myUsername])
+
+    // Check reaction (choose only 1)
+    // useEffect(() => {
+    //     if (thumb) {
+    //         if (like.classList.contains("text-primary")) dislike.classList.remove("text-danger")
+    //         if (dislike.classList.contains("text-danger")) like.classList.remove("text-primary")
+    //     }
+    // }, [thumb])
+
+    // Edit reaction
+    useEffect(() => {
+
     }, [])
 
     // Delete idea
@@ -157,7 +192,8 @@ function ViewIdea({ image, date }) {
             headers: {
                 'Authorization': 'Bearer ' + cookies.get('token')
             },
-            url: `http://localhost:8080/submit_idea/delete/${idea_id}`
+            url: `http://localhost:8080/submit_idea/delete/${idea_id}`,
+            data: JSON.stringify(userId, ideaId)
         })
             .then(response => {
                 console.log(response);
@@ -211,16 +247,15 @@ function ViewIdea({ image, date }) {
                 <div className="reaction fz-20 c-pointer d-flex align-items-center gap-5 text-secondary px-3">
                     <button
                         type='button'
-                        className={`like btn fz-20 ${myUsername === cookies.cookies.username ? thumb ? "text-primary" : "" : ""}`}
-                        // onClick={() => myUsername === cookies.cookies.username ? thumb ? deleteReaction(idea.ideaId) : handleThumb(idea.ideaId, 1) : null}
-                        onClick={() => handleThumb(idea.ideaId, 1) }
+                        className="like btn fz-20"
+                        onClick={() => handleThumb(idea.ideaId, 1)}
                     >
                         <i className="fa-solid fa-thumbs-up mr-2"></i>
                         Like
                     </button>
                     <button
                         type='button'
-                        className={`like btn fz-20 ${!thumb ? "text-danger" : ""}`}
+                        className="dislike btn fz-20"
                         onClick={() => handleThumb(idea.ideaId, 2)}>
                         <i className="fa-solid fa-thumbs-down mr-2"></i>
                         Dislike
@@ -262,7 +297,7 @@ function ViewIdea({ image, date }) {
                 </div>
             )}
             <Alert isAlert={isAlert} className={className} message={message} />
-            <MoveToTop />
+            {/* <MoveToTop /> */}
         </div>
     )
 }

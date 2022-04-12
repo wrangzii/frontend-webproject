@@ -3,6 +3,8 @@ import axios from 'axios'
 import { Cookies } from 'react-cookie'
 import { CSVLink } from 'react-csv'
 import ReactApexChart from 'react-apexcharts'
+import JSZip from 'jszip';
+import FileSaver from 'file-saver'
 
 function Chart() {
     const cookies = new Cookies()
@@ -11,11 +13,13 @@ function Chart() {
     const [countCate, setCountCate] = useState([])
     const [ideas, setIdeas] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isManager, setIsManager] = useState(false)
     const [mounted, setMounted] = useState(true)
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token')
     }
 
+    // Check role
     useEffect(() => {
         if (cookies.get("token")) {
             if (cookies.get("roles").some(role => role === "ROLE_ADMIN")) {
@@ -24,6 +28,12 @@ function Chart() {
                 setIsAdmin(false)
                 // navigate("/")
             }
+        }
+
+        if (cookies.get("roles").some(role => role === "ROLE_QA_MANAGER")) {
+            setIsManager(true)
+        } else {
+            setIsManager(false)
         }
         return () => setMounted(false)
     }, [mounted])
@@ -59,10 +69,7 @@ function Chart() {
             url: "http://localhost:8080/dashboard/report/object",
             headers: myHeaders
         })
-            .then(response => {
-                setIdeas(response.data)
-                console.log(response);
-            })
+            .then(response => setIdeas(response.data))
     }, [])
 
     const pie = {
@@ -108,7 +115,9 @@ function Chart() {
             headers: myHeaders,
             url: 'http://localhost:8080/dashboard/report'
         })
-            .then(response => setData(response.data))
+            .then(response => {
+                setData(response.data)
+            })
             .catch(error => console.log({ error }))
     }, [])
 
@@ -117,18 +126,26 @@ function Chart() {
         data: data
     }
 
+    const downloadCSV = () => {
+        const zip = new JSZip();
+        zip.file(`Report.csv`, data);
+        zip.generateAsync({ type: 'blob' }).then(function (content) {
+            FileSaver.saveAs(content, `Report_${new Date().toLocaleDateString()}.zip`);
+        });
+    }
+
     return (
         <div className='chart d-flex flex-column gap-5'>
             <div className="pie-chart">
-                <h4 className='text-uppercase'>The percentage of ideas by department</h4>
+                <h4 className='text-uppercase'>1. The percentage of ideas by department</h4>
                 <ReactApexChart options={pie.options} series={pie.series} type="pie" width={380} />
             </div>
             <div className="bar-chart">
-                <h4 className='text-uppercase'>Idea's view by category</h4>
+                <h4 className='text-uppercase'>2. Idea's view by category</h4>
                 <ReactApexChart options={bar.options} series={bar.series} type="bar" height={350} />
             </div>
             <div className="table-ideas">
-                <h3 className='text-uppercase'>Ideas statistical analysis</h3>
+                <h3 className='text-uppercase'>3. Ideas statistical analysis</h3>
                 <div className="overflow-auto">
                     <table className="table">
                         <thead className="thead-dark">
@@ -147,19 +164,25 @@ function Chart() {
                                     <td>{idea.title}</td>
                                     <td>{idea.submission}</td>
                                     <td>{idea.category}</td>
-                                    <td>{idea.count}</td>
+                                    <td className='d-table-cell text-center'>{idea.count}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div className="export-csv w-100">
-                <CSVLink {...csvReport} className='btn btn-success'>
-                    <i className="fa-solid fa-download mr-2"></i>
-                    Export CSV File
-                </CSVLink>
-            </div>
+            {isManager && (
+                <div className="export-csv w-100 d-flex gap-3">
+                    <CSVLink {...csvReport} className='btn btn-success'>
+                        <i className="fa-solid fa-download mr-2"></i>
+                        Export CSV File
+                    </CSVLink>
+                    <button className="btn btn-warning" onClick={downloadCSV}>
+                        <i className="fa-solid fa-download mr-2"></i>
+                        Export as ZIP File
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

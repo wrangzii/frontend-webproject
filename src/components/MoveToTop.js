@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 function MoveToTop() {
     const [isShow, setIsShow] = useState(false)
@@ -7,10 +7,9 @@ function MoveToTop() {
     }
     window.onscroll = () => {
         document.body.clientHeight / 3 < window.scrollY ? setIsShow(true) : setIsShow(false)
-        // console.log(document.body.clientHeight / 3, window.scrollY);
     }
+
     return (
-        // <button className='btn btn-secondary btn-lg position-sticky float-end' onClick={moveToTop} style={{ bottom: 0, right: 0 }}>
         <button className={`btn btn-secondary btn-lg position-sticky float-end ${isShow ? 'd-block' : 'd-none'}`} style={{ bottom: 0, right: 0 }} onClick={moveToTop}>
             <i className="fa-solid fa-arrow-up"></i>
         </button>

@@ -13,6 +13,7 @@ const ListCate = () => {
     const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
 
+    // Check role
     useEffect(() => {
         if (cookies.get("token")) {
             if (cookies.get("roles").some(role => role === "ROLE_ADMIN")) {
@@ -72,7 +73,6 @@ const ListCate = () => {
             responseType: 'blob'
         })
             .then(response => {
-                console.log(response);
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
@@ -122,14 +122,14 @@ const ListCate = () => {
                                             </>
                                         </td>
                                     }
-                                    <td>
-                                        {isManager && (
+                                    {isManager && (
+                                        <td>
                                             <button className="btn btn-warning" onClick={() => downloadCSV(cate.cateId)}>
                                                 <i className="fa-solid fa-download mr-2"></i>
                                                 Export CSV
                                             </button>
-                                        )}
-                                    </td>
+                                        </td>
+                                    )}
                                 </tr>
                             ))
                         }

@@ -124,7 +124,7 @@ const ListIdea = () => {
                         </Link>
                         <span className="view-count"><b>{idea.viewCount}</b> people watched</span>
                     </div>
-                    <MoveToTop />
+                    {/* <MoveToTop /> */}
                 </div>
             ))}
             <nav aria-label="Page navigation example">
