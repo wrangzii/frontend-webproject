@@ -33,8 +33,6 @@ const EditCate = () => {
                     setClassName("alert-success")
                     setCateName(result.data.cateName)
                     setDescription(result.data.description)
-                    setCreateDate(result.data.createDate || "")
-                    setLastModifyDate(result.data.lastModifyDate || "")
                 } else {
                     setClassName("alert-danger")
                 }
@@ -99,26 +97,6 @@ const EditCate = () => {
                         name="description"
                         value={description}
                         onChange={e => setDescription(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="createDate">Created Date</label>
-                    <input
-                        type="date"
-                        className="form-control form-control-lg"
-                        name="createDate"
-                        value={createDate}
-                        onChange={e => setCreateDate(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="lastModifyDate">Last Modified Date</label>
-                    <input
-                        type="date"
-                        className="form-control form-control-lg"
-                        name="lastModifyDate"
-                        value={lastModifyDate}
-                        onChange={e => setLastModifyDate(e.target.value)}
                     />
                 </div>
                 <div className="form-group text-right">

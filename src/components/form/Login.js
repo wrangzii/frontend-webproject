@@ -9,7 +9,6 @@ const Login = () => {
 	const [isAlert, setIsAlert] = useState(false)
 	const [message, setMessage] = useState("")
 	const [className, setClassName] = useState("")
-	const navigate = useNavigate()
 	const cookies = new Cookies();
 
 	const handleLogin = () => {
@@ -33,7 +32,6 @@ const Login = () => {
 			})
 			.then(result => {
 				setMessage(result.message || result.error)
-				// setIsAlert(true)
 				if (result.data.token) {
 					cookies.set('token', result.data.token, { path: '/' })
 					cookies.set('fullName', result.data.fullName)
@@ -43,7 +41,6 @@ const Login = () => {
 					cookies.set('phoneNumber', result.data.phoneNumber)
 					cookies.set('dateOfBirth', new Date(result.data.dateOfBirth).toLocaleDateString())
 					cookies.set('roles', result.data.roles)
-					navigate('/')
 					window.location.reload()
 				}
 			})
@@ -70,7 +67,7 @@ const Login = () => {
 				<div className="form-group mb-3 text-right">
 					<Link to="/forgot-password">Forgot password?</Link>
 				</div>
-				<button type="button" onClick={handleLogin} className="btn btn-success">Login</button>
+				<Link to={"/"} onClick={handleLogin} className="btn btn-success">Login</Link>
 			</form>
 		</div>
 	)

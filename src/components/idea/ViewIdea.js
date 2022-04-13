@@ -23,7 +23,7 @@ function ViewIdea({ image, date }) {
     const [className, setClassName] = useState("alert-success")
     const [message, setMessage] = useState("")
     const [isShowCmt, setIsShowCmt] = useState(false)
-    const [thumb, setThumb] = useState(false)
+    const [isThumb, setIsThumb] = useState(false)
     const { id } = useParams()
     const $ = document.querySelector.bind(document)
     const navigate = useNavigate()
@@ -42,7 +42,6 @@ function ViewIdea({ image, date }) {
             headers: myHeaders
         })
             .then(response => {
-                // console.log(response.data);
                 setIdea(response.data.data)
                 setIdeaId(response.data.data.ideaId);
                 setCateId(response.data.data.cateId)
@@ -63,12 +62,16 @@ function ViewIdea({ image, date }) {
             }
         })
             .then(response => {
-                // console.log(response.data.data.map(username => username.username))
                 setMyUsername(response.data.data.map(username => username.username))
                 return response.data.data
             })
-            .then(response => response.find(reaction => reaction.reactionType === "like" ? setThumb(true) : setThumb(false)))
-    }, [])
+            .then(response => {
+                response.find(reaction => reaction.reactionType === "like" || reaction.reactionType === "dislike" ? setIsThumb(true) : setIsThumb(false))
+                return response
+            })
+            .then(response => response.map(r => checkReaction(r.reactionType, isThumb)))
+            
+    }, [isThumb])
 
     const handleComment = () => {
         setIsShowCmt(true)
@@ -95,8 +98,11 @@ function ViewIdea({ image, date }) {
             }
         })
             .then(response => {
-                setContent("")
-                window.location.reload()
+                if (content !== "") {
+                    window.location.reload()
+                } else {
+                    return false
+                }
             })
             .catch(error => {
                 console.log(error)
@@ -130,13 +136,6 @@ function ViewIdea({ image, date }) {
     const handleThumb = (idea_id, type) => {
         if (type === 1) {
             like.classList.toggle("text-primary")
-        } else if (type === 2) {
-            dislike.classList.toggle("text-danger")
-        }
-
-        if (reactionType === like || reactionType === dislike) {
-            deleteReaction()
-        } else {
             axios({
                 method: "POST",
                 headers: {
@@ -152,19 +151,56 @@ function ViewIdea({ image, date }) {
                     setIdeaId(idea_id)
                 })
                 .catch(error => console.log(error))
+        } else if (type === 2) {
+            dislike.classList.toggle("text-danger")
+            axios({
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer ' + cookies.get('token')
+                },
+                url: "http://localhost:8080/reaction/add",
+                data: JSON.stringify({ reactionType, userId, ideaId })
+            })
+                .then(response => {
+                    setReactionType("dislike")
+                    setUserId(cookies.cookies.id)
+                    setIdeaId(idea_id)
+                })
+                .catch(error => console.log(error))
         }
+
+        // if (reactionType === "like" || reactionType === "dislike") {
+        //     deleteReaction()
+        // } else {
+        //     axios({
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             'Authorization': 'Bearer ' + cookies.get('token')
+        //         },
+        //         url: "http://localhost:8080/reaction/add",
+        //         data: JSON.stringify({ reactionType, userId, ideaId })
+        //     })
+        //         .then(response => {
+        //             setReactionType("like")
+        //             setUserId(cookies.cookies.id)
+        //             setIdeaId(idea_id)
+        //         })
+        //         .catch(error => console.log(error))
+        // }
     }
 
     // Toggle reaction display
     useEffect(() => {
         if (reactionType === "like" && myUsername) {
-            if (myUsername.map(username => username === cookies.cookies.username)) {
+            if (myUsername.find(username => username === cookies.cookies.username)) {
                 like.classList.add("text-primary")
             } else {
                 like.classList.remove("text-primary")
             }
         } else if (reactionType === "dislike" && myUsername) {
-            if (myUsername.map(username => username === cookies.cookies.username)) {
+            if (myUsername.find(username => username === cookies.cookies.username)) {
                 dislike.classList.add("text-danger")
             } else {
                 dislike.classList.remove("text-danger")
@@ -172,13 +208,21 @@ function ViewIdea({ image, date }) {
         }
     }, [myUsername])
 
-    // Check reaction (choose only 1)
-    // useEffect(() => {
-    //     if (thumb) {
-    //         if (like.classList.contains("text-primary")) dislike.classList.remove("text-danger")
-    //         if (dislike.classList.contains("text-danger")) like.classList.remove("text-primary")
-    //     }
-    // }, [thumb])
+    // Check reaction type
+    function checkReaction(type, isThumb) {
+        if (isThumb) {
+            if (type === "like") {
+                console.log("like");
+                like.classList.add("text-primary")
+            } else if (type === "dislike") {
+                console.log("dislike");
+                dislike.classList.add("text-danger")
+            }
+            // console.log("have reaction");
+        } else {
+            console.log("no reaction: first render");
+        }
+    }
 
     // Edit reaction
     useEffect(() => {
@@ -192,7 +236,7 @@ function ViewIdea({ image, date }) {
             headers: {
                 'Authorization': 'Bearer ' + cookies.get('token')
             },
-            url: `http://localhost:8080/submit_idea/delete/${idea_id}`,
+            url: `http://localhost:8080/submit_idea/delete?ideaId=${idea_id}&userId=${userId}`,
             data: JSON.stringify(userId, ideaId)
         })
             .then(response => {

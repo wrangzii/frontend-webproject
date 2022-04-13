@@ -4,6 +4,7 @@ import { Cookies } from "react-cookie";
 import Alert from "../../alert/Alert";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
+import { MultiSelect } from "react-multi-select-component";
 
 const EditUser = () => {
     const { id } = useParams();
@@ -15,7 +16,6 @@ const EditUser = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    // const [password, setPassword] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [fullName, setFullName] = useState("");
     const [role, setRole] = useState([]);
@@ -23,6 +23,13 @@ const EditUser = () => {
     const [departs, setDeparts] = useState([])
     const [mounted, setMounted] = useState(true)
     const [pageNumber, setPageNumber] = useState(0)
+
+    const options = [
+        { label: "Admin", value: "admin" },
+        { label: "QA Manager", value: "qa_manager" },
+        { label: "QA Coordinator", value: "qa_coordinator" },
+        { label: "Staff", value: "staff" },
+    ];
 
     const myHeaders = {
         'Authorization': 'Bearer ' + cookies.get('token'),
@@ -34,6 +41,7 @@ const EditUser = () => {
         redirect: 'follow'
     };
 
+    // Get list user info
     useEffect(() => {
         fetch(`http://localhost:8080/users/${id}`, requestOptions)
             .then(response => response.json())
@@ -45,7 +53,8 @@ const EditUser = () => {
                     setDateOfBirth(result.data.dateOfBirth)
                     setFullName(result.data.fullName)
                     setDepartmentId(result.data.departmentId.departmentId)
-                    // setRole(result.data.role.map(user => user.roleName))
+                    setRole([1])
+                    // setRole(result.data.roles)
                     setClassName("alert-success")
                 } else {
                     setClassName("alert-danger")
@@ -107,6 +116,11 @@ const EditUser = () => {
                 }
                 window.scrollTo(0, 0)
             })
+    }
+
+    // Set role
+    const handleChange = (e) => {
+        setRole(Array.isArray(e) ? e.map(x => x.value) : []);
     }
 
     return (
@@ -171,19 +185,12 @@ const EditUser = () => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="role">Choose Role</label>
-                    <select
-                        name="role"
-                        className="form-control form-control-lg"
-                        value={role.roleId}
-                        onChange={e => setRole(e.target.value)}
-                    >
-                        <optgroup label="Role">
-                            <option value="admin">Admin</option>
-                            <option value="qa_manager">QA Manager</option>
-                            <option value="qa_coordinator">QA Coordinator</option>
-                            <option value="staff">Staff</option>
-                        </optgroup>
-                    </select>
+                    <MultiSelect
+                        options={options}
+                        value={options.filter(obj => role.includes(obj.value))}
+                        onChange={handleChange}
+                        labelledBy="Select"
+                    />
                 </div>
                 <div className="form-group">
                     <label htmlFor="departmentId">Choose Department</label>

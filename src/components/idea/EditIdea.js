@@ -124,7 +124,7 @@ function EditIdea() {
                         <input type="text" placeholder='Your title' className='form-control fw-bold' value={title} onChange={e => setTitle(e.target.value)} />
                     </h4>
                     <p className='pb-2'>
-                        <input type="text" placeholder='Your content' className='form-control' value={description} onChange={e => setDescription(e.target.value)} />
+                        <textarea type="text" placeholder='Your content' className='form-control' value={description} onChange={e => setDescription(e.target.value)} />
                     </p>
                     <div className="file form-group">
                         <label htmlFor="file">Upload your file</label>

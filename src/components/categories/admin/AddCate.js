@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Cookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "../../alert/Alert";
+// import DatePicker from "react-datepicker"
+// import "react-datepicker/dist/react-datepicker.css"
 
 const AddCate = () => {
     const [cateName, setCateName] = useState("")
     const [description, setDescription] = useState("")
-    const [createDate, setCreateDate] = useState("")
-    // const [lastModifyDate, setLastModifyDate] = useState("")
+    // const [createDate, setCreateDate] = useState("")
     const [className, setClassName] = useState("alert-success");
     const [message, setMessage] = useState("");
     const [isAlert, setIsAlert] = useState(false);
@@ -19,7 +20,7 @@ const AddCate = () => {
         const raw = JSON.stringify({
             cateName,
             description,
-            createDate,
+            // createDate,
         });
 
         const requestOptions = {
@@ -79,18 +80,17 @@ const AddCate = () => {
                         }}
                     ></textarea>
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group d-none">
                     <label htmlFor="createDate">Create Date</label>
-                    <input
-                        type="date"
+                    <DatePicker
                         className="form-control form-control-lg"
-                        name="createDate"
-                        value={createDate}
-                        onChange={(e) => {
-                            setCreateDate(e.target.value)
-                        }}
+                        selected={createDate}
+                        value={new Date().toISOString().slice(0, 10) }
+                        onChange={date => setCreateDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        minDate={new Date()}
                     />
-                </div>
+                </div> */}
                 <div className="form-group text-right">
                     <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddCate}>Add Category</button>
                     <Link to="/categories" className="btn btn-danger px-3">Cancel</Link>

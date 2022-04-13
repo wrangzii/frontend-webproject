@@ -4,6 +4,7 @@ import Alert from "../../alert/Alert";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Cookies } from "react-cookie";
+import { MultiSelect } from "react-multi-select-component";
 
 const AddUser = () => {
     const [email, setEmail] = useState("");
@@ -11,8 +12,9 @@ const AddUser = () => {
     const [fullName, setFullName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState(null);
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState([]);
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [departmentId, setDepartmentId] = useState("");
     const [message, setMessage] = useState("");
     const [className, setClassName] = useState("alert-success");
@@ -20,8 +22,16 @@ const AddUser = () => {
     const [mounted, setMounted] = useState(true)
     const [departs, setDeparts] = useState([])
     const [pageNumber, setPageNumber] = useState(0)
+    const [isValid, setIsValid] = useState(false)
     const navigate = useNavigate()
     const cookies = new Cookies();
+
+    const options = [
+        { label: "Admin", value: "admin" },
+        { label: "QA Manager", value: "qa_manager" },
+        { label: "QA Coordinator", value: "qa_coordinator" },
+        { label: "Staff", value: "staff" },
+    ];
 
     const handleAddUser = () => {
         const raw = JSON.stringify({
@@ -77,6 +87,20 @@ const AddUser = () => {
             })
         return () => setMounted(false)
     }, [])
+
+    // Check same password
+    useEffect(() => {
+        if (password === confirmPassword) {
+            setIsValid(true)
+        } else {
+            setIsValid(false)
+        }
+    }, [password])
+
+    // Set role
+    const handleChange = (e) => {
+        setRole(Array.isArray(e) ? e.map(x => x.value) : []);
+    }
 
     return (
         <div className="add-user">
@@ -145,6 +169,19 @@ const AddUser = () => {
                             className="form-control form-control-lg"
                             placeholder="Enter Password"
                             name="password"
+                            value={confirmPassword.trim()}
+                            onChange={(e) => {
+                                setConfirmPassword(e.target.value)
+                            }}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="confirmPassword">Confirm Password</label>
+                        <input
+                            type="password"
+                            className="form-control form-control-lg"
+                            placeholder="Confirm Password"
+                            name="confirmPassword"
                             value={password.trim()}
                             onChange={(e) => {
                                 setPassword(e.target.value)
@@ -164,20 +201,12 @@ const AddUser = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="role">Role</label>
-                        <select
-                            name="role"
-                            className="form-control form-control-lg"
-                            value={role}
-                            onChange={(e) => {
-                                setRole([e.target.value])
-                            }}
-                        >
-                            <option>Select a role</option>
-                            <option value="admin">Admin</option>
-                            <option value="qa_manager">QA manager</option>
-                            <option value="qa_coordinator">QA coordinator</option>
-                            <option value="staff">Staff</option>
-                        </select>
+                        <MultiSelect
+                            options={options}
+                            value={options.filter(obj => role.includes(obj.value)) }
+                            onChange={handleChange}
+                            labelledBy="Select"
+                        />
                     </div>
                     <div className="form-group">
                         <label htmlFor="departmentId">Department No.</label>
@@ -191,6 +220,7 @@ const AddUser = () => {
                             }}
                         >
                             <optgroup label="Department">
+                                <option>Select a department</option>
                                 {departs.map(depart => (
                                     <option key={depart.departmentId} value={depart.departmentId}>{depart.departmentName}</option>
                                 ))}
@@ -198,7 +228,7 @@ const AddUser = () => {
                         </select>
                     </div>
                     <div className="form-group text-right">
-                        <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddUser}>Add User</button>
+                        {isValid && <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddUser}>Add User</button>}
                         <Link to="/users" className="btn btn-danger px-3">Cancel</Link>
                     </div>
                 </div>
