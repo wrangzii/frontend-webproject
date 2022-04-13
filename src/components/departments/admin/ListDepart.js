@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import axios from "axios"
 
@@ -11,7 +11,6 @@ const ListDepart = () => {
     const [mounted, setMounted] = useState(true)
     const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
-    // const navigate = useNavigate()
 
     useEffect(() => {
         if (cookies.get("token")) {
@@ -116,7 +115,7 @@ const ListDepart = () => {
         );
     }
     return (
-        <p className="alert alert-danger">Only <b>Admin</b> can view this content!</p>
+        <p className="alert alert-danger">You don't have permission to access this resources!</p>
     )
 }
 

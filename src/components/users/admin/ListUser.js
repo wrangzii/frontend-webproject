@@ -11,7 +11,6 @@ const ListUser = () => {
     const [isAdmin, setIsAdmin] = useState(false)
     const $ = document.querySelector.bind(document)
     const cookies = new Cookies();
-    // const navigate = useNavigate()
 
     useEffect(() => {
         if (cookies.get("token")) {
@@ -133,7 +132,7 @@ const ListUser = () => {
         );
     }
     return (
-        <p className="alert alert-danger">Only <b>Admin</b> can view this content!</p>
+        <p className="alert alert-danger">You don't have permission to access this resources!</p>
     )
 }
 

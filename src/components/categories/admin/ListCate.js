@@ -82,79 +82,79 @@ const ListCate = () => {
             })
     }
 
+    // Handle pagination
     useEffect(() => {
-        (function checkPage() {
-            pageNumber <= 0 ? $(".prev").classList.add("pe-none") : $(".prev").classList.remove("pe-none")
-        })()
+        if ($(".prev")) {
+            (function checkPage() {
+                pageNumber <= 0 ? $(".prev").classList.add("pe-none") : $(".prev").classList.remove("pe-none")
+            })()
+        }
     }, [pageNumber])
 
-    return (
-        <div className="list-cate">
-            <h3>Category List</h3>
-            {isAdmin && <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>}
-            <div className="overflow-auto">
-                <table className="table border shadow">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Created Date</th>
-                            <th scope="col">Last Modified</th>
-                            {(isAdmin || isManager) && <th>Action</th>}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            cates.map(cate => (
-                                <tr key={cate.cateId}>
-                                    <th scope="row">#{cate.cateId}</th>
-                                    <td>{cate.cateName}</td>
-                                    <td>{cate.description}</td>
-                                    <td>{new Date(cate.createDate).toLocaleDateString()}</td>
-                                    <td>{new Date(cate.lastModifyDate).toLocaleDateString()}</td>
-                                    {isAdmin &&
+    if (isAdmin || isManager) {
+        return (
+            <div className="list-cate">
+                <h3>Category List</h3>
+                {isAdmin && <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>}
+                <div className="overflow-auto">
+                    <table className="table border shadow">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Created Date</th>
+                                <th scope="col">Last Modified</th>
+                                {(isAdmin || isManager) && <th>Action</th>}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                cates.map(cate => (
+                                    <tr key={cate.cateId}>
+                                        <th scope="row">#{cate.cateId}</th>
+                                        <td>{cate.cateName}</td>
+                                        <td>{cate.description}</td>
+                                        <td>{new Date(cate.createDate).toLocaleDateString()}</td>
+                                        <td>{new Date(cate.lastModifyDate).toLocaleDateString()}</td>
                                         <td>
-                                            <>
-                                                <Link className="btn btn-primary mr-2" to={`/categories/${cate.cateId}`}>View</Link>
-                                                <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.cateId}`}>Edit</Link>
-                                                <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.cateId)} to="/categories">Delete</Link>
-                                            </>
-                                        </td>
-                                    }
-                                    {isManager && (
-                                        <td>
+                                            <Link className="btn btn-primary mr-2" to={`/categories/${cate.cateId}`}>View</Link>
+                                            <Link className="btn btn-outline-primary mr-2" to={`/categories/edit/${cate.cateId}`}>Edit</Link>
+                                            <Link className="btn btn-outline-danger mr-2" onClick={() => deleteCate(cate.cateId)} to="/categories">Delete</Link>
                                             <button className="btn btn-warning" onClick={() => downloadCSV(cate.cateId)}>
                                                 <i className="fa-solid fa-download mr-2"></i>
-                                                Export CSV
+                                                Export file
                                             </button>
                                         </td>
-                                    )}
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
-                {message && <p className="alert alert-success">{message}</p>}
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                    {message && <p className="alert alert-success">{message}</p>}
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul className="pagination">
+                        <li className="page-item prev" onClick={() => setPageNumber(pageNumber - 1)}>
+                            <Link className="page-link" to={`?pageNumber=${pageNumber - 1}`} aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span className="sr-only">Previous</span>
+                            </Link>
+                        </li>
+                        <li className="page-item next" onClick={() => setPageNumber(pageNumber + 1)}>
+                            <Link className="page-link" to={`?pageNumber=${pageNumber + 1}`} aria-label="Previous">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span className="sr-only">Next</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <nav aria-label="Page navigation example">
-                <ul className="pagination">
-                    <li className="page-item prev" onClick={() => setPageNumber(pageNumber - 1)}>
-                        <Link className="page-link" to={`?pageNumber=${pageNumber - 1}`} aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span className="sr-only">Previous</span>
-                        </Link>
-                    </li>
-                    <li className="page-item next" onClick={() => setPageNumber(pageNumber + 1)}>
-                        <Link className="page-link" to={`?pageNumber=${pageNumber + 1}`} aria-label="Previous">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span className="sr-only">Next</span>
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    );
+        );
+    }
+    return (
+        <p className="alert alert-danger">You don't have permission to access this resources!</p>
+    )
 }
 
 export default ListCate;

@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Cookies } from "react-cookie";
-import MoveToTop from "../MoveToTop";
+// import MoveToTop from "../MoveToTop";
+import { CSVLink } from 'react-csv'
+import JSZip from 'jszip';
+import FileSaver from 'file-saver'
 
 const ListIdea = () => {
     const [ideas, setIdeas] = useState([])
@@ -62,6 +65,17 @@ const ListIdea = () => {
             .then(response => setIdeas(response.data))
     }
 
+    // Add view count
+    const addViewCount = id => {
+        axios({
+            method: "GET",
+            url: `http://localhost:8080/submit_idea/viewCount/${id}`,
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token')
+            }
+        })
+    }
+    
     // Export CSV
     useEffect(() => {
         axios({
@@ -77,24 +91,21 @@ const ListIdea = () => {
             .catch(error => console.log({ error }))
     }, [])
 
-    // Add view count
-    const addViewCount = id => {
-        axios({
-            method: "GET",
-            url: `http://localhost:8080/submit_idea/viewCount/${id}`,
-            headers: {
-                'Authorization': 'Bearer ' + cookies.get('token')
-            }
-        })
+    const csvReport = {
+        filename: `Report_${new Date().toLocaleDateString()}.csv`,
+        data: data
     }
 
     return (
         <div className="list-idea">
-            <div className="sort-area d-flex align-items-center gap-3">
-                <h5>Sort by:</h5>
+            <div className="sort-area d-flex align-items-center justify-content-between gap-3 mb-3">
                 <button className="btn btn-outline-secondary" onClick={sortLastestIdea}>Lastest Idea</button>
                 <button className="btn btn-outline-secondary" onClick={sortMostPopular}>Most Popular</button>
                 <button className="btn btn-outline-secondary" onClick={sortLastestComment}>Lastest Comment</button>
+                <CSVLink {...csvReport} className='btn btn-success'>
+                    <i className="fa-solid fa-download mr-2"></i>
+                    Export CSV File
+                </CSVLink>
             </div>
             {ideas.map(idea => (
                 <div className="shadow rounded mb-5" key={idea.ideaId}>

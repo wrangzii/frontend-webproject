@@ -13,6 +13,7 @@ function Chart() {
     const [countCate, setCountCate] = useState([])
     const [ideas, setIdeas] = useState([])
     const [isAdmin, setIsAdmin] = useState(false)
+    const [isCoordinator, setIsCoordinator] = useState(false)
     const [isManager, setIsManager] = useState(false)
     const [mounted, setMounted] = useState(true)
     const myHeaders = {
@@ -26,8 +27,13 @@ function Chart() {
                 setIsAdmin(true)
             } else {
                 setIsAdmin(false)
-                // navigate("/")
             }
+        }
+
+        if (cookies.get("roles").some(role => role === "ROLE_QA_COORDINATOR")) {
+            setIsCoordinator(true)
+        } else {
+            setIsCoordinator(false)
         }
 
         if (cookies.get("roles").some(role => role === "ROLE_QA_MANAGER")) {
@@ -134,44 +140,44 @@ function Chart() {
         });
     }
 
-    return (
-        <div className='chart d-flex flex-column gap-5'>
-            <div className="pie-chart">
-                <h4 className='text-uppercase'>1. The percentage of ideas by department</h4>
-                <ReactApexChart options={pie.options} series={pie.series} type="pie" width={380} />
-            </div>
-            <div className="bar-chart">
-                <h4 className='text-uppercase'>2. Idea's view by category</h4>
-                <ReactApexChart options={bar.options} series={bar.series} type="bar" height={350} />
-            </div>
-            <div className="table-ideas">
-                <h3 className='text-uppercase'>3. Ideas statistical analysis</h3>
-                <div className="overflow-auto">
-                    <table className="table">
-                        <thead className="thead-dark">
-                            <tr>
-                                <th scope="col">Is Anonymous</th>
-                                <th scope="col">Idea Title</th>
-                                <th scope="col">Submission</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Total comments</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {ideas.map((idea, index) => (
-                                <tr key={index}>
-                                    <td className='pe-none'><input type="checkbox" defaultChecked={idea.isAnonymous} /></td>
-                                    <td>{idea.title}</td>
-                                    <td>{idea.submission}</td>
-                                    <td>{idea.category}</td>
-                                    <td className='d-table-cell text-center'>{idea.count}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+    if (isCoordinator || isAdmin || isManager) {
+        return (
+            <div className='chart d-flex flex-column gap-5'>
+                <div className="pie-chart">
+                    <h4 className='text-uppercase'>1. The percentage of ideas by department</h4>
+                    <ReactApexChart options={pie.options} series={pie.series} type="pie" width={380} />
                 </div>
-            </div>
-            {isManager && (
+                <div className="bar-chart">
+                    <h4 className='text-uppercase'>2. Idea's view by category</h4>
+                    <ReactApexChart options={bar.options} series={bar.series} type="bar" height={350} />
+                </div>
+                <div className="table-ideas">
+                    <h3 className='text-uppercase'>3. Ideas statistical analysis</h3>
+                    <div className="overflow-auto">
+                        <table className="table">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th scope="col">Is Anonymous</th>
+                                    <th scope="col">Idea Title</th>
+                                    <th scope="col">Submission</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Total comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {ideas.map((idea, index) => (
+                                    <tr key={index}>
+                                        <td className='pe-none'><input type="checkbox" defaultChecked={idea.isAnonymous} /></td>
+                                        <td>{idea.title}</td>
+                                        <td>{idea.submission}</td>
+                                        <td>{idea.category}</td>
+                                        <td className='d-table-cell text-center'>{idea.count}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <div className="export-csv w-100 d-flex gap-3">
                     <CSVLink {...csvReport} className='btn btn-success'>
                         <i className="fa-solid fa-download mr-2"></i>
@@ -182,8 +188,11 @@ function Chart() {
                         Export as ZIP File
                     </button>
                 </div>
-            )}
-        </div>
+            </div>
+        )
+    }
+    return (
+        <p className="alert alert-danger">You don't have permission to access this resources!</p>
     )
 }
 

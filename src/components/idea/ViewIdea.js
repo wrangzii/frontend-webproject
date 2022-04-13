@@ -4,7 +4,7 @@ import { Cookies } from 'react-cookie'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import ListComment from './components/ListComment'
 import Alert from "../alert/Alert"
-import MoveToTop from '../MoveToTop'
+// import MoveToTop from '../MoveToTop'
 
 function ViewIdea({ image, date }) {
     const cookies = new Cookies()
@@ -209,12 +209,12 @@ function ViewIdea({ image, date }) {
     }, [myUsername])
 
     // Check reaction type
-    function checkReaction(type, isThumb) {
+    function checkReaction(username, type, isThumb) {
         if (isThumb) {
-            if (type === "like") {
+            if (type === "like" && username === myUsername) {
                 console.log("like");
                 like.classList.add("text-primary")
-            } else if (type === "dislike") {
+            } else if (type === "dislike" && username === myUsername) {
                 console.log("dislike");
                 dislike.classList.add("text-danger")
             }

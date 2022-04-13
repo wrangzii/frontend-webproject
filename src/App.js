@@ -34,7 +34,6 @@ import Profile from './components/pages/Profile';
 import Terms from './components/Terms';
 import Chart from "./components/Dashboard/Chart"
 
-import Goodbye from './components/pages/Goodbye';
 import {
   BrowserRouter,
   Routes,
@@ -73,7 +72,6 @@ function App() {
               <Route path='/submission/edit/:id' element={<EditSubmission />} />
               <Route path='/dashboard' element={<Chart />} />
               <Route path='/profile' element={<Profile />} />
-              <Route path='/goodbye' element={<Goodbye />} />
               {cookies.get("token") ? (
                 <>
                   <Route exact path='/' element={<ListIdea />} />
