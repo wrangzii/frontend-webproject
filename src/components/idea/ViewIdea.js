@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Cookies } from 'react-cookie'
 import { useParams, Link, useNavigate } from 'react-router-dom'
@@ -10,13 +10,13 @@ function ViewIdea({ image, date }) {
     const cookies = new Cookies()
     const [myUsername, setMyUsername] = useState("")
     const [idea, setIdea] = useState({})
-    const [comment, setComment] = useState("")
+    // const [comment, setComment] = useState("")
     const [content, setContent] = useState("")
     const [posterId, setPosterId] = useState(0)
     const [userId, setUserId] = useState(0)
     const [ideaId, setIdeaId] = useState(0)
     const [isAnonymous, setIsAnonymous] = useState(false)
-    const [reactionType, setReactionType] = useState("")
+    const [reactionType, setReactionType] = useState("like")
     const [isThumbup, setIsThumbup] = useState(false)
     const [isThumbdown, setIsThumbdown] = useState(false)
     const [submissionId, setSubmissionId] = useState("")
@@ -28,7 +28,6 @@ function ViewIdea({ image, date }) {
     const [reactionList, setReactionList] = useState([])
     const [countLike, setCountLike] = useState(0)
     const [countDislike, setCountDislike] = useState(0)
-    const [reactionId, setReactionId] = useState(0)
     const { id } = useParams()
     const $ = document.querySelector.bind(document)
     const navigate = useNavigate()
@@ -48,15 +47,14 @@ function ViewIdea({ image, date }) {
             }
         })
             .then(response => {
+                console.log(response);
                 setIdea(response.data.data)
                 setIdeaId(response.data.data.ideaId);
-                setReactionId(response.data.data.reactionId)
                 setCateId(response.data.data.cateId)
                 setPosterId(response.data.data.userId)
                 setSubmissionId(response.data.data.submissionId)
                 setUserId(parseInt(cookies.cookies.id));
                 setMyUsername(cookies.cookies.username)
-                setReactionType((!isThumbup) ? "like" : (!isThumbdown) ? "dislike" : "")
             })
             .catch(error => console.log(error))
     }, [])
@@ -103,21 +101,17 @@ function ViewIdea({ image, date }) {
         setIsAnonymous($("#anonymous").checked ? true : false);
     }, [isAnonymous])
 
-    // Delete reaction
-    const deleteReaction = () => {
-        axios({
-            method: "DELETE",
-            headers: myHeaders,
-            url: "http://localhost:8080/reaction/delete",
-            data: JSON.stringify({ userId, ideaId })
-        })
-            .then(res => console.log(res))
-        setIsThumbup(false)
-        setIsThumbdown(false)
-    }
-
     // Add reaction
     const handleThumb = (type) => {
+        if (type === 1) {
+            setIsThumbup(true)
+            setReactionType("like")
+        } else if (type === 2) {
+            setIsThumbdown(true)
+            setReactionType("dislike")
+        } else {
+            return false
+        }
         axios({
             method: "POST",
             headers: myHeaders,
@@ -126,27 +120,7 @@ function ViewIdea({ image, date }) {
         })
             .then(res => {
                 console.log(res)
-                if (type === 1) {
-                    setIsThumbup(true)
-                } else if (type === 2) {
-                    setIsThumbdown(true)
-                } else {
-                    return false
-                }
-                console.log(type);
             })
-    }
-
-    // Edit reaction
-    const editReaction = () => {
-        axios({
-            method: "GET",
-            url: "http://localhost:8080/reaction/edit",
-            headers: myHeaders,
-            data: JSON.stringify({ reactionId, reactionType, userId, ideaId })
-        })
-            .then(res => console.log(res))
-            .catch(err => console.log({err}))
     }
 
     // Get reaction list
@@ -237,7 +211,7 @@ function ViewIdea({ image, date }) {
                     <button
                         type='button'
                         className={`like btn fz-20 ${isThumbup ? "text-primary" : ""}`}
-                        onClick={() => !isThumbup ? handleThumb(1) : deleteReaction(1)}
+                        onClick={() => handleThumb(1)}
                     >
                         <i className="fa-solid fa-thumbs-up mr-2"></i>
                         {countLike}
@@ -245,7 +219,7 @@ function ViewIdea({ image, date }) {
                     <button
                         type='button'
                         className={`dislike btn fz-20 ${isThumbdown ? "text-danger" : ""}`}
-                        onClick={() => !isThumbdown ? handleThumb(2) : deleteReaction(2)}>
+                        onClick={() => handleThumb(2)}>
                         <i className="fa-solid fa-thumbs-down mr-2"></i>
                         {countDislike}
                     </button>
@@ -254,7 +228,7 @@ function ViewIdea({ image, date }) {
                         Comment
                     </Link>
                 </div>
-                <ListComment image={image} date={date} comment={comment} />
+                <ListComment image={image} date={date}  />
                 <button className="btn btn-primary call-to-comment m-3" onClick={handleComment}>
                     <i className="fa-solid fa-comment mr-2"></i>
                     Write a comment...
@@ -265,7 +239,14 @@ function ViewIdea({ image, date }) {
                             <img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} />
                         </div>
                         <textarea required placeholder="Write your idea..." cols="80" rows="2" className="px-2 form-control" value={content} onChange={e => setContent(e.target.value)}></textarea>
-                        {content && <button type='submit' className="btn btn-primary h-100 mt-auto" onClick={() => handlePostComment(content)}>Post</button>}
+                        {content && (
+                            <button
+                                type='submit'
+                                className="btn btn-primary h-100 mt-auto"
+                                onClick={() => handlePostComment(content)}>
+                                Post
+                            </button>
+                        )}
                     </div>
                     <div className="d-flex align-items-center ml-3 py-3">
                         <input type="checkbox" id="anonymous" className='mr-2' onChange={e => setIsAnonymous(e.target.checked)} />
