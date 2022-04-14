@@ -75,7 +75,7 @@ const ListIdea = () => {
             }
         })
     }
-    
+
     // Export CSV
     useEffect(() => {
         axios({
@@ -98,7 +98,7 @@ const ListIdea = () => {
 
     return (
         <div className="list-idea">
-            <div className="sort-area d-flex align-items-center justify-content-between gap-3 mb-3">
+            <div className="sort-area d-flex align-items-center gap-3 mb-3">
                 <button className="btn btn-outline-secondary" onClick={sortLastestIdea}>Lastest Idea</button>
                 <button className="btn btn-outline-secondary" onClick={sortMostPopular}>Most Popular</button>
                 <button className="btn btn-outline-secondary" onClick={sortLastestComment}>Lastest Comment</button>

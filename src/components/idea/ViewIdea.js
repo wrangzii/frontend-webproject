@@ -16,22 +16,26 @@ function ViewIdea({ image, date }) {
     const [userId, setUserId] = useState(0)
     const [ideaId, setIdeaId] = useState(0)
     const [isAnonymous, setIsAnonymous] = useState(false)
-    const [reactionType, setReactionType] = useState("like")
+    const [reactionType, setReactionType] = useState("")
+    const [isThumbup, setIsThumbup] = useState(false)
+    const [isThumbdown, setIsThumbdown] = useState(false)
     const [submissionId, setSubmissionId] = useState("")
     const [cateId, setCateId] = useState("")
     const [isAlert, setIsAlert] = useState(false)
     const [className, setClassName] = useState("alert-success")
     const [message, setMessage] = useState("")
     const [isShowCmt, setIsShowCmt] = useState(false)
-    const [isThumb, setIsThumb] = useState(false)
+    const [reactionList, setReactionList] = useState([])
+    const [countLike, setCountLike] = useState(0)
+    const [countDislike, setCountDislike] = useState(0)
+    const [reactionId, setReactionId] = useState(0)
     const { id } = useParams()
     const $ = document.querySelector.bind(document)
     const navigate = useNavigate()
-    const like = $(".like")
-    const dislike = $(".dislike")
 
     const myHeaders = {
-        'Authorization': 'Bearer ' + cookies.get('token')
+        'Authorization': 'Bearer ' + cookies.get('token'),
+        "Content-Type": "application/json",
     }
 
     // Get idea by id
@@ -39,46 +43,32 @@ function ViewIdea({ image, date }) {
         axios({
             method: "GET",
             url: `http://localhost:8080/submit_idea/${id}`,
-            headers: myHeaders
-        })
-            .then(response => {
-                setIdea(response.data.data)
-                setIdeaId(response.data.data.ideaId);
-                setCateId(response.data.data.cateId)
-                setPosterId(response.data.data.userId)
-                setSubmissionId(response.data.data.submissionId)
-                setUserId(parseInt(cookies.cookies.id));
-            })
-            .catch(error => console.log(error))
-    }, [])
-
-    // Get reaction list
-    useEffect(() => {
-        axios({
-            method: "GET",
-            url: `http://localhost:8080/reaction/${id}`,
             headers: {
                 'Authorization': 'Bearer ' + cookies.get('token')
             }
         })
             .then(response => {
-                setMyUsername(response.data.data.map(username => username.username))
-                return response.data.data
+                setIdea(response.data.data)
+                setIdeaId(response.data.data.ideaId);
+                setReactionId(response.data.data.reactionId)
+                setCateId(response.data.data.cateId)
+                setPosterId(response.data.data.userId)
+                setSubmissionId(response.data.data.submissionId)
+                setUserId(parseInt(cookies.cookies.id));
+                setMyUsername(cookies.cookies.username)
+                setReactionType((!isThumbup) ? "like" : (!isThumbdown) ? "dislike" : "")
             })
-            .then(response => {
-                response.find(reaction => reaction.reactionType === "like" || reaction.reactionType === "dislike" ? setIsThumb(true) : setIsThumb(false))
-                return response
-            })
-            .then(response => response.map(r => checkReaction(r.reactionType, isThumb)))
-            
-    }, [isThumb])
+            .catch(error => console.log(error))
+    }, [])
 
+    // Handle post comment button
     const handleComment = () => {
         setIsShowCmt(true)
         window.scrollTo(0, document.body.clientHeight)
         $(".call-to-comment").classList.add("d-none")
     }
 
+    // Add comment
     const raw = JSON.stringify({
         content,
         userId,
@@ -86,7 +76,6 @@ function ViewIdea({ image, date }) {
         isAnonymous
     })
 
-    // Add comment
     const handlePostComment = () => {
         axios({
             method: "POST",
@@ -115,119 +104,65 @@ function ViewIdea({ image, date }) {
     }, [isAnonymous])
 
     // Delete reaction
-    const deleteReaction = (idea_id) => {
+    const deleteReaction = () => {
         axios({
             method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + cookies.get('token')
-            },
+            headers: myHeaders,
             url: "http://localhost:8080/reaction/delete",
             data: JSON.stringify({ userId, ideaId })
         })
-            .then(response => {
-                setUserId(cookies.cookies.id)
-                setIdeaId(idea_id)
-            })
-            .catch(error => console.log(error))
+            .then(res => console.log(res))
+        setIsThumbup(false)
+        setIsThumbdown(false)
     }
 
     // Add reaction
-    const handleThumb = (idea_id, type) => {
-        if (type === 1) {
-            like.classList.toggle("text-primary")
-            axios({
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    'Authorization': 'Bearer ' + cookies.get('token')
-                },
-                url: "http://localhost:8080/reaction/add",
-                data: JSON.stringify({ reactionType, userId, ideaId })
+    const handleThumb = (type) => {
+        axios({
+            method: "POST",
+            headers: myHeaders,
+            url: "http://localhost:8080/reaction/add",
+            data: JSON.stringify({ reactionType, userId, ideaId })
+        })
+            .then(res => {
+                console.log(res)
+                if (type === 1) {
+                    setIsThumbup(true)
+                } else if (type === 2) {
+                    setIsThumbdown(true)
+                } else {
+                    return false
+                }
+                console.log(type);
             })
-                .then(response => {
-                    setReactionType("like")
-                    setUserId(cookies.cookies.id)
-                    setIdeaId(idea_id)
-                })
-                .catch(error => console.log(error))
-        } else if (type === 2) {
-            dislike.classList.toggle("text-danger")
-            axios({
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    'Authorization': 'Bearer ' + cookies.get('token')
-                },
-                url: "http://localhost:8080/reaction/add",
-                data: JSON.stringify({ reactionType, userId, ideaId })
-            })
-                .then(response => {
-                    setReactionType("dislike")
-                    setUserId(cookies.cookies.id)
-                    setIdeaId(idea_id)
-                })
-                .catch(error => console.log(error))
-        }
-
-        // if (reactionType === "like" || reactionType === "dislike") {
-        //     deleteReaction()
-        // } else {
-        //     axios({
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             'Authorization': 'Bearer ' + cookies.get('token')
-        //         },
-        //         url: "http://localhost:8080/reaction/add",
-        //         data: JSON.stringify({ reactionType, userId, ideaId })
-        //     })
-        //         .then(response => {
-        //             setReactionType("like")
-        //             setUserId(cookies.cookies.id)
-        //             setIdeaId(idea_id)
-        //         })
-        //         .catch(error => console.log(error))
-        // }
-    }
-
-    // Toggle reaction display
-    useEffect(() => {
-        if (reactionType === "like" && myUsername) {
-            if (myUsername.find(username => username === cookies.cookies.username)) {
-                like.classList.add("text-primary")
-            } else {
-                like.classList.remove("text-primary")
-            }
-        } else if (reactionType === "dislike" && myUsername) {
-            if (myUsername.find(username => username === cookies.cookies.username)) {
-                dislike.classList.add("text-danger")
-            } else {
-                dislike.classList.remove("text-danger")
-            }
-        }
-    }, [myUsername])
-
-    // Check reaction type
-    function checkReaction(username, type, isThumb) {
-        if (isThumb) {
-            if (type === "like" && username === myUsername) {
-                console.log("like");
-                like.classList.add("text-primary")
-            } else if (type === "dislike" && username === myUsername) {
-                console.log("dislike");
-                dislike.classList.add("text-danger")
-            }
-            // console.log("have reaction");
-        } else {
-            console.log("no reaction: first render");
-        }
     }
 
     // Edit reaction
-    useEffect(() => {
+    const editReaction = () => {
+        axios({
+            method: "GET",
+            url: "http://localhost:8080/reaction/edit",
+            headers: myHeaders,
+            data: JSON.stringify({ reactionId, reactionType, userId, ideaId })
+        })
+            .then(res => console.log(res))
+            .catch(err => console.log({err}))
+    }
 
-    }, [])
+    // Get reaction list
+    useEffect(() => {
+        axios({
+            method: "GET",
+            url: `http://localhost:8080/reaction/${id}`,
+            headers: {
+                'Authorization': 'Bearer ' + cookies.get('token')
+            }
+        })
+            .then(response => {
+                setReactionList(response.data.data)
+            })
+
+    }, [isThumbup, isThumbdown])
 
     // Delete idea
     const deleteIdea = idea_id => {
@@ -250,6 +185,16 @@ function ViewIdea({ image, date }) {
                 console.log(error);
             })
     }
+
+    // Count like/ dislike and whether had my thumb
+    useEffect(() => {
+        const count_like = reactionList.filter(reaction => reaction.reactionType === "like")
+        const count_dislike = reactionList.filter(reaction => reaction.reactionType === "dislike")
+        setCountLike(count_like.length)
+        setCountDislike(count_dislike.length)
+        setIsThumbup(reactionList.some(reaction => reaction.reactionType === "like" && reaction.username === myUsername))
+        setIsThumbdown(reactionList.some(reaction => reaction.reactionType === "dislike" && reaction.username === myUsername))
+    }, [reactionList])
 
     return (
         <div className='view-idea'>
@@ -291,18 +236,18 @@ function ViewIdea({ image, date }) {
                 <div className="reaction fz-20 c-pointer d-flex align-items-center gap-5 text-secondary px-3">
                     <button
                         type='button'
-                        className="like btn fz-20"
-                        onClick={() => handleThumb(idea.ideaId, 1)}
+                        className={`like btn fz-20 ${isThumbup ? "text-primary" : ""}`}
+                        onClick={() => !isThumbup ? handleThumb(1) : deleteReaction(1)}
                     >
                         <i className="fa-solid fa-thumbs-up mr-2"></i>
-                        Like
+                        {countLike}
                     </button>
                     <button
                         type='button'
-                        className="dislike btn fz-20"
-                        onClick={() => handleThumb(idea.ideaId, 2)}>
+                        className={`dislike btn fz-20 ${isThumbdown ? "text-danger" : ""}`}
+                        onClick={() => !isThumbdown ? handleThumb(2) : deleteReaction(2)}>
                         <i className="fa-solid fa-thumbs-down mr-2"></i>
-                        Dislike
+                        {countDislike}
                     </button>
                     <Link to={`/${id}`} className="comment text-decoration-none" onClick={() => handleComment(idea.ideaId)}>
                         <i className="fa-solid fa-comment mr-2"></i>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import axios from "axios";
 
@@ -18,7 +18,6 @@ const ListUser = () => {
                 setIsAdmin(true)
             } else {
                 setIsAdmin(false)
-                // navigate("/")
             }
         }
         return () => setMounted(false)
@@ -38,19 +37,6 @@ const ListUser = () => {
             .then(result => setUsers(result))
         return () => setMounted(false)
     }, [pageNumber])
-
-    // const deleteUser = userId => {
-    //     fetch(`http://localhost:8080/users/delete/${userId}`, {
-    //         method: 'DELETE',
-    //         headers: myHeaders,
-    //     })
-    //         .then(res => res.json())
-    //         .then(id => {
-    //             setListUser([...listUser.filter(user => id !== user.userId), listUser])
-    //             setIsDeleted(true)
-    //             setMessage(id.message)
-    //         })
-    // }
 
     // Delete item
     const deleteUser = userId => {
