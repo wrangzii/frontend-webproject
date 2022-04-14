@@ -95,7 +95,7 @@ const ListCate = () => {
         return (
             <div className="list-cate">
                 <h3>Category List</h3>
-                {isAdmin && <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>}
+                <Link className="btn btn-outline-dark mb-3" to="/categories/add">Add Category</Link>
                 <div className="overflow-auto">
                     <table className="table border shadow">
                         <thead>

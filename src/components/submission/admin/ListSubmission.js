@@ -77,7 +77,7 @@ const ListSubmission = () => {
     return (
         <div className="submission">
             <h3>Submission List</h3>
-            {isAdmin && <Link className="btn btn-outline-dark mb-3" to="/submission/add">Add Submission</Link>}
+            <Link className="btn btn-outline-dark mb-3" to="/submission/add">Add Submission</Link>
             <div className="overflow-auto">
                 <table className="table border shadow">
                     <thead>
