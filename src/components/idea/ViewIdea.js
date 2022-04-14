@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { Cookies } from 'react-cookie'
 import { useParams, Link, useNavigate } from 'react-router-dom'
@@ -138,6 +138,19 @@ function ViewIdea({ image, date }) {
 
     }, [isThumbup, isThumbdown])
 
+    const deleteReaction = () => {
+        setIsThumbup(false)
+        setIsThumbdown(false)
+        axios({
+            method: "DELETE",
+            headers: myHeaders,
+            url: "http://localhost:8080/reaction/delete",
+            data: JSON.stringify({ userId, ideaId })
+        })
+        .then(res => console.log(res))
+    }
+
+
     // Delete idea
     const deleteIdea = idea_id => {
         axios({
@@ -161,7 +174,7 @@ function ViewIdea({ image, date }) {
     }
 
     // Count like/ dislike and whether had my thumb
-    useEffect(() => {
+    useLayoutEffect(() => {
         const count_like = reactionList.filter(reaction => reaction.reactionType === "like")
         const count_dislike = reactionList.filter(reaction => reaction.reactionType === "dislike")
         setCountLike(count_like.length)
@@ -211,7 +224,7 @@ function ViewIdea({ image, date }) {
                     <button
                         type='button'
                         className={`like btn fz-20 ${isThumbup ? "text-primary" : ""}`}
-                        onClick={() => handleThumb(1)}
+                        onClick={() => isThumbup ? deleteReaction() : handleThumb(1)}
                     >
                         <i className="fa-solid fa-thumbs-up mr-2"></i>
                         {countLike}
@@ -219,7 +232,7 @@ function ViewIdea({ image, date }) {
                     <button
                         type='button'
                         className={`dislike btn fz-20 ${isThumbdown ? "text-danger" : ""}`}
-                        onClick={() => handleThumb(2)}>
+                        onClick={() => isThumbdown ? deleteReaction() : handleThumb(2)}>
                         <i className="fa-solid fa-thumbs-down mr-2"></i>
                         {countDislike}
                     </button>
@@ -228,7 +241,7 @@ function ViewIdea({ image, date }) {
                         Comment
                     </Link>
                 </div>
-                <ListComment image={image} date={date}  />
+                <ListComment image={image} date={date} />
                 <button className="btn btn-primary call-to-comment m-3" onClick={handleComment}>
                     <i className="fa-solid fa-comment mr-2"></i>
                     Write a comment...
