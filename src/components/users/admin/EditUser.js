@@ -207,9 +207,9 @@ const EditUser = () => {
                         </optgroup>
                     </select>
                 </div>
-                <div className="form-group text-right">
-                    <button type="button" onClick={editUser} className="btn btn-warning px-3 mr-3">Update</button>
-                    <Link to="/users" className="btn btn-danger px-3">Cancel</Link>
+                <div className="form-group d-flex justify-content-end gap-3 flex-wrap">
+                    <button type="button" onClick={editUser} className="btn btn-warning col-12 col-sm-auto">Update</button>
+                    <Link to="/users" className="btn btn-danger col-12 col-sm-auto">Cancel</Link>
                 </div>
             </form>
         </div>

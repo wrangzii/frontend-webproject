@@ -64,7 +64,7 @@ const Login = () => {
 					<label htmlFor="password" className="mb-2">Password</label>
 					<input type="password" name="password" className="form-control" placeholder="Password" value={password.trim()} onChange={e => setPassword(e.target.value)} />
 				</div>
-				<div className="form-group mb-3 text-right">
+				<div className="form-group mb-3 text-left">
 					<Link to="/forgot-password">Forgot password?</Link>
 				</div>
 				<Link to={"/"} onClick={handleLogin} className="btn btn-success">Login</Link>

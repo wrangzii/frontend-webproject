@@ -4,15 +4,34 @@ import axios from "axios";
 import { Cookies } from "react-cookie";
 // import MoveToTop from "../MoveToTop";
 import { CSVLink } from 'react-csv'
-import JSZip from 'jszip';
-import FileSaver from 'file-saver'
+import avatar from "../../assets/avatar.jpg"
 
 const ListIdea = () => {
     const [ideas, setIdeas] = useState([])
     const [pageNumber, setPageNumber] = useState(0)
     const [data, setData] = useState([])
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [isManager, setIsManager] = useState(false)
+    const [mounted, setMounted] = useState(true)
     const $ = document.querySelector.bind(document)
     const cookies = new Cookies()
+
+    // Check role
+    useEffect(() => {
+        if (cookies.get("token")) {
+            if (cookies.get("roles").some(role => role === "ROLE_ADMIN")) {
+                setIsAdmin(true)
+            } else {
+                setIsAdmin(false)
+            }
+            if (cookies.get("roles").some(role => role === "ROLE_QA_MANAGER")) {
+                setIsManager(true)
+            } else {
+                setIsManager(false)
+            }
+        }
+        return () => setMounted(false)
+    }, [mounted])
 
     const myHeaders = {
         "Content-Type": "multipart/form-data",
@@ -98,37 +117,39 @@ const ListIdea = () => {
 
     return (
         <div className="list-idea">
-            <div className="sort-area d-flex align-items-center gap-3 mb-3">
+            <div className="sort-area d-flex align-items-center flex-wrap gap-3 mb-3">
                 <button className="btn btn-outline-secondary" onClick={sortLastestIdea}>Lastest Idea</button>
                 <button className="btn btn-outline-secondary" onClick={sortMostPopular}>Most Popular</button>
                 <button className="btn btn-outline-secondary" onClick={sortLastestComment}>Lastest Comment</button>
-                <CSVLink {...csvReport} className='btn btn-success'>
-                    <i className="fa-solid fa-download mr-2"></i>
-                    Export CSV File
-                </CSVLink>
+                {(isAdmin || isManager) && (
+                    <CSVLink {...csvReport} className='btn btn-success'>
+                        <i className="fa-solid fa-download mr-2"></i>
+                        Export CSV File
+                    </CSVLink>
+                )}
             </div>
             {ideas.map(idea => (
                 <div className="shadow rounded mb-5" key={idea.ideaId}>
-                    <div className="user d-flex align-items-center justify-content-between p-3 border-bottom bg-light">
-                        <div className="user d-flex">
+                    <div className="user d-flex align-items-center justify-content-between p-3 border-bottom bg-light flex-wrap">
+                        <div className="user d-flex flex-wrap">
                             <div className="user-image">
-                                <img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} />
+                                <img src={avatar} alt="" width={60} />
                             </div>
                             <div className="user-info">
                                 <p className="user-name fz-20 text-primary fw-bold">{idea.isAnonymous ? "Anonymous" : idea.userId.username}</p>
-                                <small className="post-date text-muted">{new Date(idea.createDate).toLocaleDateString()}</small>
+                                <small className="post-date">{new Date(idea.createDate).toLocaleDateString()}</small>
                             </div>
                         </div>
                         <div className="idea-info">
-                            <p className="text-right"><b>Category: </b>{idea.cateId.cateName}</p>
-                            <p className="text-right"><b>Submission: </b>{idea.submissionId.submissionName}</p>
+                            <p className="text-left text-sm-right"><b>Category: </b>{idea.cateId.cateName}</p>
+                            <p className="text-left text-sm-right"><b>Submission: </b>{idea.submissionId.submissionName}</p>
                         </div>
                     </div>
                     <div className="status p-3">
                         <h4 className="border-bottom pb-2">{idea.title}</h4>
                         <p>{idea.description}</p>
                     </div>
-                    <div className="action form-group p-3 d-flex justify-content-between align-items-center">
+                    <div className="action form-group p-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <Link className="btn btn-primary" to={`/${idea.ideaId}`} onClick={() => addViewCount(idea.ideaId)}>
                             View
                             <i className="fa-solid fa-eye ml-2"></i>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import axios from "axios";
 
@@ -10,9 +10,7 @@ const ListSubmission = () => {
     const [mounted, setMounted] = useState(true)
     const [isAdmin, setIsAdmin] = useState(false)
     const [isManager, setIsManager] = useState(false)
-    const [className, setClassName] = useState("")
     const $ = document.querySelector.bind(document)
-    const navigate = useNavigate()
     const cookies = new Cookies();
 
     // Check role

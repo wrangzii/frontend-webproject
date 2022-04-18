@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Cookies } from 'react-cookie'
 import Alert from '../alert/Alert'
+import avatar from "../../assets/avatar.jpg"
 
 function EditIdea() {
     const [files, setFiles] = useState([])
@@ -107,11 +108,11 @@ function EditIdea() {
                 <div className="user d-flex align-items-center justify-content-between p-3 border-bottom bg-light">
                     <div className="d-flex align-items-center gap-2">
                         <div className="user-image">
-                            <img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} />
+                            <img src={avatar} alt="" width={60} />
                         </div>
                         <div className="user-info">
                             <p className="user-name fz-20 text-primary fw-bold">{username}</p>
-                            <small className="post-date text-muted">{new Date(createDate).toLocaleDateString()}</small>
+                            <small className="post-date">{new Date(createDate).toLocaleDateString()}</small>
                         </div>
                     </div>
                     <div className='idea-info'>

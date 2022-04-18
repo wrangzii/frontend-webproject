@@ -125,9 +125,9 @@ const EditSubmission = () => {
                         minDate={closureDate}
                     />
                 </div>
-                <div className="form-group text-right">
-                    <button type="button" className="btn btn-warning px-3 mr-3" onClick={editSubmission}>Update</button>
-                    <Link to="/submission" className="btn btn-danger px-3">Cancel</Link>
+                <div className="form-group d-flex justify-content-end gap-3 flex-wrap">
+                    <button type="button" className="btn btn-warning col-12 col-sm-auto" onClick={editSubmission}>Update</button>
+                    <Link to="/submission" className="btn btn-danger col-12 col-sm-auto">Cancel</Link>
                 </div>
             </form>
         </div>

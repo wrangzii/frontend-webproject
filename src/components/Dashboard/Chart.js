@@ -178,12 +178,12 @@ function Chart() {
                         </table>
                     </div>
                 </div>
-                <div className="export-csv w-100 d-flex gap-3">
-                    <CSVLink {...csvReport} className='btn btn-success'>
+                <div className="form-group d-flex justify-content-end gap-3 flex-wrap">
+                    <CSVLink {...csvReport} className='btn btn-success col-12 col-sm-auto'>
                         <i className="fa-solid fa-download mr-2"></i>
                         Export CSV File
                     </CSVLink>
-                    <button className="btn btn-warning" onClick={downloadCSV}>
+                    <button className="btn btn-warning col-12 col-sm-auto" onClick={downloadCSV}>
                         <i className="fa-solid fa-download mr-2"></i>
                         Export as ZIP File
                     </button>

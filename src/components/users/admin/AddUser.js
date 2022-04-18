@@ -227,9 +227,9 @@ const AddUser = () => {
                             </optgroup>
                         </select>
                     </div>
-                    <div className="form-group text-right">
-                        {isValid && <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddUser}>Add User</button>}
-                        <Link to="/users" className="btn btn-danger px-3">Cancel</Link>
+                    <div className="form-group d-flex justify-content-end gap-3 flex-wrap">
+                        {isValid && <button type="button" className="btn btn-primary col-12 col-sm-auto" onClick={handleAddUser}>Add User</button>}
+                        <Link to="/users" className="btn btn-danger col-12 col-sm-auto">Cancel</Link>
                     </div>
                 </div>
             </div>

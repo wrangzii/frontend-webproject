@@ -58,9 +58,9 @@ const AddDepart = () => {
                     onChange={e => setDepartmentName(e.target.value)}
                 />
             </div>
-            <div className="form-group text-right">
-                <button type="button" className="btn btn-primary px-3 mr-3" onClick={handleAddDepart}>Add Department</button>
-                <Link to="/departments" className="btn btn-danger px-3">Cancel</Link>
+            <div className="form-group form-group d-flex justify-content-end gap-3 flex-wrap">
+                <button type="button" className="btn btn-primary col-12 col-sm-auto" onClick={handleAddDepart}>Add Department</button>
+                <Link to="/departments" className="btn btn-danger col-12 col-sm-auto">Cancel</Link>
             </div>
         </div>
     )

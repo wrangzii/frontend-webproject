@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Cookies } from "react-cookie";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
 import Alert from "../alert/Alert"
+import avatar from "../../assets/avatar.jpg"
 
 function AddIdea() {
     const [files, setFiles] = useState([])
@@ -115,7 +116,7 @@ function AddIdea() {
                 <div className="card-header">
                     <div className="d-flex align-items-center gap-2">
                         <label htmlFor="">Category:</label>
-                        <select className="form-select col-3" name="" id="">
+                        <select className="form-select col-7 col-sm-3" name="" id="">
                             {cates.map(cate => (
                                 <option key={cate.cateId} ref={cate_id} value={cate.cateId}>{cate.cateName}</option>
                             ))}
@@ -129,13 +130,13 @@ function AddIdea() {
             </div>
             <form>
                 <div className="idea-contribute">
-                    <div className="user d-flex align-items-center gap-2 p-2">
+                    <div className="user d-flex align-items-center gap-2 p-2 flex-wrap">
                         <div className="user-image">
-                            <img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} />
+                            <img src={avatar} alt="" width={60} />
                         </div>
                         <div className="user-info">
                             <p className="user-name fz-20 text-primary fw-bold">{cookies.get("fullName")}(@{cookies.get("username")})</p>
-                            <small className="post-email text-muted">{cookies.get("email")}</small>
+                            <small className="post-email">{cookies.get("email")}</small>
                         </div>
                     </div>
                     <div className="form-group">
@@ -150,7 +151,7 @@ function AddIdea() {
                         <label htmlFor="file">Upload your file</label>
                         <input type="file" id='file' className="file form-control" onChange={handleSelectFile} />
                     </div>
-                    <div className="d-flex align-items-center pb-2">
+                    <div className="anonymous mb-2">
                         <input type="checkbox" id="anonymous" className='mr-2' onChange={e => setIsAnonymous(e.target.checked)} />
                         <label className="form-check-label fw-bold text-danger" htmlFor="anonymous">Post as anonymous</label>
                     </div>
@@ -159,15 +160,15 @@ function AddIdea() {
                         <label htmlFor="term">Do you agree <Link to={"/terms-and-condition"}>Terms and Condition</Link>?</label>
                     </div>
                     <Alert isAlert={isAlert} className={className} message={message} />
-                    <div className="d-flex gap-3 justify-content-end align-items-center">
-                        <button type='button' className='btn btn-success my-3' onClick={handleSubmit}>Post your idea</button>
+                    <div className="form-group d-flex justify-content-end gap-3 flex-wrap">
+                        <button type='button' className='btn btn-primary col-12 col-sm-auto' onClick={handleSubmit}>Post your idea</button>
                         {isAlert && (
-                            <Link className='btn btn-primary' to={"/"}>
+                            <Link className='btn btn-success col-12 col-sm-auto' to={"/"}>
                                 <i className="fa-solid fa-angles-left mr-2"></i>
                                 Idea List
                             </Link>
                         )}
-                        {!(title || description) && <Link to={"/"} className="btn btn-danger">Cancel</Link>}
+                        {!(title || description) && <Link to={"/"} className="btn btn-danger col-12 col-sm-auto">Cancel</Link>}
                     </div>
                 </div>
             </form>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { Cookies } from 'react-cookie'
+import avatar from '../../../assets/avatar.jpg'
 
 function ListComment() {
     const [comments, setComments] = useState([])
@@ -26,7 +27,7 @@ function ListComment() {
                 setCommentsCount(response.data.length);
             })
             .catch(error => console.log(error))
-        return() => setMounted(false)
+        return () => setMounted(false)
     }, [])
 
     if (commentsCount !== 0) {
@@ -35,7 +36,9 @@ function ListComment() {
                 {comments.map(comment => (
                     <div key={comment.commentId} className="border-top">
                         <div className="user d-flex align-items-center gap-2 py-3">
-                            <div className="user-image"><img src="https://phunugioi.com/wp-content/uploads/2020/10/hinh-anh-avatar-de-thuong-cute.jpg" alt="" width={60} /></div>
+                            <div className="user-image">
+                                <img src={avatar} alt="" width={60} />
+                            </div>
                             <div className="user-info">
                                 <p className="user-name fz-20">{comment.isAnonymous ? "Anonymous" : comment.username}</p>
                                 <small className="post-date">{new Date(comment.createDate).toLocaleDateString()}</small>
